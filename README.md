@@ -2,7 +2,7 @@
 
 A package for generating documentation for Swift projects.
 
-**This project is in its early stages of development
+**This project is under active development
 and is expected to change significantly before its first stable release.**
 
 Given a directory of Swift files,
@@ -15,7 +15,7 @@ For an example of generated documentation,
 
 > **Note**:
 > Output is currently limited to CommonMark,
-> but the plan is to support HTML and other formats as well, eventually.
+> but the plan is to support HTML and other formats as well.
 
 ## Usage
 
@@ -248,7 +248,7 @@ Here's an excerpt of the graph generated for Alamofire:
 
 From its earliest days,
 Swift has been fortunate to have [Jazzy][jazzy],
-a fantastic tool for generating documentation
+which is a fantastic tool for generating documentation
 for both Swift and Objective-C projects.
 Over time, however,
 the way we write Swift code —
