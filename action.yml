@@ -1,0 +1,21 @@
+name: "Swift Doc"
+description: "Generates documentation for your Swift project"
+
+inputs:
+  inputs:
+    description: "One or more paths to Swift files"
+    required: true
+    default: "./Sources"
+  output:
+    description: "The path for generated output"
+    required: true
+    default: "./.build/documentation"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args: ["${{ inputs.inputs }}", --output, "${{ inputs.output }}"]
+
+branding:
+  icon: "book"
+  color: "orange"

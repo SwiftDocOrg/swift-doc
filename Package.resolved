@@ -1,0 +1,70 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Commander",
+        "repositoryURL": "https://github.com/kylef/Commander.git",
+        "state": {
+          "branch": null,
+          "revision": "4b6133c3071d521489a80c38fb92d7983f19d438",
+          "version": "0.9.1"
+        }
+      },
+      {
+        "package": "CommonMark",
+        "repositoryURL": "https://github.com/SwiftDocOrg/CommonMark.git",
+        "state": {
+          "branch": "master",
+          "revision": "81b2698f19e83d33276c3ee55e7178d23913216e",
+          "version": null
+        }
+      },
+      {
+        "package": "Spectre",
+        "repositoryURL": "https://github.com/kylef/Spectre.git",
+        "state": {
+          "branch": null,
+          "revision": "f14ff47f45642aa5703900980b014c2e9394b6e5",
+          "version": "0.9.0"
+        }
+      },
+      {
+        "package": "cmark",
+        "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
+        "state": {
+          "branch": null,
+          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
+          "version": "0.28.3+20200110.2a76603"
+        }
+      },
+      {
+        "package": "SwiftSyntax",
+        "repositoryURL": "https://github.com/apple/swift-syntax.git",
+        "state": {
+          "branch": null,
+          "revision": "3e3eb191fcdbecc6031522660c4ed6ce25282c25",
+          "version": "0.50100.0"
+        }
+      },
+      {
+        "package": "SwiftMarkup",
+        "repositoryURL": "https://github.com/SwiftDocOrg/SwiftMarkup.git",
+        "state": {
+          "branch": null,
+          "revision": "8e82d625b0342fc80525956c22f9f0defa0cffce",
+          "version": "0.0.4"
+        }
+      },
+      {
+        "package": "SwiftSemantics",
+        "repositoryURL": "https://github.com/SwiftDocOrg/SwiftSemantics.git",
+        "state": {
+          "branch": "master",
+          "revision": "8a5a57fba79d3a5ef4e568c549397a12392a7a03",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
