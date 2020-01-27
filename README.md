@@ -217,6 +217,33 @@ $ diff -u Alamofire-5.0.0-rc.1.txt Alamofire-5.0.0-rc.3.txt
 
 </details>
 
+### swift-api-diagram
+
+`swift-dcov` generates a graph of APIs in [DOT format][dot]
+that can be rendered by [GraphViz][graphviz] into a diagram.
+
+```terminal
+$ swift run swift-api-diagram Alamofire/Source > graph.dot
+$ head graph.dot
+digraph Anonymous {
+  "Session" [shape=box];
+  "NetworkReachabilityManager" [shape=box];
+  "URLEncodedFormEncoder" [shape=box,peripheries=2];
+  "ServerTrustManager" [shape=box];
+  "MultipartFormData" [shape=box];
+  
+  subgraph cluster_Request {
+    "DataRequest" [shape=box];
+    "Request" [shape=box];
+
+$ dot -T svg graph.dot > graph.svg
+```
+
+Here's an excerpt of the graph generated for Alamofire:
+
+![Excerpt of swift-doc-api Diagram for Alamofire](https://user-images.githubusercontent.com/7659/73189318-0db0e880-40d9-11ea-8895-341a75ce873c.png)
+
+
 ## Motivation
 
 From its earliest days,
@@ -389,3 +416,5 @@ Mattt ([@mattt](https://twitter.com/mattt))
 [nshipster]: https://nshipster.com
 [dependency hell]: https://github.com/apple/swift-package-manager/tree/master/Documentation#dependency-hell
 [pcre]: https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions
+[dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
+[graphviz]: https://www.graphviz.org
