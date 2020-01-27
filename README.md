@@ -62,11 +62,12 @@ or bundle them into a release artifact.
 
 #### Inputs
 
-| Name     | Type       | Description |
-|———-|————|————-|
-| `inputs` | `[String]` | One or more paths to Swift files in your workspace. <br/> Default: `"./Sources"` |
-| `output` | `String`   | The path for generated output. <br/> Default: `"./.build/documentation"`         |
-
+- `inputs`: 
+  One or more paths to Swift files in your workspace. 
+  (Default: `"./Sources"`)
+- `output`:
+  The path for generated output. 
+  (Default: `"./.build/documentation"`)
 
 #### Example Workflow
 
