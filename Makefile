@@ -23,10 +23,16 @@ swift-doc: $(SOURCES)
 install: swift-doc
 	@install -d "$(bindir)"
 	@install "$(BUILDDIR)/release/swift-doc" "$(bindir)"
+	@install "$(BUILDDIR)/release/swift-dcov" "$(bindir)"
+	@install "$(BUILDDIR)/release/swift-api-inventory" "$(bindir)"
+	@install "$(BUILDDIR)/release/swift-api-diagram" "$(bindir)"
 
 .PHONY: uninstall
 uninstall:
 	@rm -rf "$(bindir)/swift-doc"
+	@rm -rf "$(bindir)/swift-api-diagram"
+	@rm -rf "$(bindir)/swift-api-inventory"
+	@rm -rf "$(bindir)/swift-dcov"
 
 .PHONY: clean
 distclean:
