@@ -314,7 +314,7 @@ that take advantage of modern infrastructure and tooling:
   Publishes the contents of a directory to your project's wiki
 
 These new technologies have already yielded some promising results.
-`swit-doc` is built in Swift,
+`swift-doc` is built in Swift,
 and can be installed both macOS and Linux as a small, standalone binary.
 Because it relies only on a syntactic reading of Swift source code,
 without needing code first to be compiled,
