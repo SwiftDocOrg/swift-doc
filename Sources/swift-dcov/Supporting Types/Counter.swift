@@ -5,7 +5,8 @@ struct Counter {
     var total: Int { hits + misses }
 
     var percentage: Double {
-        Double(hits) / Double(total) * 100.0
+        guard total > 0 else { return 0 }
+        return Double(hits) / Double(total) * 100.0
     }
 
     init(hits: Int = 0, misses: Int = 0) {
