@@ -28,7 +28,7 @@ struct ConformingTypes: Component {
                     #"""
                     \#(names.map { name in
                         if module.hasDeclaration(named: name) {
-                            return "[`\(name)`](\(path(for: name)))"
+                            return "[`\(name)`](\(path(for: name)).md)"
                         } else {
                             return "`\(name)`"
                         }

@@ -53,7 +53,7 @@ struct Inheritance: Component {
                         #"""
                         \#(inheritance.map {
                             if module.hasDeclaration(named: $0) {
-                                return "[`\($0)`](\(path(for: $0)))"
+                                return "[`\($0)`](\(path(for: $0)).md)"
                             } else {
                                 return "`\($0)`"
                             }

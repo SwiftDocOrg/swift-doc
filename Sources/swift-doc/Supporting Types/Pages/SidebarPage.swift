@@ -64,7 +64,7 @@ struct SidebarPage: Page {
                 }
 
                 List(of: section.names.sorted()) { name in
-                    Link(urlString: path(for: name), text: name)
+                    Link(urlString: "\(path(for: name)).md", text: name)
                 }
 
                 Fragment { "</details>" }
