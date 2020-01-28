@@ -219,7 +219,7 @@ $ diff -u Alamofire-5.0.0-rc.1.txt Alamofire-5.0.0-rc.3.txt
 
 ### swift-api-diagram
 
-`swift-dcov` generates a graph of APIs in [DOT format][dot]
+`swift-api-diagram` generates a graph of APIs in [DOT format][dot]
 that can be rendered by [GraphViz][graphviz] into a diagram.
 
 ```terminal
