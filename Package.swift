@@ -6,11 +6,11 @@ import PackageDescription
 let package = Package(
     name: "swift-doc",
     products: [
-        .executable(name: "swift-doc", targets: ["swift-doc"])
         .executable(name: "swift-doc", targets: ["swift-doc"]),
         .executable(name: "swift-dcov", targets: ["swift-dcov"]),
         .executable(name: "swift-api-diagram", targets: [ "swift-api-diagram"]),
         .executable(name: "swift-api-inventory", targets: [ "swift-api-inventory"]),
+        .library(name: "SwiftDoc", targets: ["SwiftDoc"])
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
