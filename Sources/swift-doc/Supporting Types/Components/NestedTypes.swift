@@ -25,7 +25,7 @@ struct NestedTypes: Component {
 
                 List(of: types.map { $0.declaration.qualifiedName }) { (name) -> ListItemConvertible in
                     if module.hasDeclaration(named: name) {
-                        return Link(urlString: path(for: name), text: name)
+                        return Link(urlString: "\(path(for: name)).md", text: name)
                     } else {
                         return Text(literal: name)
                     }
