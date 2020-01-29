@@ -53,7 +53,7 @@ struct HomePage: Page {
                 if (!names.isEmpty) {
                     Heading { heading }
                     List(of: names.sorted()) { name in
-                        Link(urlString: path(for: name), text: name)
+                        Link(urlString: path(for: name), text: "\(name).md")
                     }
                 }
             }
@@ -74,7 +74,7 @@ struct HomePage: Page {
                           Heading { heading }
                             
                           List(of: names.sorted()) { name in
-                              Link(urlString: path(for: name), text: name)
+                              Link(urlString: path(for: name), text: "\(name).md")
                           }
                         }
                     }
