@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "swift-doc",
+    products: [
+        .executable(name: "swift-doc", targets: ["swift-doc"])
+    ],
     dependencies: [
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
