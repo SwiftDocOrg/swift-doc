@@ -114,7 +114,7 @@ jobs:
 In addition to `swift-doc`,
 this project currently ships with several, experimental tools
 that offer complementary functionality.
-It's unclear how all everything will ultimately fit together,
+It's unclear how everything will ultimately fit together,
 but for now,
 they're incubating in a shared monorepo
 (the intent is for each of them to eventually become
@@ -308,8 +308,10 @@ having instead focused on perceived cosmetic issues.)
 Without much in the way of strong design guidance,
 we're not entirely sure what Swift documentation _should_ look like.
 But we do think plain text is a good place to start.
-We look forward to soliciting feedback and ideas from everyone
-to identify what those needs are and come up with the best ways to meet them.
+We look forward to 
+soliciting feedback and ideas from everyone 
+so that we can identify those needs 
+and figure out the best ways to meet them.
 
 In the meantime,
 we've set ourselves up for success
@@ -329,7 +331,7 @@ that take advantage of modern infrastructure and tooling:
 
 These new technologies have already yielded some promising results.
 `swift-doc` is built in Swift,
-and can be installed both macOS and Linux as a small, standalone binary.
+and can be installed on both macOS and Linux as a small, standalone binary.
 Because it relies only on a syntactic reading of Swift source code,
 without needing code first to be compiled,
 `swift-doc` is quite fast.
