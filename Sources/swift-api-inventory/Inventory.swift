@@ -2,9 +2,24 @@ import SwiftSemantics
 import SwiftDoc
 
 func inventory(of module: Module) -> [String] {
-    return module.symbols
+    let publicSymbols = module.symbols
         .filter { $0.isPublic }
-        .sorted()
+        
+    let publicProtocolNames = Set(publicSymbols
+        .filter { $0.declaration is Protocol }
+        .map { $0.declaration.qualifiedName })
+    
+        
+    let symbolsForPublicProtocols = module.symbols
+        .filter { symbol -> Bool in
+            guard let context = symbol.declaration.context else { return false }
+            return publicProtocolNames.contains(context)
+    }
+    
+    let inventory = publicSymbols + symbolsForPublicProtocols
+    
+    return inventory
+        .sorted
         .compactMap { representation(of: $0, in: module) }
 }
 
