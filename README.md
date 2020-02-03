@@ -151,10 +151,10 @@ $ swift run swift-dcov SwiftSemantics/Sources/ | jq ".data.symbols[] | select(.d
 While there are plenty of tools for assessing test coverage for code,
 we weren't able to find anything analogous for documentation coverage.
 To this end,
-we've contrived a simple JSON format 
+we've contrived a simple JSON format
 [inspired by llvm-cov](https://reviews.llvm.org/D22651#change-xdePaVfBugps).
 
-If you know of an existing standard 
+If you know of an existing standard
 that you think might be better suited for this purpose,
 please reach out by [opening an Issue][open an issue]!
 
@@ -183,7 +183,7 @@ you can feed the output of `swift-api-inventory` to conventional diffing tools
 to determine API changes between different releases of a project.
 
 For example,
-here's an API diff between the first beta and latest release candidate of 
+here's an API diff between the first beta and latest release candidate of
 [Alamofire 5](https://forums.swift.org/t/alamofire-5-one-year-in-the-making-now-in-beta/18865):
 
 ```terminal
@@ -245,7 +245,7 @@ digraph Anonymous {
   "URLEncodedFormEncoder" [shape=box,peripheries=2];
   "ServerTrustManager" [shape=box];
   "MultipartFormData" [shape=box];
-  
+
   subgraph cluster_Request {
     "DataRequest" [shape=box];
     "Request" [shape=box];
@@ -267,13 +267,13 @@ for both Swift and Objective-C projects.
 Over time, however,
 the way we write Swift code —
 and indeed the language itself —
-has evolved to incorporate patterns and features 
-that are difficult to understand using 
+has evolved to incorporate patterns and features
+that are difficult to understand using
 the same documentation standards that served us well for Objective-C.
 
 Whereas in Objective-C,
 you could get a complete view of a type's functionality from its class hierarchy,
-Swift code today tends to layer and distribute functionality across 
+Swift code today tends to layer and distribute functionality across
 [a network of types][swift number protocols diagram].
 While adopting a
 [protocol-oriented paradigm][protocol-oriented programming]
@@ -285,7 +285,7 @@ is to make Swift documentation more useful
 by surfacing the information you need to understand how an API works
 and presenting it in a way that can be easily searched and accessed.
 We want developers to be empowered to use Swift packages to their full extent,
-without being reliant on (often outdated) blog posts or Stack Overflow threads. 
+without being reliant on (often outdated) blog posts or Stack Overflow threads.
 We want documentation coverage to become as important as test coverage:
 a valuable metric for code quality,
 and an expected part of first-rate open source projects.
@@ -334,7 +334,7 @@ Because it relies only on a syntactic reading of Swift source code,
 without needing code first to be compiled,
 `swift-doc` is quite fast.
 As a baseline,
-compare its performance to Jazzy 
+compare its performance to Jazzy
 when generating documentation for [SwiftSemantics][swiftsemantics]:
 
 ```terminal
@@ -361,17 +361,19 @@ to [a GitHub wiki generated with `swift-doc`][swift-doc swiftsemantics].
 
 ## What About [SwiftDoc.org][swiftdoc.org]?
 
-**tl;dr:** 
-We're currently working on updating SwiftDoc.org for Swift 5,
-and hope to have it released later this week.
+**tl;dr:**
+SwiftDoc.org is now updated for Swift 5.1,
+but we're still working to migrate over a few missing parts
+(notably, the beloved
+[type inheritance graphs](https://swiftdoc.org/v4.2/protocol/expressiblebyfloatliteral/hierarchy/)).
 
 SwiftDoc.org,
 [originally "Swifter"](http://natecook.com/blog/2014/09/introducing-swifter/),
-was created by Nate Cook ([@natecook1000][@natecook1000]) 
+was created by Nate Cook ([@natecook1000][@natecook1000])
 in September 2014.
 At the time,
 Swift tooling was still in its infancy,
-so Nate actually 
+so Nate actually
 [wrote a parser (from scratch!)](https://github.com/SwiftDocOrg/swiftdoc-parser)
 to pull symbols and documentation from the Swift standard library.
 Nate became managing editor of [NSHipster][nshipster] in 2015,
@@ -383,9 +385,9 @@ After the hand-off,
 we were able to get the site updated for Swift 4.2 without too much trouble.
 But when it came time to regenerate the site for Swift 5,
 we found ourselves deep in ["dependency hell"][dependency hell]
-(something to do with the [regular expression][pcre] library 
+(something to do with the [regular expression][pcre] library
 that Nate had used for the parser).
-After begging and pleading with 
+After begging and pleading with
 the spirits possessing our `node_modules` directory to no avail,
 we decided to roll up our sleeves and get started on a long-term replacement —
 this time, written in Swift.
