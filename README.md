@@ -120,6 +120,12 @@ they're incubating in a shared monorepo
 (the intent is for each of them to eventually become
 an option, subcommand, or plugin of `swift-doc`).
 
+> **Note**:
+> We recommend building and running these tools via `swift run`.
+> If you prefer to have compiled binaries,
+> you can generate them with the same commands
+> used for the `swift-doc` target in `Makefile`.
+
 * * *
 
 ### swift-dcov
