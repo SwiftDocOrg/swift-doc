@@ -22,7 +22,12 @@ command(
                 let directory = URL(fileURLWithPath: path)
                 guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: nil) else { continue }
                 for case let url as URL in directoryEnumerator {
-                    guard url.pathExtension == "swift" else { continue }
+                    var isDirectory: ObjCBool = false
+                    guard url.pathExtension == "swift",
+                        fileManager.isReadableFile(atPath: url.path),
+                        fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
+                        isDirectory.boolValue == false
+                    else { continue }
                     sourceFiles.append(try SourceFile(file: url, relativeTo: directory))
                 }
             }
