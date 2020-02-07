@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  macos:
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build and Run
+        run: swift run swift-doc Sources
+
+  linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        swift: ["5.1"]
+
+    container:
+      image: swift:${{ matrix.swift }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build and Run
+        run: swift run swift-doc Sources
