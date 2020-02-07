@@ -1,5 +1,7 @@
 # swift-doc
 
+![CI][ci badge]
+
 A package for generating documentation for Swift projects.
 
 **This project is under active development
@@ -416,6 +418,8 @@ MIT
 ## Contact
 
 Mattt ([@mattt](https://twitter.com/mattt))
+
+[ci badge]: https://github.com/SwiftDocOrg/swift-doc/workflows/CI/badge.svg
 
 [alamofire wiki]: https://github.com/SwiftDocOrg/Alamofire/wiki
 [github wiki]: https://help.github.com/en/github/building-a-strong-community/about-wikis
