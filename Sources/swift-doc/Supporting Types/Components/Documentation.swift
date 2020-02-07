@@ -3,25 +3,38 @@ import SwiftMarkup
 import CommonMarkBuilder
 
 struct Documentation: Component {
-    var symbol: SwiftDoc.Symbol
+    var symbol: Symbol
 
-    init(for symbol: SwiftDoc.Symbol) {
+    init(for symbol: Symbol) {
         self.symbol = symbol
     }
 
     // MARK: - Component
 
     var body: Fragment {
-        Fragment {
-            if symbol.documentation.summary != nil {
-                Fragment { "\(symbol.documentation.summary!)" }
+        guard let documentation = symbol.documentation else { return Fragment { "" } }
+
+        return Fragment {
+            if !symbol.conditions.isEmpty {
+                Fragment {
+                    #"""
+                    <dl>
+                    <dt><code>\#(symbol.conditions.map { $0.description }.joined(separator: ", "))</code></dt>
+                    <dd>
+
+                    """#
+                }
+            }
+
+            if documentation.summary != nil {
+                Fragment { "\(documentation.summary!)" }
             }
 
             CodeBlock("swift") {
                 "\(symbol.declaration)".trimmingCharacters(in: .whitespacesAndNewlines)
             }
 
-            ForEach(in: symbol.documentation.discussionParts) { part in
+            ForEach(in: documentation.discussionParts) { part in
                 if part is SwiftMarkup.Documentation.Callout {
                     Callout(part as! SwiftMarkup.Documentation.Callout)
                 } else {
@@ -29,27 +42,55 @@ struct Documentation: Component {
                 }
             }
 
-            if !symbol.documentation.parameters.isEmpty {
+            if !documentation.parameters.isEmpty {
                 Section {
                     Heading { "Parameters" }
-                    List(of:  symbol.documentation.parameters) { parameter in
+                    List(of:  documentation.parameters) { parameter in
                         Fragment { "\(parameter.name): \(parameter.description)" }
                     }
                 }
             }
 
-            if symbol.documentation.throws != nil {
+            if documentation.throws != nil {
                 Section {
                     Heading { "Throws" }
-                    Fragment { symbol.documentation.throws! }
+                    Fragment { documentation.throws! }
                 }
             }
 
-            if symbol.documentation.returns != nil {
+            if documentation.returns != nil {
                 Section {
                     Heading { "Returns" }
-                    Fragment { symbol.documentation.returns! }
+                    Fragment { documentation.returns! }
                 }
+            }
+
+            if !symbol.conditions.isEmpty {
+                Fragment {
+                    #"""
+
+                    </dd>
+                    </dl>
+                    """#
+                }
+            }
+        }
+    }
+
+    struct Callout: Component {
+        var callout: SwiftMarkup.Documentation.Callout
+
+        init(_ callout: SwiftMarkup.Documentation.Callout) {
+            self.callout = callout
+        }
+
+        // MARK: - Component
+
+        var body: Fragment {
+            Fragment {
+                """
+                > \(callout.delimiter.rawValue.capitalized): \(callout.content)
+                """
             }
         }
     }

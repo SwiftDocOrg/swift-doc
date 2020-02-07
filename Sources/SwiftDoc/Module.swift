@@ -1,94 +1,134 @@
 import SwiftSemantics
 
-public struct Module: Codable {
+public class Module: Codable {
     public let name: String
 
     public let sourceFiles: [SourceFile]
 
     public let symbols: [Symbol]
 
-    public let extendedSymbols: [Extension: [Symbol]]
+    private lazy var symbolsByIdentifier: [Symbol.ID: [Symbol]] = {
+        return Dictionary(grouping: symbols, by: { $0.id })
+    }()
 
-    public var topLevelSymbols: [Symbol] {
-        return symbols.filter { $0.declaration.context == nil || $0.declaration is Type }
-    }
+    public private(set) lazy var topLevelSymbols: [Symbol] = {
+        return symbols.filter { $0.declaration is Type || $0.id.pathComponents.isEmpty }
+    }()
+
+    public private(set) lazy var baseClasses: [Symbol] = {
+        return symbols.filter { $0.declaration is Class &&
+                                typesInherited(by: $0).isEmpty }
+    }()
+
+    public private(set) lazy var relationships: [Relationship] = {
+        var relationships: Set<Relationship> = []
+        for symbol in symbols {
+            let `extension` = symbol.context.compactMap({ $0 as? Extension }).first
+
+            if let container = symbol.context.compactMap({ $0 as? Symbol }).last {
+                let predicate: Relationship.Predicate
+
+                switch container.declaration {
+                case is Protocol:
+                    if symbol.declaration.modifiers.contains(where: { $0.name == "optional" }) {
+                        predicate = .optionalRequirementOf
+                    } else {
+                        predicate = .requirementOf
+                    }
+                default:
+                    predicate = .memberOf
+                }
+
+                relationships.insert(Relationship(subject: symbol, predicate: predicate, object: container))
+            }
+
+            if let `extension` = `extension` {
+                for extended in symbols.filter({ $0.declaration is Type &&  $0.id.matches(`extension`.extendedType) }) {
+                    let predicate: Relationship.Predicate
+                    switch extended.declaration {
+                    case is Protocol:
+                        predicate = .defaultImplementationOf
+                    default:
+                        predicate = .memberOf
+                    }
+
+                    relationships.insert(Relationship(subject: symbol, predicate: predicate, object: extended))
+                }
+            }
+
+            if let type = symbol.declaration as? Type {
+                let inheritance = Set((type.inheritance + (`extension`?.inheritance ?? [])).flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
+                for name in inheritance {
+                    let inheritedTypes = symbols.filter({ ($0.declaration is Class || $0.declaration is Protocol) && $0.id.matches(name) })
+                    if inheritedTypes.isEmpty {
+                        let inherited = Symbol(declaration: Unknown(name: name), context: [], documentation: nil, sourceLocation: nil)
+                        relationships.insert(Relationship(subject: symbol, predicate: .inheritsFrom, object: inherited))
+                    } else {
+                        for inherited in inheritedTypes {
+                            let predicate: Relationship.Predicate
+                            if symbol.declaration is Class, inherited.declaration is Class {
+                                predicate = .inheritsFrom
+                            } else {
+                                predicate = .conformsTo
+                            }
+
+                            relationships.insert(Relationship(subject: symbol, predicate: predicate, object: inherited))
+                        }
+                    }
+                }
+            }
+        }
+
+        return Array(relationships)
+    }()
+
+    private lazy var relationshipsBySubject: [Symbol.ID: [Relationship]] = {
+        Dictionary(grouping: relationships, by: { $0.subject.id })
+    }()
+
+    private lazy var relationshipsByObject: [Symbol.ID: [Relationship]] = {
+        Dictionary(grouping: relationships, by: { $0.object.id })
+    }()
+
+    // MARK: -
 
     public init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
         self.name = name
-
         self.sourceFiles = sourceFiles
-
-        var symbols: [Symbol] = []
-        var extendedSymbols: [Extension: [Symbol]] = [:]
-
-        for sourceFile in sourceFiles {
-            symbols.append(contentsOf: sourceFile.symbols)
-
-            for `extension` in sourceFile.extendedSymbols.keys {
-                extendedSymbols[`extension`, default: []] += sourceFile.extendedSymbols[`extension`] ?? []
-            }
-        }
-
-        self.symbols = symbols
-        self.extendedSymbols = extendedSymbols
+        self.symbols = sourceFiles.flatMap { $0.symbols }
     }
+
+    // MARK: -
 
     public func members(of symbol: Symbol) -> [Symbol] {
-        guard symbol.declaration is Type else { return [] }
-        var members: [Symbol] = symbols.filter { $0.declaration.context == symbol.declaration.qualifiedName }
-
-        let inheritance = [symbol.declaration.qualifiedName] + (self.inheritance(of: symbol) ?? [])
-        for `extension` in extendedSymbols.keys where `extension`.genericRequirements.isEmpty {
-            if inheritance.contains(`extension`.extendedType) {
-                members.append(contentsOf: extendedSymbols[`extension`] ?? [])
-            }
-        }
-
-        return members
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .memberOf }.map { $0.subject } ?? []
     }
 
-    public func inheritance(of symbol: Symbol) -> [String]? {
-        guard let type = symbol.declaration as? Type else { return nil }
-        let inheritance = type.inheritance
-
-        var extendedInheritance: Set<String> = []
-        for `extension` in extendedSymbols.keys where `extension`.genericRequirements.isEmpty {
-            if symbol.declaration.qualifiedName == `extension`.extendedType ||
-                inheritance.contains(`extension`.extendedType) ||
-                extendedInheritance.contains(`extension`.extendedType)
-            {
-                extendedInheritance.formUnion(`extension`.inheritance)
-            }
-        }
-
-        return inheritance + extendedInheritance.sorted()
+    public func requirements(of symbol: Symbol) -> [Symbol] {
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .requirementOf }.map { $0.subject } ?? []
     }
 
-    public func namesOfTypesConforming(to protocol: Protocol) -> [String] {
-        var names: [String] = []
+    public func optionalRequirements(of symbol: Symbol) -> [Symbol] {
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .optionalRequirementOf }.map { $0.subject } ?? []
+    }
 
-        for symbol in symbols {
-            if let type = symbol.declaration as? Type,
-                type.inheritance.contains(`protocol`.name)
-            {
-                names.append(type.qualifiedName)
-            }
-        }
+    public func typesInherited(by symbol: Symbol) -> [Symbol] {
+        return relationshipsBySubject[symbol.id]?.filter { $0.predicate == .inheritsFrom }.map { $0.object }.sorted() ?? []
+    }
 
-        for `extension` in extendedSymbols.keys where `extension`.genericRequirements.isEmpty {
-            if `extension`.inheritance.contains(`protocol`.name) {
-                names.append(`extension`.extendedType)
-            }
-        }
+    public func typesInheriting(from symbol: Symbol) -> [Symbol] {
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .inheritsFrom }.map { $0.subject }.sorted() ?? []
+    }
 
-        return Set(names).sorted()
+    public func typesConformed(by symbol: Symbol) -> [Symbol] {
+        return relationshipsBySubject[symbol.id]?.filter { $0.predicate == .conformsTo }.map { $0.object }.sorted() ?? []
+    }
+
+    public func typesConforming(to symbol: Symbol) -> [Symbol] {
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .conformsTo }.map { $0.subject }.sorted() ?? []
     }
 
     public func conditionalCounterparts(of symbol: Symbol) -> [Symbol] {
-        return symbols.filter { !$0.conditions.isEmpty && $0.declaration.qualifiedName == symbol.declaration.qualifiedName }
-    }
-
-    public func hasDeclaration(named name: String) -> Bool {
-        return symbols.contains { $0.declaration.qualifiedName == name }
+        return symbolsByIdentifier[symbol.id]?.filter { $0 != symbol } ?? []
     }
 }

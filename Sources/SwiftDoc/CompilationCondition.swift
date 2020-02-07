@@ -10,3 +10,15 @@ public struct CompilationCondition: Hashable, Codable {
         self.branch = branch
     }
 }
+
+// MARK: - CustomStringConvertible
+
+extension CompilationCondition: CustomStringConvertible {
+    public var description: String {
+        if let condition = branch.condition {
+            return condition
+        } else {
+            return branch.condition ?? "!(\(block.branches.compactMap { $0.condition }.map { "(\($0))"}.joined(separator: "&&")))"
+        }
+    }
+}

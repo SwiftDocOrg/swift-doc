@@ -39,7 +39,7 @@ command(
             }
 
             let module = Module(sourceFiles: sourceFiles)
-
+            
             let outputDirectoryURL = URL(fileURLWithPath: output)
             try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
 
@@ -48,15 +48,15 @@ command(
                 try SidebarPage(module: module).write(to: outputDirectoryURL.appendingPathComponent("_Sidebar.md"))
                 try FooterPage().write(to: outputDirectoryURL.appendingPathComponent("_Footer.md"))
 
-                var globals: [String: [SwiftDoc.Symbol]] = [:]
-                for symbol in module.topLevelSymbols.filter({ $0.declaration.isPublic }) {
+                var globals: [String: [Symbol]] = [:]
+                for symbol in module.topLevelSymbols.filter({ $0.isPublic }) {
                     switch symbol.declaration {
-                    case let `class` as Class:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: `class`.qualifiedName)).md"))
-                    case let enumeration as Enumeration:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: enumeration.qualifiedName)).md"))
-                    case let structure as Structure:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: structure.qualifiedName)).md"))
+                    case is Class:
+                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
+                    case is Enumeration:
+                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
+                    case is Structure:
+                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
                     case let `protocol` as Protocol:
                         try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: `protocol`.name)).md"))
                     case let `typealias` as Typealias:

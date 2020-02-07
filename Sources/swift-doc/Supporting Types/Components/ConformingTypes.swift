@@ -4,10 +4,10 @@ import SwiftMarkup
 import SwiftSemantics
 
 struct ConformingTypes: Component {
-    var symbol: SwiftDoc.Symbol
-    var module: SwiftDoc.Module
+    var symbol: Symbol
+    var module: Module
 
-    init(to symbol: SwiftDoc.Symbol, in module: SwiftDoc.Module) {
+    init(to symbol: Symbol, in module: Module) {
         precondition(symbol.declaration is Protocol)
         self.symbol = symbol
         self.module = module
@@ -16,9 +16,9 @@ struct ConformingTypes: Component {
     // MARK: - Component
 
     var body: Fragment {
-        guard let `protocol` = symbol.declaration as? Protocol else { return Fragment { "" } }
-        let names = module.namesOfTypesConforming(to: `protocol`)
-        guard !names.isEmpty else { return Fragment { "" }}
+        guard symbol.declaration is Protocol else { return Fragment { "" } }
+        let conformingTypes = module.typesConforming(to: symbol)
+        guard !conformingTypes.isEmpty else { return Fragment { "" }}
 
         return Fragment {
             Section {
@@ -26,11 +26,11 @@ struct ConformingTypes: Component {
 
                 Fragment {
                     #"""
-                    \#(names.map { name in
-                        if module.hasDeclaration(named: name) {
-                            return "[`\(name)`](\(path(for: name)))"
+                    \#(conformingTypes.map { type in
+                        if type.declaration is Unknown {
+                            return "`\(type.id)`"
                         } else {
-                            return "`\(name)`"
+                            return "[`\(type.id)`](\(path(for: type.id)))"
                         }
                     }.joined(separator: ", "))
                     """#

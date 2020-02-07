@@ -24,56 +24,33 @@ extension StringBuilder {
 
 struct Inheritance: Component {
     var module: Module
-    var inheritance: [String]
-    var conditionallyConstrainedExtensions: [Extension] = []
+    var symbol: Symbol
 
-    init(of symbol: SwiftDoc.Symbol, in module: SwiftDoc.Module) {
+    init(of symbol: Symbol, in module: Module) {
         self.module = module
-        self.inheritance = module.inheritance(of: symbol) ?? []
-        self.conditionallyConstrainedExtensions = module.extendedSymbols.keys.filter { $0.extendedType == symbol.declaration.qualifiedName }.filter { !$0.genericRequirements.isEmpty && !$0.inheritance.isEmpty }
-    }
-
-    init(of extension: Extension, in module: SwiftDoc.Module) {
-        self.module = module
-        self.inheritance = `extension`.inheritance
-        self.conditionallyConstrainedExtensions = []
+        self.symbol = symbol
     }
 
     // MARK: - Component
 
     var body: Fragment {
-        guard !inheritance.isEmpty else { return Fragment { "" } }
+        let inheritedTypes = module.typesInherited(by: symbol) + module.typesConformed(by: symbol)
+        guard !inheritedTypes.isEmpty else { return Fragment { "" } }
 
         return Fragment {
             Section {
-                if !inheritance.isEmpty {
-                    Heading { "Inheritance" }
+                Heading { "Inheritance" }
 
-                    Fragment {
-                        #"""
-                        \#(inheritance.map {
-                            if module.hasDeclaration(named: $0) {
-                                return "[`\($0)`](\(path(for: $0)))"
-                            } else {
-                                return "`\($0)`"
-                            }
-                        }.joined(separator: ", "))
-                        """#
-                    }
-                }
-
-                if !conditionallyConstrainedExtensions.isEmpty {
-                    Section {
-                        Heading { "Generically Constrained Inheritance" }
-
-                        ForEach(in: conditionallyConstrainedExtensions) { `extension` in
-                            Section {
-                                Heading { "where \(`extension`.genericRequirements.map { $0.description }.joined(separator: ", "))" }
-
-                                Inheritance(of: `extension`, in: module)
-                            }
+                Fragment {
+                    #"""
+                    \#(inheritedTypes.map { type in
+                        if type.declaration is Unknown {
+                            return "`\(type.id)`"
+                        } else {
+                            return "[`\(type.id)`](\(path(for: type.id)))"
                         }
-                    }
+                    }.joined(separator: ", "))
+                    """#
                 }
             }
         }

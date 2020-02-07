@@ -4,10 +4,10 @@ import SwiftMarkup
 import SwiftSemantics
 
 struct Members: Component {
-    var symbol: SwiftDoc.Symbol
-    var module: SwiftDoc.Module
+    var symbol: Symbol
+    var module: Module
 
-    init(of symbol: SwiftDoc.Symbol, in module: SwiftDoc.Module) {
+    init(of symbol: Symbol, in module: Module) {
         self.symbol = symbol
         self.module = module
     }
@@ -15,71 +15,50 @@ struct Members: Component {
     // MARK: - Component
 
     var body: Fragment {
-        let extensions = module.extendedSymbols.keys.filter { $0.extendedType == symbol.declaration.qualifiedName }
-
-        var members = module.members(of: symbol)
-        if !(symbol.declaration is Protocol) {
-            members = members.filter({ $0.declaration.isPublic })
-        }
-
-        for `extension` in extensions where `extension`.genericRequirements.isEmpty {
-            for member in module.extendedSymbols[`extension`] ?? [] {
-                if !member.declaration.isPublic, `extension`.isPublic  {
-                    members.append(member)
-                }
-            }
-        }
+        let members = module.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
+        guard !members.isEmpty else { return Fragment { "" } }
 
         let typealiases = members.filter { $0.declaration is Typealias }
         let cases = members.filter { $0.declaration is Enumeration.Case }
         let initializers = members.filter { $0.declaration is Initializer }
         let properties = members.filter { $0.declaration is Variable }
         let methods = members.filter { $0.declaration is Function }
+        let genericallyConstrainedMembers = Dictionary(grouping: members) { $0.`extension`?.genericRequirements ?? [] }.filter { !$0.key.isEmpty }
 
-        guard !members.isEmpty else { return Fragment { "" } }
+        let sections: [(title: String, members: [Symbol])] = [
+            (symbol.declaration is Protocol ? "Associated Types" : "Nested Type Aliases", typealiases),
+            ("Enumeration Cases", cases),
+            ("Initializers", initializers),
+            ("Properties", properties),
+            ("Methods", methods)
+        ].filter { !$0.members.isEmpty }
 
         return Fragment {
-            if !typealiases.isEmpty {
+            ForEach(in: sections) { section -> BlockConvertible in
                 Section {
-                    Heading { symbol.declaration is Protocol ? "Associated Types" : "Nested Type Aliases" }
-                    ForEach(in: typealiases) { `typealias` in
-                        Symbol(`typealias`, in: module)
+                    Heading { section.title }
+                    ForEach(in: section.members) { member in
+                        Heading { member.name }
+                        Documentation(for: member)
                     }
                 }
             }
 
-            if !cases.isEmpty {
+            if !genericallyConstrainedMembers.isEmpty {
                 Section {
-                    Heading { "Enumeration Cases" }
-                    ForEach(in: cases) { `case` in
-                        Symbol(`case`, in: module)
-                    }
-                }
-            }
+                    Heading { "Generically Constrained Members" }
 
-            if !initializers.isEmpty {
-                Section {
-                    Heading { symbol.declaration is Protocol ? "Required Initializers" : "Initializers" }
-                    ForEach(in: initializers) { initializer in
-                        Symbol(initializer, in: module)
-                    }
-                }
-            }
+                    ForEach(in: genericallyConstrainedMembers) { (requirements, members) in
+                        Section {
+                            Heading { "where \(requirements.map { $0.description }.joined(separator: ", "))"}
 
-            if !properties.isEmpty {
-                Section {
-                    Heading { symbol.declaration is Protocol ? "Required Properties" : "Properties" }
-                    ForEach(in: properties) { property in
-                        Symbol(property, in: module)
-                    }
-                }
-            }
-
-            if !methods.isEmpty {
-                Section {
-                    Heading { symbol.declaration is Protocol ? "Required Methods" : "Methods" }
-                    ForEach(in: methods) { method in
-                        Symbol(method, in: module)
+                            Section {
+                                ForEach(in: members) { member in
+                                    Heading { member.name }
+                                    Documentation(for: member)
+                                }
+                            }
+                        }
                     }
                 }
             }

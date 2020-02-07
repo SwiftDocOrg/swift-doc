@@ -14,7 +14,7 @@ struct Report {
         var entries: [Entry] = []
 
         for file in module.sourceFiles {
-            for symbol in file.symbols where symbol.declaration.isPublic {
+            for symbol in file.symbols where symbol.isPublic {
                 entries.append(Entry(symbol))
 
                 if symbol.isDocumented {

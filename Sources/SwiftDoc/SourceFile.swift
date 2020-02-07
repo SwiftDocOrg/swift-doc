@@ -4,37 +4,36 @@ import SwiftSyntax
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
+public protocol Contextual {}
+extension Symbol: Contextual {}
+extension Extension: Contextual {}
+extension CompilationCondition: Contextual {}
+
+// MARK: -
+
 public struct SourceFile: Hashable, Codable {
     public let path: String
 
     public let symbols: [Symbol]
-    public let extendedSymbols: [Extension: [Symbol]]
+
+    public let imports: [Import]
 
     public init(file url: URL, relativeTo directory: URL) throws {
         self.path = url.path(relativeTo: directory)
 
-        var symbols: [Symbol] = []
-        var extendedSymbols: [Extension: [Symbol]] = [:]
-        for case let (symbol, `extension`) in try Visitor(file: url, relativeTo: directory).visitedSymbols {
-            if let `extension` = `extension` {
-                extendedSymbols[`extension`, default: []] += [symbol]
-            } else {
-                symbols.append(symbol)
-            }
-        }
-        
-        self.symbols = symbols
-        self.extendedSymbols = extendedSymbols
+        let visitor = try Visitor(file: url, relativeTo: directory)
+
+        self.symbols = visitor.visitedSymbols
+        self.imports = visitor.visitedImports
     }
 
     // MARK: -
 
     private struct Visitor: SyntaxVisitor {
-        var currentCompilationConditions: [CompilationCondition] = []
-        var currentExtension: Extension?
-        var currentHeading: String?
+        var context: [Contextual] = []
 
-        var visitedSymbols: [(Symbol, Extension?)] = []
+        var visitedSymbols: [Symbol] = []
+        var visitedImports: [Import] = []
 
         let sourceLocationConverter: SourceLocationConverter
 
@@ -42,54 +41,80 @@ public struct SourceFile: Hashable, Codable {
             let tree = try SyntaxParser.parse(url)
             sourceLocationConverter = SourceLocationConverter(file: url.path(relativeTo: directory), tree: tree)
             tree.walk(&self)
-            assert(currentExtension == nil)
-            assert(currentCompilationConditions.isEmpty)
+            assert(context.isEmpty)
         }
 
-        mutating func add<Node, Declaration>(_ type: Declaration.Type, _ node: Node) where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
-            add(node, declaration: Declaration(node))
+        func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
+            return symbol(node, declaration: Declaration(node))
         }
 
-        mutating func add<Node: Syntax>(_ node: Node, declaration: API) {
+        func symbol<Node: Syntax>(_ node: Node, declaration: API) -> Symbol {
             let documentation = try! Documentation.parse(node.documentation)
             let sourceLocation = sourceLocationConverter.location(for: node.position)
-            var symbol = Symbol(declaration: declaration, documentation: documentation, sourceLocation: sourceLocation)
-            symbol.conditions = currentCompilationConditions
-            visitedSymbols.append((symbol, currentExtension))
+            return Symbol(declaration: declaration, context: context, documentation: documentation, sourceLocation: sourceLocation)
+        }
+
+        mutating func push(_ symbol: Symbol) {
+            visitedSymbols.append(symbol)
+
+            switch symbol.declaration {
+            case is Class,
+                 is Enumeration,
+                 is Protocol,
+                 is Structure:
+                context.append(symbol)
+            default:
+                return
+            }
+        }
+
+        mutating func push(_ extension: Extension) {
+            context.append(`extension`)
+        }
+
+        mutating func push(_ condition: CompilationCondition) {
+            context.append(condition)
+        }
+
+        mutating func push(_ import: Import) {
+            visitedImports.append(`import`)
+        }
+
+        mutating func pop() -> Contextual? {
+            return context.popLast()
         }
 
         // MARK: - SyntaxVisitor
 
         mutating func visit(_ node: AssociatedtypeDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(AssociatedType.self, node)
+            push(symbol(AssociatedType.self, node))
             return .skipChildren
         }
 
         mutating func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Class.self, node)
+            push(symbol(Class.self, node))
             return .visitChildren
         }
 
         mutating func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Enumeration.self, node)
+            push(symbol(Enumeration.self, node))
             return .visitChildren
         }
 
         mutating func visit(_ node: EnumCaseDeclSyntax) -> SyntaxVisitorContinueKind {
             for `case` in Enumeration.Case.cases(from: node) {
-                add(node, declaration: `case`)
+                push(symbol(node, declaration: `case`))
             }
             return .skipChildren
         }
 
         mutating func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
-            assert(currentExtension == nil)
-            currentExtension = Extension(node)
+            push(Extension(node))
             return .visitChildren
         }
 
         mutating func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Function.self, node)
+            push(symbol(Function.self, node))
             return .skipChildren
         }
 
@@ -103,56 +128,77 @@ public struct SourceFile: Hashable, Codable {
 
             let block = ConditionalCompilationBlock(node.parent?.parent as! IfConfigDeclSyntax)
             let branch = ConditionalCompilationBlock.Branch(node)
-            currentCompilationConditions.append(CompilationCondition(block: block, branch: branch))
+            push(CompilationCondition(block: block, branch: branch))
 
             return .visitChildren
         }
 
+        mutating func visit(_ node: ImportDeclSyntax) -> SyntaxVisitorContinueKind {
+            push(Import(node))
+            return .skipChildren
+        }
+
         mutating func visit(_ node: InitializerDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Initializer.self, node)
+            push(symbol(Initializer.self, node))
             return .skipChildren
         }
 
         mutating func visit(_ node: PrecedenceGroupDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(PrecedenceGroup.self, node)
+            push(symbol(PrecedenceGroup.self, node))
             return .skipChildren
         }
 
         mutating func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Protocol.self, node)
+            push(symbol(Protocol.self, node))
             return .visitChildren
         }
 
         mutating func visit(_ node: SubscriptDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Subscript.self, node)
+            push(symbol(Subscript.self, node))
             return .skipChildren
         }
 
         mutating func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Structure.self, node)
+            push(symbol(Structure.self, node))
             return .visitChildren
         }
 
         mutating func visit(_ node: TypealiasDeclSyntax) -> SyntaxVisitorContinueKind {
-            add(Typealias.self, node)
+            push(symbol(Typealias.self, node))
             return .skipChildren
         }
 
         mutating func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
             for variable in Variable.variables(from: node) {
-                add(node, declaration: variable)
+                push(symbol(node, declaration: variable))
             }
             return .skipChildren
         }
 
+        // MARK: -
+
+        mutating func visitPost(_ node: ClassDeclSyntax) {
+            assert((pop() as? Symbol)?.declaration is Class)
+        }
+
+        mutating func visitPost(_ node: EnumDeclSyntax) {
+            assert((pop() as? Symbol)?.declaration is Enumeration)
+        }
+
         mutating func visitPost(_ node: ExtensionDeclSyntax) {
-            assert(currentExtension != nil)
-            currentExtension = nil
+            assert(pop() is Extension)
         }
 
         mutating func visitPost(_ node: IfConfigClauseSyntax) {
-            assert(!currentCompilationConditions.isEmpty)
-            currentCompilationConditions.removeLast()
+            assert(pop() is CompilationCondition)
+        }
+
+        mutating func visitPost(_ node: ProtocolDeclSyntax) {
+            assert((pop() as? Symbol)?.declaration is Protocol)
+        }
+
+        mutating func visitPost(_ node: StructDeclSyntax) {
+            assert((pop() as? Symbol)?.declaration is Structure)
         }
     }
 }

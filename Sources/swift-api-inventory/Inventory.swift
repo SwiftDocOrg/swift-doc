@@ -3,22 +3,20 @@ import SwiftDoc
 
 func inventory(of module: Module) -> [String] {
     return module.symbols
-        .filter { $0.declaration.isPublic }
-        .sorted { $0.declaration.qualifiedName < $1.declaration.qualifiedName }
+        .filter { $0.isPublic }
+        .sorted()
         .compactMap { representation(of: $0, in: module) }
 }
 
 // TODO: Refactor
 fileprivate func representation(of symbol: Symbol, in module: Module) -> String? {
-    if let declaration = symbol.declaration as? Modifiable,
-        declaration.modifiers.contains(where: { $0.name == "override" })
-    {
+    if symbol.declaration.modifiers.contains(where: { $0.name == "override" }) {
         return nil
     }
 
     if let declaration = symbol.declaration as? Enumeration.Case,
         !module.symbols.contains(where: { $0.declaration is Enumeration &&
-                                          $0.declaration.isPublic &&
+                                          $0.isPublic &&
                                           $0.name == declaration.context })
     {
         return nil
@@ -133,15 +131,15 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
         return representation
     case let declaration as Enumeration.Case:
         if let associatedValue = declaration.associatedValue {
-            return "\(declaration.keyword) \(declaration.qualifiedName)(\(associatedValue.map { "\($0.firstName ?? "_"): \($0.type ?? "_")\($0.variadic ? "..." : "")" }.joined(separator: ", ")))"
+            return "\(declaration.keyword) \(symbol.id)(\(associatedValue.map { "\($0.firstName ?? "_"): \($0.type ?? "_")\($0.variadic ? "..." : "")" }.joined(separator: ", ")))"
         } else {
-            return "\(declaration.keyword) \(declaration.qualifiedName)"
+            return "\(declaration.keyword) \(symbol.id)"
         }
-    case let declaration as API & Modifiable:
+    case let declaration:
         var representation = (
             declaration.attributes.map { $0.description } +
                 declaration.nonAccessModifiers.map { $0.description } +
-                [declaration.keyword, declaration.qualifiedName]
+                [/*declaration.keyword, FIXME*/ symbol.id.description]
             ).joined(separator: " ")
 
         if let genericParameters = (declaration as? Generic)?.genericParameters,
@@ -150,10 +148,9 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
             representation += "<\(genericParameters.map { $0.description }.joined(separator: ", "))>"
         }
 
-        if let inheritance = module.inheritance(of: symbol),
-            !inheritance.isEmpty
-        {
-            representation += ": \(inheritance.joined(separator: ", "))"
+        let inheritedTypes = module.typesInherited(by: symbol) + module.typesConformed(by: symbol)
+        if !inheritedTypes.isEmpty {
+            representation += ": \(inheritedTypes.map{ $0.id.description }.joined(separator: ", "))"
         }
 
         if let genericRequirements = (declaration as? Generic)?.genericRequirements,
@@ -163,8 +160,6 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
         }
 
         return representation
-    default:
-        fatalError()
     }
 }
 

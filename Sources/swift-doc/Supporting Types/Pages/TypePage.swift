@@ -3,10 +3,10 @@ import SwiftDoc
 import CommonMarkBuilder
 
 struct TypePage: Page {
-    let module: SwiftDoc.Module
-    let symbol: SwiftDoc.Symbol
+    let module: Module
+    let symbol: Symbol
 
-    init(module: SwiftDoc.Module, symbol: SwiftDoc.Symbol) {
+    init(module: Module, symbol: Symbol) {
         precondition(symbol.declaration is Type)
         self.module = module
         self.symbol = symbol
@@ -15,8 +15,10 @@ struct TypePage: Page {
     // MARK: - Page
 
     var body: Document {
-        Document {
-            Symbol(symbol, in: module)
+        return Document {
+            Heading { symbol.id.description }
+
+            Documentation(for: symbol)
 
             Inheritance(of: symbol, in: module)
 
@@ -27,7 +29,7 @@ struct TypePage: Page {
             }
 
             Members(of: symbol, in: module)
-            GenericallyConstrainedMembers(of: symbol, in: module)
+            Requirements(of: symbol, in: module)
         }
     }
 }

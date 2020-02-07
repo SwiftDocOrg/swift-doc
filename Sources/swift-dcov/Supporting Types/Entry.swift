@@ -22,12 +22,12 @@ extension Entry: Encodable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(symbol.declaration.qualifiedName, forKey: .name)
+        try container.encode(symbol.id.description, forKey: .name)
         try container.encode(String(describing: type(of: symbol.declaration)), forKey: .type)
         try container.encode(symbol.isDocumented, forKey: .documented)
-        try container.encode(symbol.sourceLocation.file, forKey: .file)
-        try container.encode(symbol.sourceLocation.line, forKey: .line)
-        try container.encode(symbol.sourceLocation.column, forKey: .column)
+        try container.encodeIfPresent(symbol.sourceLocation?.file, forKey: .file)
+        try container.encodeIfPresent(symbol.sourceLocation?.line, forKey: .line)
+        try container.encodeIfPresent(symbol.sourceLocation?.column, forKey: .column)
     }
 }
 

@@ -19,14 +19,14 @@ struct HomePage: Page {
         var globalFunctionNames: Set<String> = []
         var globalVariableNames: Set<String> = []
 
-        for symbol in module.topLevelSymbols.filter({ $0.declaration.isPublic }) {
+        for symbol in module.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.declaration {
-            case let `class` as Class:
-                typeNames.insert(`class`.qualifiedName)
-            case let enumeration as Enumeration:
-                typeNames.insert(enumeration.qualifiedName)
-            case let structure as Structure:
-                typeNames.insert(structure.qualifiedName)
+            case is Class:
+                typeNames.insert(symbol.id.description)
+            case is Enumeration:
+                typeNames.insert(symbol.id.description)
+            case is Structure:
+                typeNames.insert(symbol.id.description)
             case let `protocol` as Protocol:
                 protocolNames.insert(`protocol`.name)
             case let `typealias` as Typealias:
