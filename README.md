@@ -88,6 +88,7 @@ or bundle them into a release artifact.
 ### Example Workflow
 
 ```yml
+# .github/workflows/documentation.yml
 name: Documentation
 
 on: [push]
