@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - .github/workflows/documentation.yml
-      - Sources/**.swift
+      - Sources/SwiftDoc/**.swift
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
       - name: Generate Documentation
         uses: SwiftDocOrg/swift-doc@master
         with:
-          inputs: "Sources"
+          inputs: "Sources/SwiftDoc"
           output: "Documentation"
       - name: Upload Documentation to Wiki
         uses: SwiftDocOrg/github-wiki-publish-action@master
