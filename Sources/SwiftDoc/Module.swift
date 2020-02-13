@@ -95,7 +95,7 @@ public class Module: Codable {
     public init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
         self.name = name
         self.sourceFiles = sourceFiles
-        self.symbols = sourceFiles.flatMap { $0.symbols }
+        self.symbols = sourceFiles.flatMap { $0.symbols }.filter { $0.isPublic }
     }
 
     // MARK: -
