@@ -8,8 +8,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
-        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("master")),
-        .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50100.0")),
+        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
+        .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-02-12-a")),
         .package(url: "https://github.com/kylef/Commander.git", .upToNextMinor(from: "0.9.1")),
     ],
     targets: [
