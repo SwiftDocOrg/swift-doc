@@ -42,7 +42,7 @@ public final class Symbol {
         }
 
         if declaration is Enumeration.Case,
-            let enumeration = context.compactMap({ $0 as? Enumeration }).last,
+            let enumeration = context.compactMap({ ($0 as? Symbol)?.declaration as? Enumeration }).last,
             enumeration.modifiers.contains(where: { $0.name == "public" }) {
             return true
         }
