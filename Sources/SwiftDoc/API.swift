@@ -4,6 +4,7 @@ public protocol API: Declaration {
     var attributes: [Attribute] { get }
     var modifiers: [Modifier] { get }
     var name: String { get }
+    var keyword: String { get }
 }
 
 // MARK: -

@@ -9,4 +9,5 @@ public struct Unknown: Hashable, Codable {
 extension Unknown: API {
     public var attributes: [Attribute] { return [] }
     public var modifiers: [Modifier] { return [] }
+    public var keyword: String { return "" }
 }

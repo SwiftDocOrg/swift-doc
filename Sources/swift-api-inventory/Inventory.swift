@@ -14,30 +14,24 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
         return nil
     }
 
-    if let declaration = symbol.declaration as? Enumeration.Case,
-        !module.symbols.contains(where: { $0.declaration is Enumeration &&
-                                          $0.isPublic &&
-                                          $0.name == declaration.context })
-    {
-        return nil
-    }
+    let context = symbol.context.compactMap {
+        switch $0 {
+        case let `extension` as Extension:
+            return `extension`.extendedType
+        case let symbol as Symbol:
+            return symbol.name
+        default:
+            return nil
+        }
+    }.joined(separator: ".")
 
     switch symbol.declaration {
     case let declaration as Variable:
-        var representation: String
-        if let context = declaration.context {
-            representation = (
-                declaration.attributes.map { $0.description } +
-                declaration.nonAccessModifiers.map { $0.description } +
-                    ["var", context + "." + declaration.name]
-            ).joined(separator: " ")
-        } else {
-            representation = (
-                declaration.attributes.map { $0.description } +
-                declaration.nonAccessModifiers.map { $0.description } +
-                ["var", declaration.name]
-            ).joined(separator: " ")
-        }
+        var representation = (
+            declaration.attributes.map { $0.description } +
+            declaration.nonAccessModifiers.map { $0.description } +
+                ["var", context + "." + declaration.name]
+        ).joined(separator: " ")
 
         if declaration.keyword == "let" ||
             declaration.modifiers.contains(where: { $0.name == "private" && $0.detail == "set" }) {
@@ -48,20 +42,11 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
 
         return representation
     case let declaration as Function:
-        var representation: String
-        if let context = declaration.context {
-            representation = (
-                declaration.attributes.map { $0.description } +
-                declaration.nonAccessModifiers.map { $0.description } +
-                    [declaration.keyword, context + "." + declaration.identifier]
-            ).joined(separator: " ")
-        } else {
-            representation = (
-                declaration.attributes.map { $0.description } +
-                declaration.nonAccessModifiers.map { $0.description } +
-                    [declaration.keyword, declaration.identifier]
-            ).joined(separator: " ")
-        }
+        var representation = (
+            declaration.attributes.map { $0.description } +
+            declaration.nonAccessModifiers.map { $0.description } +
+                [declaration.keyword, context + "." + declaration.identifier]
+        ).joined(separator: " ")
 
         if !declaration.genericParameters.isEmpty {
             representation += "<\(declaration.genericParameters.map { $0.description }.joined(separator: ", "))>"
@@ -86,9 +71,8 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
           var representation = (
               declaration.attributes.map { $0.description } +
               declaration.nonAccessModifiers.map { $0.description } +
-              [declaration.keyword, declaration.context!]
+              [declaration.keyword, context]
           ).joined(separator: " ")
-
 
           if declaration.optional {
               representation += "?"
@@ -109,7 +93,7 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
         var representation = (
             declaration.attributes.map { $0.description } +
             declaration.nonAccessModifiers.map { $0.description } +
-            [(declaration.context ?? "") + declaration.keyword]
+            [context + declaration.keyword]
         ).joined(separator: " ")
 
         if !declaration.genericParameters.isEmpty {
@@ -139,7 +123,7 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
         var representation = (
             declaration.attributes.map { $0.description } +
                 declaration.nonAccessModifiers.map { $0.description } +
-                [/*declaration.keyword, FIXME*/ symbol.id.description]
+                [declaration.keyword, symbol.id.description]
             ).joined(separator: " ")
 
         if let genericParameters = (declaration as? Generic)?.genericParameters,
