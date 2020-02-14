@@ -16,24 +16,7 @@ command(
         }
     }), { inputs in
         do {
-            // TODO: Add special behavior for Package.swift manifests
-            var sourceFiles: [SourceFile] = []
-            for path in inputs {
-                let directory = URL(fileURLWithPath: path)
-                guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: nil) else { continue }
-                for case let url as URL in directoryEnumerator {
-                    var isDirectory: ObjCBool = false
-                    guard url.pathExtension == "swift",
-                        fileManager.isReadableFile(atPath: url.path),
-                        fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-                        isDirectory.boolValue == false
-                    else { continue }
-                    sourceFiles.append(try SourceFile(file: url, relativeTo: directory))
-                }
-            }
-
-            let module = Module(sourceFiles: sourceFiles)
-
+            let module = try Module(paths: inputs)
             let report = Report(module: module)
             let encoder = JSONEncoder()
             let data = try encoder.encode(report)
