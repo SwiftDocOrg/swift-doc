@@ -44,17 +44,19 @@ public struct SourceFile: Hashable, Codable {
             assert(context.isEmpty)
         }
 
-        func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
-            return symbol(node, declaration: Declaration(node))
+        func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol? where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
+            guard let declaration = Declaration(node) else { return nil }
+            return symbol(node, declaration: declaration)
         }
 
-        func symbol<Node: Syntax>(_ node: Node, declaration: API) -> Symbol {
-            let documentation = try! Documentation.parse(node.documentation)
+        func symbol<Node: Syntax>(_ node: Node, declaration: API) -> Symbol? {
+            guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
             let sourceLocation = sourceLocationConverter.location(for: node.position)
             return Symbol(declaration: declaration, context: context, documentation: documentation, sourceLocation: sourceLocation)
         }
 
-        mutating func push(_ symbol: Symbol) {
+        mutating func push(_ symbol: Symbol?) {
+            guard let symbol = symbol else { return }
             visitedSymbols.append(symbol)
 
             switch symbol.declaration {
