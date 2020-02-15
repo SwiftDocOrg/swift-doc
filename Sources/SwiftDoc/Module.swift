@@ -95,40 +95,65 @@ public class Module: Codable {
     public init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
         self.name = name
         self.sourceFiles = sourceFiles
-        self.symbols = sourceFiles.flatMap { $0.symbols }.filter { $0.isPublic }
+        self.symbols = sourceFiles.flatMap { $0.symbols }
+                                  .filter { $0.isPublic }
+                                  .sorted()
     }
 
     // MARK: -
 
     public func members(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .memberOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?
+                    .filter { $0.predicate == .memberOf }
+                    .map { $0.subject }
+                    .sorted() ?? []
     }
 
     public func requirements(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .requirementOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?
+                    .filter { $0.predicate == .requirementOf }
+                    .map { $0.subject }
+                    .sorted() ?? []
     }
 
     public func optionalRequirements(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .optionalRequirementOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?
+                    .filter { $0.predicate == .optionalRequirementOf }
+                    .map { $0.subject }
+                    .sorted() ?? []
     }
 
     public func typesInherited(by symbol: Symbol) -> [Symbol] {
-        return relationshipsBySubject[symbol.id]?.filter { $0.predicate == .inheritsFrom }.map { $0.object }.sorted() ?? []
+        return relationshipsBySubject[symbol.id]?
+                    .filter { $0.predicate == .inheritsFrom }
+                    .map { $0.object }
+                    .sorted() ?? []
     }
 
     public func typesInheriting(from symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .inheritsFrom }.map { $0.subject }.sorted() ?? []
+        return relationshipsByObject[symbol.id]?
+                    .filter { $0.predicate == .inheritsFrom }
+                    .map { $0.subject }
+                    .sorted() ?? []
     }
 
     public func typesConformed(by symbol: Symbol) -> [Symbol] {
-        return relationshipsBySubject[symbol.id]?.filter { $0.predicate == .conformsTo }.map { $0.object }.sorted() ?? []
+        return relationshipsBySubject[symbol.id]?
+                    .filter { $0.predicate == .conformsTo }
+                    .map { $0.object }
+                    .sorted() ?? []
     }
 
     public func typesConforming(to symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .conformsTo }.map { $0.subject }.sorted() ?? []
+        return relationshipsByObject[symbol.id]?
+                    .filter { $0.predicate == .conformsTo }
+                    .map { $0.subject }
+                    .sorted() ?? []
     }
 
     public func conditionalCounterparts(of symbol: Symbol) -> [Symbol] {
-        return symbolsByIdentifier[symbol.id]?.filter { $0 != symbol } ?? []
+        return symbolsByIdentifier[symbol.id]?
+                    .filter { $0 != symbol }
+                    .sorted() ?? []
     }
 }
