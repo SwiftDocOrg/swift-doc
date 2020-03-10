@@ -36,5 +36,9 @@ let package = Package(
             name: "SwiftDoc",
             dependencies: ["SwiftSyntax", "SwiftSemantics", "SwiftMarkup"]
         ),
+        .testTarget(
+            name: "SwiftDocTests",
+            dependencies: ["SwiftDoc", "SwiftSyntax", "SwiftSemantics", "SwiftMarkup"]
+        ),
     ]
 )
