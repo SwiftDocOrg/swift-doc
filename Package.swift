@@ -25,10 +25,6 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "swift-api-diagram",
-            dependencies: ["SwiftDoc", "SwiftSemantics", "Commander"]
-        ),
-        .target(
             name: "swift-api-inventory",
             dependencies: ["SwiftDoc", "SwiftSemantics", "Commander"]
         ),

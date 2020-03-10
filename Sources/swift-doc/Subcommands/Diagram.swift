@@ -1,9 +1,24 @@
-import SwiftSemantics
+import ArgumentParser
+import Foundation
 import SwiftDoc
+import SwiftSemantics
 
-fileprivate extension String {
-    func indented(by spaces: Int = 2) -> String {
-        return String(repeating: " ", count: spaces) + self
+extension SwiftDoc {
+    struct Diagram: ParsableCommand {
+        struct Options: ParsableArguments {
+            @Argument(help: "One or more paths to Swift files")
+            var inputs: [String]
+        }
+
+        static var configuration = CommandConfiguration(abstract: "Generates diagram of Swift symbol relationships")
+
+        @OptionGroup()
+        var options: Options
+
+        func run() throws {
+            let module = try Module(paths: options.inputs)
+            print(GraphViz.diagram(of: module), to: &standardOutput)
+        }
     }
 }
 
@@ -19,7 +34,7 @@ enum GraphViz {
 
             while !superclasses.isEmpty {
                 let subclasses = Set(superclasses.flatMap { module.interface.typesInheriting(from: $0) }
-                                                 .filter { $0.isPublic })
+                    .filter { $0.isPublic })
                 defer { superclasses = subclasses }
                 classClusters[baseClass, default: []].formUnion(subclasses)
             }
@@ -43,8 +58,8 @@ enum GraphViz {
             if cluster.count > 1 {
                 clusterLines = (
                     ["", "subgraph cluster_\(baseClass.id.description.replacingOccurrences(of: ".", with: "_")) {"] +
-                    clusterLines.map { $0.indented() } +
-                    ["}", ""]
+                        clusterLines.map { $0.indented() } +
+                        ["}", ""]
                 )
             }
 
@@ -60,9 +75,17 @@ enum GraphViz {
         }
 
         lines = ["digraph \(module.name) {"] +
-                    lines.map { $0.indented() } +
-                ["}"]
+            lines.map { $0.indented() } +
+            ["}"]
 
         return lines.joined(separator: "\n")
+    }
+}
+
+// MARK: -
+
+fileprivate extension String {
+    func indented(by spaces: Int = 2) -> String {
+        return String(repeating: " ", count: spaces) + self
     }
 }
