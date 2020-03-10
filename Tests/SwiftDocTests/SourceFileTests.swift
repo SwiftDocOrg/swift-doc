@@ -29,7 +29,7 @@ final class SourceFileTests: XCTestCase {
         public struct S {}
 
         /// Extension
-        extension S: P {
+        public extension S: P {
             /// Function
             func f() {}
 
@@ -40,10 +40,10 @@ final class SourceFileTests: XCTestCase {
         /// Class
         open class C: P{
             /// Function
-            func f() {}
+            public func f() {}
 
             /// Property
-            var p: Any { return () }
+            public var p: Any { return () }
         }
 
         /// Subclass
@@ -57,6 +57,10 @@ final class SourceFileTests: XCTestCase {
         XCTAssertEqual(sourceFile.imports.first?.pathComponents, ["Foundation"])
 
         XCTAssertEqual(sourceFile.symbols.count, 12)
+
+        for symbol in sourceFile.symbols {
+            XCTAssert(symbol.isPublic, "\(symbol.declaration) isn't public")
+        }
 
         do {
             let `protocol` = sourceFile.symbols[0]
