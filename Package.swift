@@ -10,7 +10,6 @@ let package = Package(
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
         .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a")),
-        .package(url: "https://github.com/kylef/Commander.git", .upToNextMinor(from: "0.9.1")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.0.2")),
     ],
     targets: [
@@ -23,10 +22,6 @@ let package = Package(
         .target(
             name: "DCOV",
             dependencies: []
-        ),
-        .target(
-            name: "swift-api-inventory",
-            dependencies: ["SwiftDoc", "SwiftSemantics", "Commander"]
         ),
         .target(
             name: "SwiftDoc",
