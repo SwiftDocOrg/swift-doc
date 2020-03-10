@@ -1,35 +1,35 @@
-struct Counter {
-    private(set) var hits: Int = 0
-    private(set) var misses: Int = 0
+public struct Ratio {
+    public private(set) var hits: Int = 0
+    public private(set) var misses: Int = 0
 
-    var total: Int { hits + misses }
+    public var total: Int { hits + misses }
 
-    var percentage: Double {
+    public var percentage: Double {
         guard total > 0 else { return 0 }
         return Double(hits) / Double(total) * 100.0
     }
 
-    init(hits: Int = 0, misses: Int = 0) {
+    public init(hits: Int = 0, misses: Int = 0) {
         self.hits = max(0, hits)
         self.misses = max(0, misses)
     }
 
-    mutating func hit() {
+    public mutating func hit() {
         hits += 1
     }
 
-    mutating func miss() {
+    public mutating func miss() {
         misses += 1
     }
 
-    static func + (lhs: Counter, rhs: Counter) -> Counter {
-        return Counter(hits: lhs.hits + rhs.hits, misses: lhs.misses + rhs.misses)
+    public static func + (lhs: Ratio, rhs: Ratio) -> Ratio {
+        return Ratio(hits: lhs.hits + rhs.hits, misses: lhs.misses + rhs.misses)
     }
 }
 
 // MARK: - Encodable
 
-extension Counter: Encodable {
+extension Ratio: Encodable {
     private enum CodingKeys: String, CodingKey {
         case count
         case documented

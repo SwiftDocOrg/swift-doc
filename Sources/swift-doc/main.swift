@@ -10,7 +10,7 @@ var standardError = FileHandle.standardError
 struct SwiftDoc: ParsableCommand {
     static var configuration = CommandConfiguration(
         abstract: "A utility for generating documentation for Swift code.",
-        subcommands: [Generate.self],
+        subcommands: [Generate.self, Coverage.self],
         defaultSubcommand: Generate.self
     )
 }

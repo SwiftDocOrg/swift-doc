@@ -18,11 +18,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "swift-doc",
-            dependencies: ["SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "ArgumentParser"]
+            dependencies: ["ArgumentParser", "SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "DCOV"]
         ),
         .target(
-            name: "swift-dcov",
-            dependencies: ["SwiftSyntax", "SwiftSemantics", "SwiftMarkup", "SwiftDoc", "Commander"]
+            name: "DCOV",
+            dependencies: []
         ),
         .target(
             name: "swift-api-diagram",
