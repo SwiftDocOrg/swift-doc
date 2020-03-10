@@ -14,11 +14,11 @@ enum GraphViz {
         var lines: [String] = []
 
         var classClusters: [Symbol: Set<Symbol>] = [:]
-        for baseClass in module.baseClasses {
+        for baseClass in module.interface.baseClasses {
             var superclasses = Set(CollectionOfOne(baseClass))
 
             while !superclasses.isEmpty {
-                let subclasses = Set(superclasses.flatMap { module.typesInheriting(from: $0) }
+                let subclasses = Set(superclasses.flatMap { module.interface.typesInheriting(from: $0) }
                                                  .filter { $0.isPublic })
                 defer { superclasses = subclasses }
                 classClusters[baseClass, default: []].formUnion(subclasses)
@@ -35,7 +35,7 @@ enum GraphViz {
                     clusterLines.append(#""\#(subclass.id)" [shape=box];"#)
                 }
 
-                for superclass in module.typesInherited(by: subclass) {
+                for superclass in module.interface.typesInherited(by: subclass) {
                     clusterLines.append(#""\#(subclass.id)" -> "\#(superclass.id)";"#)
                 }
             }
@@ -53,8 +53,8 @@ enum GraphViz {
 
         lines.append("")
 
-        for symbol in (module.symbols.filter { $0.isPublic && $0.declaration is Type }) {
-            for inherited in module.typesConformed(by: symbol) {
+        for symbol in (module.interface.symbols.filter { $0.isPublic && $0.declaration is Type }) {
+            for inherited in module.interface.typesConformed(by: symbol) {
                 lines.append(#""\#(symbol.id)" -> "\#(inherited.id)";"#)
             }
         }

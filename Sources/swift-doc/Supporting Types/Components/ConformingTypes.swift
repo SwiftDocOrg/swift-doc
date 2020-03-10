@@ -17,7 +17,7 @@ struct ConformingTypes: Component {
 
     var body: Fragment {
         guard symbol.declaration is Protocol else { return Fragment { "" } }
-        let conformingTypes = module.typesConforming(to: symbol)
+        let conformingTypes = module.interface.typesConforming(to: symbol)
         guard !conformingTypes.isEmpty else { return Fragment { "" }}
 
         return Fragment {

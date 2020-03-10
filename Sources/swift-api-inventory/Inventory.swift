@@ -2,7 +2,7 @@ import SwiftSemantics
 import SwiftDoc
 
 func inventory(of module: Module) -> [String] {
-    return module.symbols
+    return module.interface.symbols
         .filter { $0.isPublic }
         .sorted()
         .compactMap { representation(of: $0, in: module) }
@@ -132,7 +132,7 @@ fileprivate func representation(of symbol: Symbol, in module: Module) -> String?
             representation += "<\(genericParameters.map { $0.description }.joined(separator: ", "))>"
         }
 
-        let inheritedTypes = module.typesInherited(by: symbol) + module.typesConformed(by: symbol)
+        let inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
         if !inheritedTypes.isEmpty {
             representation += ": \(inheritedTypes.map{ $0.id.description }.joined(separator: ", "))"
         }

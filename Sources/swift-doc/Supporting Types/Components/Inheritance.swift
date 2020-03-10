@@ -34,7 +34,7 @@ struct Inheritance: Component {
     // MARK: - Component
 
     var body: Fragment {
-        let inheritedTypes = module.typesInherited(by: symbol) + module.typesConformed(by: symbol)
+        let inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
         guard !inheritedTypes.isEmpty else { return Fragment { "" } }
 
         return Fragment {

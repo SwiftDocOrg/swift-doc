@@ -34,7 +34,7 @@ extension SwiftDoc {
                 try FooterPage().write(to: outputDirectoryURL.appendingPathComponent("_Footer.md"))
 
                 var globals: [String: [Symbol]] = [:]
-                for symbol in module.topLevelSymbols.filter({ $0.isPublic }) {
+                for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
                     switch symbol.declaration {
                     case is Class:
                         try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
