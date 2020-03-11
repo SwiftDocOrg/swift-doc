@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "GraphViz",
+        "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
+        "state": {
+          "branch": null,
+          "revision": "6371e3aa683a312b5ecd58520228269bd5e691b1",
+          "version": "0.0.1"
+        }
+      },
+      {
         "package": "swift-argument-parser",
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {

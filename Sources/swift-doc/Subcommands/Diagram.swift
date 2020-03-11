@@ -2,6 +2,8 @@ import ArgumentParser
 import Foundation
 import SwiftDoc
 import SwiftSemantics
+import GraphViz
+import DOT
 
 extension SwiftDoc {
     struct Diagram: ParsableCommand {
@@ -9,77 +11,72 @@ extension SwiftDoc {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
         }
-
+        
         static var configuration = CommandConfiguration(abstract: "Generates diagram of Swift symbol relationships")
-
+        
         @OptionGroup()
         var options: Options
-
+        
         func run() throws {
             let module = try Module(paths: options.inputs)
-            print(GraphViz.diagram(of: module), to: &standardOutput)
+            print(diagram(of: module), to: &standardOutput)
         }
     }
 }
 
 // MARK: -
 
-enum GraphViz {
-    static func diagram(of module: Module) -> String {
-        var lines: [String] = []
+fileprivate func diagram(of module: Module) -> String {
+    var graph = Graph(directed: true)
+    
+    for (baseClass, subclasses) in module.interface.classHierarchies {
+        var subgraph = Subgraph(id: "cluster_\(baseClass.id.description.replacingOccurrences(of: ".", with: "_"))")
 
-        var classClusters: [Symbol: Set<Symbol>] = [:]
-        for baseClass in module.interface.baseClasses {
-            var superclasses = Set(CollectionOfOne(baseClass))
+        for subclass in subclasses {
+            var subclassNode = Node("\(subclass.id)")
+            subclassNode.shape = .box
 
-            while !superclasses.isEmpty {
-                let subclasses = Set(superclasses.flatMap { module.interface.typesInheriting(from: $0) }
-                    .filter { $0.isPublic })
-                defer { superclasses = subclasses }
-                classClusters[baseClass, default: []].formUnion(subclasses)
+            if subclass.declaration.modifiers.contains(where: { $0.name == "final" }) {
+                subclassNode.strokeWidth = 2.0
+            }
+
+            subgraph.append(subclassNode)
+            
+            for superclass in module.interface.typesInherited(by: subclass) {
+                let superclassNode = Node("\(superclass.id)")
+                subgraph.append(superclassNode)
+
+                let edge = Edge(from: subclassNode, to: superclassNode)
+                subgraph.append(edge)
             }
         }
-
-        for (baseClass, cluster) in classClusters {
-            var clusterLines: [String] = []
-
-            for subclass in cluster {
-                if subclass.declaration.modifiers.contains(where: { $0.name == "final" }) {
-                    clusterLines.append(#""\#(subclass.id)" [shape=box,peripheries=2];"#)
-                } else {
-                    clusterLines.append(#""\#(subclass.id)" [shape=box];"#)
-                }
-
-                for superclass in module.interface.typesInherited(by: subclass) {
-                    clusterLines.append(#""\#(subclass.id)" -> "\#(superclass.id)";"#)
-                }
-            }
-
-            if cluster.count > 1 {
-                clusterLines = (
-                    ["", "subgraph cluster_\(baseClass.id.description.replacingOccurrences(of: ".", with: "_")) {"] +
-                        clusterLines.map { $0.indented() } +
-                        ["}", ""]
-                )
-            }
-
-            lines.append(contentsOf: clusterLines)
+        
+        if subclasses.count > 1 {
+            graph.append(subgraph)
+        } else {
+            subgraph.nodes.forEach { graph.append($0) }
+            subgraph.edges.forEach { graph.append($0) }
         }
-
-        lines.append("")
-
-        for symbol in (module.interface.symbols.filter { $0.isPublic && $0.declaration is Type }) {
-            for inherited in module.interface.typesConformed(by: symbol) {
-                lines.append(#""\#(symbol.id)" -> "\#(inherited.id)";"#)
-            }
-        }
-
-        lines = ["digraph \(module.name) {"] +
-            lines.map { $0.indented() } +
-            ["}"]
-
-        return lines.joined(separator: "\n")
     }
+    
+
+    for symbol in (module.interface.symbols.filter { $0.isPublic && $0.declaration is Type }) {
+        let symbolNode = Node("\(symbol.id)")
+        graph.append(symbolNode)
+
+        for inherited in module.interface.typesConformed(by: symbol) {
+            let inheritedNode = Node("\(inherited.id.description)")
+            let edge = Edge(from: symbolNode, to: inheritedNode)
+
+            graph.append(inheritedNode)
+            graph.append(edge)
+        }
+    }
+
+    let encoder = DOTEncoder()
+    let dot = encoder.encode(graph)
+
+    return dot
 }
 
 // MARK: -

@@ -23,7 +23,23 @@ public final class Interface: Codable {
 
     public private(set) lazy var baseClasses: [Symbol] = {
         return symbols.filter { $0.declaration is Class &&
-                                typesInherited(by: $0).isEmpty }
+            typesInherited(by: $0).isEmpty }
+    }()
+
+    public private(set) lazy var classHierarchies: [Symbol: Set<Symbol>] = {
+        var classClusters: [Symbol: Set<Symbol>] = [:]
+
+        for baseClass in baseClasses {
+            var superclasses = Set(CollectionOfOne(baseClass))
+
+            while !superclasses.isEmpty {
+                let subclasses = Set(superclasses.flatMap { typesInheriting(from: $0) }.filter { $0.isPublic })
+                defer { superclasses = subclasses }
+                classClusters[baseClass, default: []].formUnion(subclasses)
+            }
+        }
+
+        return classClusters
     }()
 
     public private(set) lazy var relationships: [Relationship] = {

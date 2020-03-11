@@ -6,10 +6,11 @@ import PackageDescription
 let package = Package(
     name: "swift-doc",
     dependencies: [
+        .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a")),
+        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
-        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
-        .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a")),
+        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.0.1")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.0.2")),
     ],
     targets: [
@@ -17,7 +18,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "swift-doc",
-            dependencies: ["ArgumentParser", "SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "DCOV"]
+            dependencies: ["ArgumentParser", "SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "DCOV", "GraphViz"]
         ),
         .target(
             name: "DCOV",
