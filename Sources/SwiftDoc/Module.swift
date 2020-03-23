@@ -8,7 +8,9 @@ public final class Module: Codable {
     public let sourceFiles: [SourceFile]
 
     public lazy var interface: Interface = {
-        Interface(imports: sourceFiles.flatMap { $0.imports }, symbols: sourceFiles.flatMap { $0.symbols })
+        let imports = sourceFiles.flatMap { $0.imports }
+        let symbols = sourceFiles.flatMap { $0.symbols }
+        return Interface(imports: imports, symbols: symbols)
     }()
 
     public required init(name: String = "Anonymous", sourceFiles: [SourceFile]) {

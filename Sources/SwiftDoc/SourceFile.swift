@@ -35,9 +35,12 @@ public struct SourceFile: Hashable, Codable {
         var visitedSymbols: [Symbol] = []
         var visitedImports: [Import] = []
 
+        let fileURL: URL
         let sourceLocationConverter: SourceLocationConverter
 
         init(file url: URL, relativeTo directory: URL) throws {
+            self.fileURL = url
+
             let tree = try SyntaxParser.parse(url)
             sourceLocationConverter = SourceLocationConverter(file: url.path(relativeTo: directory), tree: tree)
             super.init()
@@ -48,21 +51,22 @@ public struct SourceFile: Hashable, Codable {
         }
 
         func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol? where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
-            guard let declaration = Declaration(node) else { return nil }
-            return symbol(node, declaration: declaration)
+            guard let api = Declaration(node) else { return nil }
+            return symbol(node, api: api)
         }
 
-        func symbol<Node: SyntaxProtocol>(_ node: Node, declaration: API) -> Symbol? {
+        func symbol<Node: SyntaxProtocol>(_ node: Node, api: API) -> Symbol? {
             guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
             let sourceLocation = sourceLocationConverter.location(for: node.position)
-            return Symbol(declaration: declaration, context: context, documentation: documentation, sourceLocation: sourceLocation)
+
+            return Symbol(api: api, context: context, declaration: "\(api)", documentation: documentation, sourceLocation: sourceLocation)
         }
 
         func push(_ symbol: Symbol?) {
             guard let symbol = symbol else { return }
             visitedSymbols.append(symbol)
 
-            switch symbol.declaration {
+            switch symbol.api {
             case is Class,
                  is Enumeration,
                  is Protocol,
@@ -108,7 +112,7 @@ public struct SourceFile: Hashable, Codable {
 
         override func visit(_ node: EnumCaseDeclSyntax) -> SyntaxVisitorContinueKind {
             for `case` in Enumeration.Case.cases(from: node) {
-                push(symbol(node, declaration: `case`))
+                push(symbol(node, api: `case`))
             }
             return .skipChildren
         }
@@ -175,7 +179,7 @@ public struct SourceFile: Hashable, Codable {
 
         override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
             for variable in Variable.variables(from: node) {
-                push(symbol(node, declaration: variable))
+                push(symbol(node, api: variable))
             }
             return .skipChildren
         }
@@ -183,11 +187,11 @@ public struct SourceFile: Hashable, Codable {
         // MARK: -
 
         override func visitPost(_ node: ClassDeclSyntax) {
-            assert((pop() as? Symbol)?.declaration is Class)
+            assert((pop() as? Symbol)?.api is Class)
         }
 
         override func visitPost(_ node: EnumDeclSyntax) {
-            assert((pop() as? Symbol)?.declaration is Enumeration)
+            assert((pop() as? Symbol)?.api is Enumeration)
         }
 
         override func visitPost(_ node: ExtensionDeclSyntax) {
@@ -199,11 +203,11 @@ public struct SourceFile: Hashable, Codable {
         }
 
         override func visitPost(_ node: ProtocolDeclSyntax) {
-            assert((pop() as? Symbol)?.declaration is Protocol)
+            assert((pop() as? Symbol)?.api is Protocol)
         }
 
         override func visitPost(_ node: StructDeclSyntax) {
-            assert((pop() as? Symbol)?.declaration is Structure)
+            assert((pop() as? Symbol)?.api is Structure)
         }
     }
 }

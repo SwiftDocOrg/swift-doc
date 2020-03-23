@@ -2,6 +2,7 @@ import CommonMarkBuilder
 import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
+import HypertextLiteral
 
 struct Requirements: Component {
     var symbol: Symbol
@@ -14,7 +15,7 @@ struct Requirements: Component {
 
     // MARK: - Component
 
-    var body: Fragment {
+    var fragment: Fragment {
         let sections: [(title: String, requirements: [Symbol])] = [
             ("Requirements",  module.interface.requirements(of: symbol)),
             ("Optional Requirements", module.interface.optionalRequirements(of: symbol))
@@ -27,10 +28,16 @@ struct Requirements: Component {
                     Heading { section.title }
                     ForEach(in: section.requirements) { requirement in
                         Heading { requirement.name }
-                        Documentation(for: requirement)
+                        Documentation(for: requirement, in: module)
                     }
                 }
             }
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        return #"""
+
+        """#
     }
 }

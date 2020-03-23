@@ -13,16 +13,20 @@ public final class Interface: Codable {
 
     // MARK: -
 
-    private lazy var symbolsByIdentifier: [Symbol.ID: [Symbol]] = {
+    public lazy var symbolsGroupedByIdentifier: [Symbol.ID: [Symbol]] = {
         return Dictionary(grouping: symbols, by: { $0.id })
     }()
 
+    public lazy var symbolsGroupedByName: [String: [Symbol]] = {
+        return Dictionary(grouping: symbols, by: { $0.name })
+    }()
+
     public private(set) lazy var topLevelSymbols: [Symbol] = {
-        return symbols.filter { $0.declaration is Type || $0.id.pathComponents.isEmpty }
+        return symbols.filter { $0.api is Type || $0.id.pathComponents.isEmpty }
     }()
 
     public private(set) lazy var baseClasses: [Symbol] = {
-        return symbols.filter { $0.declaration is Class &&
+        return symbols.filter { $0.api is Class &&
             typesInherited(by: $0).isEmpty }
     }()
 
@@ -42,6 +46,12 @@ public final class Interface: Codable {
         return classClusters
     }()
 
+    private lazy var extensionsByExtendedType: [String: [Extension]] = {
+        return Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }) {
+            $0.extendedType
+        }
+    }()
+
     public private(set) lazy var relationships: [Relationship] = {
         var relationships: Set<Relationship> = []
         for symbol in symbols {
@@ -50,9 +60,9 @@ public final class Interface: Codable {
             if let container = symbol.context.compactMap({ $0 as? Symbol }).last {
                 let predicate: Relationship.Predicate
 
-                switch container.declaration {
+                switch container.api {
                 case is Protocol:
-                    if symbol.declaration.modifiers.contains(where: { $0.name == "optional" }) {
+                    if symbol.api.modifiers.contains(where: { $0.name == "optional" }) {
                         predicate = .optionalRequirementOf
                     } else {
                         predicate = .requirementOf
@@ -65,9 +75,10 @@ public final class Interface: Codable {
             }
 
             if let `extension` = `extension` {
-                for extended in symbols.filter({ $0.declaration is Type &&  $0.id.matches(`extension`.extendedType) }) {
+                if let extended = symbols.first(where: { $0.api is Type &&  $0.id.matches(`extension`.extendedType) }) {
+
                     let predicate: Relationship.Predicate
-                    switch extended.declaration {
+                    switch extended.api {
                     case is Protocol:
                         predicate = .defaultImplementationOf
                     default:
@@ -78,17 +89,26 @@ public final class Interface: Codable {
                 }
             }
 
-            if let type = symbol.declaration as? Type {
-                let inheritance = Set((type.inheritance + (`extension`?.inheritance ?? [])).flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
-                for name in inheritance {
-                    let inheritedTypes = symbols.filter({ ($0.declaration is Class || $0.declaration is Protocol) && $0.id.matches(name) })
+            if let type = symbol.api as? Type {
+                var inheritedTypeNames: Set<String> = []
+                inheritedTypeNames.formUnion(type.inheritance.flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) }
+                })
+
+                for `extension` in extensionsByExtendedType[symbol.id.description] ?? [] {
+                    inheritedTypeNames.formUnion(`extension`.inheritance)
+                }
+
+                inheritedTypeNames = Set(inheritedTypeNames.flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
+
+                for name in inheritedTypeNames {
+                    let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.matches(name) })
                     if inheritedTypes.isEmpty {
-                        let inherited = Symbol(declaration: Unknown(name: name), context: [], documentation: nil, sourceLocation: nil)
+                        let inherited = Symbol(api: Unknown(name: name), context: [], declaration: nil, documentation: nil, sourceLocation: nil)
                         relationships.insert(Relationship(subject: symbol, predicate: .inheritsFrom, object: inherited))
                     } else {
                         for inherited in inheritedTypes {
                             let predicate: Relationship.Predicate
-                            if symbol.declaration is Class, inherited.declaration is Class {
+                            if symbol.api is Class, inherited.api is Class {
                                 predicate = .inheritsFrom
                             } else {
                                 predicate = .conformsTo
@@ -104,26 +124,26 @@ public final class Interface: Codable {
         return Array(relationships)
     }()
 
-    private lazy var relationshipsBySubject: [Symbol.ID: [Relationship]] = {
+    public private(set) lazy var relationshipsBySubject: [Symbol.ID: [Relationship]] = {
         Dictionary(grouping: relationships, by: { $0.subject.id })
     }()
 
-    private lazy var relationshipsByObject: [Symbol.ID: [Relationship]] = {
+    public private(set) lazy var relationshipsByObject: [Symbol.ID: [Relationship]] = {
         Dictionary(grouping: relationships, by: { $0.object.id })
     }()
 
     // MARK: -
 
     public func members(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .memberOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .memberOf }.map { $0.subject }.sorted() ?? []
     }
 
     public func requirements(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .requirementOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .requirementOf }.map { $0.subject }.sorted() ?? []
     }
 
     public func optionalRequirements(of symbol: Symbol) -> [Symbol] {
-        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .optionalRequirementOf }.map { $0.subject } ?? []
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .optionalRequirementOf }.map { $0.subject }.sorted() ?? []
     }
 
     public func typesInherited(by symbol: Symbol) -> [Symbol] {
@@ -143,6 +163,6 @@ public final class Interface: Codable {
     }
 
     public func conditionalCounterparts(of symbol: Symbol) -> [Symbol] {
-        return symbolsByIdentifier[symbol.id]?.filter { $0 != symbol } ?? []
+        return symbolsGroupedByIdentifier[symbol.id]?.filter { $0 != symbol }.sorted() ?? []
     }
 }

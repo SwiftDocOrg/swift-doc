@@ -7,14 +7,28 @@ import SwiftDoc
 
 extension SwiftDoc {
     struct Generate: ParsableCommand {
+        enum Format: String, ExpressibleByArgument {
+            case commonmark
+            case html
+        }
+
         struct Options: ParsableArguments {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
+
+            @Option(name: [.long, .customShort("n")],
+                      help: "The name of the module")
+            var moduleName: String
 
             @Option(name: .shortAndLong,
                     default: ".build/documentation",
                     help: "The path for generated output")
             var output: String
+
+            @Option(name: .shortAndLong,
+                    default: .commonmark,
+                    help: "The output format")
+            var format: Format
         }
 
         static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -23,29 +37,32 @@ extension SwiftDoc {
         var options: Options
 
         func run() throws {
-            let module = try Module(paths: options.inputs)
+            let module = try Module(name: options.moduleName, paths: options.inputs)
 
             let outputDirectoryURL = URL(fileURLWithPath: options.output)
             try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
 
             do {
-                try HomePage(module: module).write(to: outputDirectoryURL.appendingPathComponent("Home.md"))
-                try SidebarPage(module: module).write(to: outputDirectoryURL.appendingPathComponent("_Sidebar.md"))
-                try FooterPage().write(to: outputDirectoryURL.appendingPathComponent("_Footer.md"))
+                let format = options.format
+
+                var pages: [String: Page] = [:]
+
+                switch format {
+                case .commonmark:
+                    pages["Home"] = HomePage(module: module)
+                    pages["_Sidebar"] = SidebarPage(module: module)
+                    pages["_Footer"] = FooterPage()
+                case .html:
+                    pages["Home"] = HomePage(module: module)
+                }
 
                 var globals: [String: [Symbol]] = [:]
                 for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
-                    switch symbol.declaration {
-                    case is Class:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
-                    case is Enumeration:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
-                    case is Structure:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: symbol.id.description)).md"))
-                    case let `protocol` as Protocol:
-                        try TypePage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: `protocol`.name)).md"))
+                    switch symbol.api {
+                    case is Class, is Enumeration, is Structure, is Protocol:
+                        pages[path(for: symbol)] = TypePage(module: module, symbol: symbol)
                     case let `typealias` as Typealias:
-                        try TypealiasPage(module: module, symbol: symbol).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: `typealias`.name)).md"))
+                        pages[path(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol)
                     case let function as Function where !function.isOperator:
                         globals[function.name, default: []] += [symbol]
                     case let variable as Variable:
@@ -56,7 +73,22 @@ extension SwiftDoc {
                 }
 
                 for (name, symbols) in globals {
-                    try GlobalPage(module: module, name: name, symbols: symbols).write(to: outputDirectoryURL.appendingPathComponent("\(path(for: name)).md"))
+                    pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
+                }
+
+                try pages.map { $0 }.parallelForEach {
+                    let filename: String
+                    switch format {
+                    case .commonmark:
+                        filename = "\($0.key).md"
+                    case .html where $0.key == "Home":
+                        filename = "index.html"
+                    case .html:
+                        filename = "\($0.key)/index.html"
+                    }
+
+                    let url = outputDirectoryURL.appendingPathComponent(filename)
+                    try $0.value.write(to: url, format: format)
                 }
             }
         }

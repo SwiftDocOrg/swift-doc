@@ -1,23 +1,39 @@
 import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
+import HypertextLiteral
 
 struct TypealiasPage: Page {
     let module: Module
     let symbol: Symbol
 
     init(module: Module, symbol: Symbol) {
-        precondition(symbol.declaration is Typealias)
+        precondition(symbol.api is Typealias)
         self.module = module
         self.symbol = symbol
     }
 
     // MARK: - Page
 
-    var body: Document {
+    var title: String {
+        return symbol.id.description
+    }
+
+    var document: CommonMark.Document {
         Document {
             Heading { symbol.id.description }
-            Documentation(for: symbol)
+            Documentation(for: symbol, in: module)
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        #"""
+        <h1>
+            <small>\#(String(describing: type(of: symbol.api)))</small>
+            <span class="name">\#(softbreak(symbol.id.description))</span>
+        </h1>
+
+        \#(Documentation(for: symbol, in: module).html)
+        """#
     }
 }

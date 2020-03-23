@@ -2,21 +2,22 @@ import CommonMarkBuilder
 import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
+import HypertextLiteral
 
 struct ConformingTypes: Component {
     var symbol: Symbol
     var module: Module
 
     init(to symbol: Symbol, in module: Module) {
-        precondition(symbol.declaration is Protocol)
+        precondition(symbol.api is Protocol)
         self.symbol = symbol
         self.module = module
     }
 
     // MARK: - Component
 
-    var body: Fragment {
-        guard symbol.declaration is Protocol else { return Fragment { "" } }
+    var fragment: Fragment {
+        guard symbol.api is Protocol else { return Fragment { "" } }
         let conformingTypes = module.interface.typesConforming(to: symbol)
         guard !conformingTypes.isEmpty else { return Fragment { "" }}
 
@@ -27,15 +28,21 @@ struct ConformingTypes: Component {
                 Fragment {
                     #"""
                     \#(conformingTypes.map { type in
-                        if type.declaration is Unknown {
+                        if type.api is Unknown {
                             return "`\(type.id)`"
                         } else {
-                            return "[`\(type.id)`](\(path(for: type.id)))"
+                            return "[`\(type.id)`](\(path(for: type)))"
                         }
                     }.joined(separator: ", "))
                     """#
                 }
             }
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        return #"""
+
+        """#
     }
 }

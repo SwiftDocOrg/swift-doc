@@ -15,13 +15,31 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
         "state": {
           "branch": null,
-          "revision": "6371e3aa683a312b5ecd58520228269bd5e691b1",
-          "version": "0.0.1"
+          "revision": "ce0327a62c4b5a5ddd4741406ea54f164f228a54",
+          "version": null
+        }
+      },
+      {
+        "package": "HypertextLiteral",
+        "repositoryURL": "https://github.com/NSHipster/HypertextLiteral.git",
+        "state": {
+          "branch": null,
+          "revision": "3e45da849e507d171c7264146176bb834a01be4f",
+          "version": "0.0.2"
+        }
+      },
+      {
+        "package": "Markup",
+        "repositoryURL": "https://github.com/SwiftDocOrg/Markup.git",
+        "state": {
+          "branch": null,
+          "revision": "bcc9bff98749f8ed92221375591a1afd61b02f1a",
+          "version": null
         }
       },
       {
         "package": "swift-argument-parser",
-        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
         "state": {
           "branch": null,
           "revision": "35b76bf577d3cc74820f8991894ce3bcdf024ddc",
@@ -38,6 +56,15 @@
         }
       },
       {
+        "package": "HTMLEntities",
+        "repositoryURL": "https://github.com/IBM-Swift/swift-html-entities.git",
+        "state": {
+          "branch": null,
+          "revision": "744c094976355aa96ca61b9b60ef0a38e979feb7",
+          "version": "3.0.14"
+        }
+      },
+      {
         "package": "SwiftSyntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
@@ -51,8 +78,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftMarkup.git",
         "state": {
           "branch": null,
-          "revision": "8e82d625b0342fc80525956c22f9f0defa0cffce",
-          "version": "0.0.4"
+          "revision": "431f418ae1833a312646e934a2891e778c1b03b0",
+          "version": "0.0.5"
         }
       },
       {
@@ -61,6 +88,15 @@
         "state": {
           "branch": "swift-5.2",
           "revision": "3bb09e896a813cf0a72ec88a19dc0a7db49577cd",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftSyntaxHighlighter",
+        "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
+        "state": {
+          "branch": null,
+          "revision": "fe39b4ec07e1e37872adf4b506d223ab27cf8cea",
           "version": null
         }
       }

@@ -3,6 +3,9 @@ import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
 import Foundation
+import HypertextLiteral
+import GraphViz
+import DOT
 
 extension StringBuilder {
     // MARK: buildIf
@@ -25,16 +28,17 @@ extension StringBuilder {
 struct Inheritance: Component {
     var module: Module
     var symbol: Symbol
+    var inheritedTypes: [Symbol]
 
     init(of symbol: Symbol, in module: Module) {
         self.module = module
         self.symbol = symbol
+        self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
     }
 
     // MARK: - Component
 
-    var body: Fragment {
-        let inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
+    var fragment: Fragment {
         guard !inheritedTypes.isEmpty else { return Fragment { "" } }
 
         return Fragment {
@@ -44,15 +48,32 @@ struct Inheritance: Component {
                 Fragment {
                     #"""
                     \#(inheritedTypes.map { type in
-                        if type.declaration is Unknown {
+                        if type.api is Unknown {
                             return "`\(type.id)`"
                         } else {
-                            return "[`\(type.id)`](\(path(for: type.id)))"
+                            return "[`\(type.id)`](\(path(for: type)))"
                         }
                     }.joined(separator: ", "))
                     """#
                 }
             }
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        let graph = symbol.graph(in: module)
+        guard !graph.edges.isEmpty else { return "" }
+
+        let svg = try! HTML(String(data: graph.render(using: .dot, to: .svg), encoding: .utf8) ?? "")
+
+        return #"""
+        <section id="inheritance">
+            <figure>
+                \#(svg)
+
+                <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
+            </figure>
+        </section>
+        """#
     }
 }

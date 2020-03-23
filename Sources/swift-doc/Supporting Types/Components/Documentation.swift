@@ -1,17 +1,23 @@
+import Foundation
 import SwiftDoc
 import SwiftMarkup
 import CommonMarkBuilder
+import HypertextLiteral
+import SwiftSyntaxHighlighter
+import Xcode
 
 struct Documentation: Component {
     var symbol: Symbol
+    var module: Module
 
-    init(for symbol: Symbol) {
+    init(for symbol: Symbol, in module: Module) {
         self.symbol = symbol
+        self.module = module
     }
 
     // MARK: - Component
 
-    var body: Fragment {
+    var fragment: Fragment {
         guard let documentation = symbol.documentation else { return Fragment { "" } }
 
         return Fragment {
@@ -30,9 +36,7 @@ struct Documentation: Component {
                 Fragment { "\(documentation.summary!)" }
             }
 
-            CodeBlock("swift") {
-                "\(symbol.declaration)".trimmingCharacters(in: .whitespacesAndNewlines)
-            }
+            Declaration(of: symbol, in: module)
 
             ForEach(in: documentation.discussionParts) { part in
                 if part is SwiftMarkup.Documentation.Callout {
@@ -77,6 +81,86 @@ struct Documentation: Component {
         }
     }
 
+    var html: HypertextLiteral.HTML {
+        guard let documentation = symbol.documentation else { return "" }
+
+        var fragments: [HypertextLiteralConvertible] = []
+
+        fragments.append(Declaration(of: symbol, in: module))
+
+        if let summary = documentation.summary {
+            fragments.append(#"""
+            <div class="summary" role="doc-abstract">
+                \#(commonmark: summary)
+            </div>
+            """# as HypertextLiteral.HTML)
+        }
+
+        if !documentation.discussionParts.isEmpty {
+            fragments.append(#"""
+            <div class="discussion">
+                \#(documentation.discussionParts.compactMap { part -> HypertextLiteral.HTML? in
+                    if let part = part as? SwiftMarkup.Documentation.Callout {
+                        return Callout(part).html
+                    } else if let part = part as? String {
+                        if part.starts(with: "```"),
+                            let codeBlock = (try? CommonMark.Document(part))?.children.compactMap({ $0 as? CodeBlock }).first,
+                            (codeBlock.fenceInfo ?? "") == "" ||
+                                codeBlock.fenceInfo?.compare("swift", options: .caseInsensitive) == .orderedSame,
+                            let source = codeBlock.literal
+                        {
+                            var html = try! highlight(source, using: Xcode.self)
+                            html = linkCodeElements(of: html, for: symbol, in: module)
+                            return HTML(html)
+                        } else {
+                            var html = (try! CommonMark.Document(part)).render(format: .html, options: [.unsafe])
+                            html = linkCodeElements(of: html, for: symbol, in: module)
+                            return HTML(html)
+                        }
+                    } else {
+                        return nil
+                    }
+                })
+            </div>
+            """# as HypertextLiteral.HTML)
+        }
+
+        if !documentation.parameters.isEmpty {
+            fragments.append(#"""
+              <h4>Parameters</h4>
+
+              <dl class="parameters">
+                  \#(documentation.parameters.map { parameter in
+                  #"""
+                  <dt>\#(parameter.name)</dt>
+                  <dd>\#(commonmark: parameter.description)</dd>
+                  """# as HypertextLiteral.HTML
+                  })
+              </dl>
+              """# as HypertextLiteral.HTML)
+        }
+
+        if let `throws` = documentation.throws {
+            fragments.append(#"""
+              <h4>Throws</h4>
+              \#(commonmark: `throws`)
+            """# as HypertextLiteral.HTML)
+        }
+
+        if let `returns` = documentation.returns {
+            fragments.append(#"""
+              <h4>Returns</h4>
+              \#(commonmark: `returns`)
+            """# as HypertextLiteral.HTML)
+        }
+
+        return #"""
+        \#(fragments.map { $0.html })
+        """#
+    }
+}
+
+extension Documentation {
     struct Callout: Component {
         var callout: SwiftMarkup.Documentation.Callout
 
@@ -86,12 +170,20 @@ struct Documentation: Component {
 
         // MARK: - Component
 
-        var body: Fragment {
+        var fragment: Fragment {
             Fragment {
                 """
                 > \(callout.delimiter.rawValue.capitalized): \(callout.content)
                 """
             }
+        }
+
+        var html: HypertextLiteral.HTML {
+            return #"""
+            <aside class=\#(callout.delimiter.rawValue)>
+                \#(commonmark: callout.content)
+            </aside>
+            """#
         }
     }
 }

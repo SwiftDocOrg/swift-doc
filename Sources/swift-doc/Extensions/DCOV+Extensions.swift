@@ -5,7 +5,7 @@ import SwiftSemantics
 extension Entry {
     public init(_ symbol: Symbol) {
         let name = symbol.id.description
-        let type = String(describing: Swift.type(of: symbol.declaration))
+        let type = String(describing: Swift.type(of: symbol.api))
         let documented = symbol.isDocumented
         let file = symbol.sourceLocation?.file
         let line = symbol.sourceLocation?.line

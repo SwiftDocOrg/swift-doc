@@ -1,34 +1,29 @@
 import CommonMarkBuilder
 import SwiftDoc
 import SwiftSemantics
+import HypertextLiteral
 
 struct HomePage: Page {
     var module: Module
 
+    var types: [Symbol] = []
+    var protocols: [Symbol] = []
+    var operatorNames: Set<String> = []
+    var globalTypealiasNames: Set<String> = []
+    var globalFunctionNames: Set<String> = []
+    var globalVariableNames: Set<String> = []
+
     init(module: Module) {
         self.module = module
-    }
-
-    // MARK: - Page
-
-    var body: Document {
-        var typeNames: Set<String> = []
-        var protocolNames: Set<String> = []
-        var operatorNames: Set<String> = []
-        var globalTypealiasNames: Set<String> = []
-        var globalFunctionNames: Set<String> = []
-        var globalVariableNames: Set<String> = []
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
-            switch symbol.declaration {
-            case is Class:
-                typeNames.insert(symbol.id.description)
-            case is Enumeration:
-                typeNames.insert(symbol.id.description)
-            case is Structure:
-                typeNames.insert(symbol.id.description)
-            case let `protocol` as Protocol:
-                protocolNames.insert(`protocol`.name)
+            switch symbol.api {
+            case is Class,
+                 is Enumeration,
+                 is Structure:
+                types.append(symbol)
+            case is Protocol:
+                protocols.append(symbol)
             case let `typealias` as Typealias:
                 globalTypealiasNames.insert(`typealias`.name)
             case let `operator` as Operator:
@@ -43,6 +38,17 @@ struct HomePage: Page {
                 continue
             }
         }
+    }
+
+    // MARK: - Page
+
+    var title: String {
+        return module.name
+    }
+
+    var document: CommonMark.Document {
+        let typeNames = Set(types.map { $0.id.description })
+        let protocolNames = Set(protocols.map { $0.id.description })
 
         return Document {
             ForEach(in: [
@@ -74,7 +80,7 @@ struct HomePage: Page {
                           Heading { heading }
                             
                           List(of: names.sorted()) { name in
-                              Link(urlString: path(for: name), text: name)
+                            Link(urlString: path(for: name), text: softbreak(name))
                           }
                         }
                     }
@@ -83,7 +89,30 @@ struct HomePage: Page {
         }
     }
 
-    var lines: [String] {
-        body.description.split(separator: "\n", omittingEmptySubsequences: false).map { String($0) }
+    var html: HypertextLiteral.HTML {
+        return #"""
+        \#([
+            ("Types", types),
+            ("Protocols", protocols),
+        ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
+            guard !symbols.isEmpty else { return nil }
+
+            return #"""
+            <h2>\#(heading)</h2>
+            <ul>
+                \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
+                let descriptor = String(describing: type(of: symbol.api))
+                return #"""
+                <li class="\#(descriptor.lowercased())">
+                    <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
+                        \#(symbol.id.description)
+                    </a>
+                </li>
+                """# as HypertextLiteral.HTML
+                })
+            </ul>
+        """# as HypertextLiteral.HTML
+        })
+        """#
     }
 }
