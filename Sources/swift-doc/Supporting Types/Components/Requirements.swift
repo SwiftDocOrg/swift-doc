@@ -16,8 +16,8 @@ struct Requirements: Component {
 
     var body: Fragment {
         let sections: [(title: String, requirements: [Symbol])] = [
-            ("Requirements",  module.requirements(of: symbol)),
-            ("Optional Requirements", module.optionalRequirements(of: symbol))
+            ("Requirements",  module.interface.requirements(of: symbol)),
+            ("Optional Requirements", module.interface.optionalRequirements(of: symbol))
         ].filter { !$0.requirements.isEmpty}
         guard !sections.isEmpty else { return Fragment { "" } }
 

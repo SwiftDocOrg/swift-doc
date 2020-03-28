@@ -19,7 +19,7 @@ struct SidebarPage: Page {
         var globalFunctionNames: Set<String> = []
         var globalVariableNames: Set<String> = []
 
-        for symbol in module.topLevelSymbols.filter({ $0.isPublic }) {
+        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.declaration {
             case is Class:
                 typeNames.insert(symbol.id.description)

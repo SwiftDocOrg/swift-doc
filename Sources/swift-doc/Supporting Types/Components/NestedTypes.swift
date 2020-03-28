@@ -16,7 +16,7 @@ struct NestedTypes: Component {
     // MARK: - Component
 
     var body: Fragment {
-        let nestedTypes = module.members(of: symbol).filter { $0.declaration is Type }
+        let nestedTypes = module.interface.members(of: symbol).filter { $0.declaration is Type }
         guard !nestedTypes.isEmpty else { return Fragment { "" }}
 
         return Fragment {

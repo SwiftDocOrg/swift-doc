@@ -15,7 +15,7 @@ struct Members: Component {
     // MARK: - Component
 
     var body: Fragment {
-        let members = module.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
+        let members = module.interface.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
         guard !members.isEmpty else { return Fragment { "" } }
 
         let typealiases = members.filter { $0.declaration is Typealias }

@@ -41,10 +41,17 @@ public final class Symbol {
             return true
         }
 
-        if declaration is Enumeration.Case,
-            let enumeration = context.compactMap({ ($0 as? Symbol)?.declaration as? Enumeration }).last,
-            enumeration.modifiers.contains(where: { $0.name == "public" }) {
-            return true
+        if let symbol = context.compactMap({ $0 as? Symbol }).first,
+            symbol.declaration.modifiers.contains(where: { $0.name == "public" })
+        {
+            switch symbol.declaration {
+            case is Enumeration:
+                return declaration is Enumeration.Case
+            case is Protocol:
+                return declaration is Function || declaration is Variable
+            default:
+                break
+            }
         }
 
         return false

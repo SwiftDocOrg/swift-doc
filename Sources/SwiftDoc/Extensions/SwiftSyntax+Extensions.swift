@@ -19,7 +19,7 @@ extension SourceLocation: Hashable {
     }
 }
 
-extension Syntax {
+extension SyntaxProtocol {
     var documentation: String? {
         return leadingTrivia?.documentation
     }
