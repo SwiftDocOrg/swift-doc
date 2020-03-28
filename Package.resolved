@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
         "state": {
           "branch": null,
-          "revision": "6371e3aa683a312b5ecd58520228269bd5e691b1",
-          "version": "0.0.1"
+          "revision": "2b3f941609a4be7d13c9d9176c7845d6f2ef0541",
+          "version": "0.0.4"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "35b76bf577d3cc74820f8991894ce3bcdf024ddc",
-          "version": "0.0.2"
+          "revision": "8d31a0905c346a45c87773ad50862b5b3df8dff6",
+          "version": "0.0.4"
         }
       },
       {
@@ -33,16 +33,16 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
         "state": {
           "branch": null,
-          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
-          "version": "0.28.3+20200110.2a76603"
+          "revision": "1168665f6b36be747ffe6b7b90bc54cfc17f42b7",
+          "version": "0.28.3+20200207.1168665"
         }
       },
       {
         "package": "SwiftSyntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
-          "branch": "swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a",
-          "revision": "75914650fd1f4a8e65c3bf27f2f7599762aae1f5",
+          "branch": "0.50200.0",
+          "revision": "0688b9cfc4c3dd234e4f55f1f056b2affc849873",
           "version": null
         }
       },
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftSemantics.git",
         "state": {
           "branch": "swift-5.2",
-          "revision": "3bb09e896a813cf0a72ec88a19dc0a7db49577cd",
+          "revision": "4fdc48bddbbb8311079ed111e5a4f2b92423b05c",
           "version": null
         }
       }

@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "swift-doc",
     dependencies: [
-        .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a")),
+        .package(url: "https://github.com/apple/swift-syntax.git", .revision("0.50200.0")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
