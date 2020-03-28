@@ -54,7 +54,7 @@ collecting all Swift files into a single "module"
 and generating documentation accordingly.
 
 ```terminal
-$ swift doc path/to/SwiftProject/Sources --output Documentation
+$ swift doc generate path/to/SwiftProject/Sources --output Documentation
 $ tree Documentation
 $ Documentation/
 ├── Home
