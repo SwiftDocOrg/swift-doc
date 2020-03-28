@@ -1,4 +1,4 @@
-FROM swift:5.1 as builder
+FROM swift:5.2 as builder
 WORKDIR /swiftdoc
 COPY . .
 RUN mkdir -p /build/lib && cp -R /usr/lib/swift/linux/*.so* /build/lib
