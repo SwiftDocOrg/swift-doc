@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "swift-doc",
     products: [
-        .library(name: "SwiftDoc", targets: ["SwiftDoc"])
+        .library(name: "SwiftDoc", targets: ["SwiftDoc"]),
+        .executable(name: "swift-doc", targets: ["swift-doc"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", .revision("0.50200.0")),
