@@ -174,7 +174,7 @@ jobs:
           inputs: "Source"
           output: "Documentation"
       - name: Upload Documentation to Wiki
-        uses: SwiftDocOrg/github-wiki-publish-action@master
+        uses: SwiftDocOrg/github-wiki-publish-action@v1
         with:
           path: "Documentation"
         env:
