@@ -10,7 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", .revision("0.50200.0")),
-        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
+        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .upToNextMinor(from: "0.1.0")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.4")),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.1.0")),
