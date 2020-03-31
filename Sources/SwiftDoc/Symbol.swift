@@ -43,7 +43,7 @@ public final class Symbol {
             return true
         }
 
-        if let symbol = context.compactMap({ $0 as? Symbol }).first,
+        if let symbol = context.compactMap({ $0 as? Symbol }).last,
             symbol.api.modifiers.contains(where: { $0.name == "public" })
         {
             switch symbol.api {

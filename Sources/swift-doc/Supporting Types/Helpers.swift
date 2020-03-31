@@ -2,19 +2,14 @@ import Foundation
 import SwiftDoc
 import HTML
 
-fileprivate let regex = try! NSRegularExpression(pattern: #"(?:([a-z]{2,})([A-Z]+))"#, options: [])
-
 public func linkCodeElements(of html: String, for symbol: Symbol, in module: Module) -> String {
     let document = try! Document(string: html.description)!
     for element in document.search(xpath: "//code | //pre/code//span[contains(@class,'type')]") {
         guard let name = element.content else { continue }
 
-//        let nameWithSoftBreaks = regex.stringByReplacingMatches(in: name, options: [], range: NSRange(name.startIndex..<name.endIndex, in: name), withTemplate: "$1\u{200B}$2")
-//        element.content = nameWithSoftBreaks
-
-        if let candidates = module.interface.symbolsGroupedByName[name],
-            let candidate = candidates.filter({ $0 != symbol }).first,
-            candidates.count == 1
+        if let candidates = module.interface.symbolsGroupedByQualifiedName[name],
+            candidates.count == 1,
+            let candidate = candidates.filter({ $0 != symbol }).first
         {
             let a = Element(name: "a")
             a["href"] = "/" + path(for: candidate)
@@ -29,7 +24,7 @@ public func sidebar(for html: String) -> String {
     let toc = Element(name: "ol")
 
     let document = try! Document(string: html.description)!
-    for h2 in document.search(xpath: "//h2") {
+    for h2 in document.search(xpath: "//section/h2") {
         guard let section = h2.parent as? Element else { continue }
 
         let li = Element(name: "li")
@@ -50,13 +45,17 @@ public func sidebar(for html: String) -> String {
             break
         }
 
-        let a = Element(name: "a")
-        a["href"] = "#\(section["id"]!)"
-        a.content = h2.text
+        if let id = section["id"] {
+            let a = Element(name: "a")
+            a["href"] = "#\(id)"
+            a.content = h2.text
+            li.insert(child: a)
+        } else {
+            li.content = h2.text
+        }
 
-        li.insert(child: a)
 
-        let nestedItems = section.search(xpath: "./details/summary").compactMap { summary -> Element? in
+        let nestedItems = section.search(xpath: "./h3 | ./div/h3").compactMap { summary -> Element? in
             guard let article = summary.parent as? Element else { return nil }
 
             let li = Element(name: "li")
@@ -86,7 +85,12 @@ public func sidebar(for html: String) -> String {
     return toc.description
 }
 
+fileprivate let pattern = #"(?:([a-z]{2,})([A-Z]+))"#
+fileprivate let regex = try! NSRegularExpression(pattern: pattern, options: [])
+
 public func softbreak(_ string: String) -> String {
-    return string.replacingOccurrences(of: ".", with: ".\u{200B}")
-                 .replacingOccurrences(of: ":", with: ":\u{200B}")
+    let string = string.replacingOccurrences(of: ".", with: ".\u{200B}")
+                       .replacingOccurrences(of: ":", with: ":\u{200B}")
+
+    return regex.stringByReplacingMatches(in: string, options: [], range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "$1\u{200B}$2")
 }

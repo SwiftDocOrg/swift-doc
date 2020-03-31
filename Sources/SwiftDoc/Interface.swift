@@ -17,8 +17,8 @@ public final class Interface: Codable {
         return Dictionary(grouping: symbols, by: { $0.id })
     }()
 
-    public lazy var symbolsGroupedByName: [String: [Symbol]] = {
-        return Dictionary(grouping: symbols, by: { $0.name })
+    public lazy var symbolsGroupedByQualifiedName: [String: [Symbol]] = {
+        return Dictionary(grouping: symbols, by: { $0.id.description })
     }()
 
     public private(set) lazy var topLevelSymbols: [Symbol] = {
@@ -101,10 +101,10 @@ public final class Interface: Codable {
                 inheritedTypeNames = Set(inheritedTypeNames.flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
 
                 for name in inheritedTypeNames {
-                    let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.matches(name) })
+                    let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
                     if inheritedTypes.isEmpty {
                         let inherited = Symbol(api: Unknown(name: name), context: [], declaration: nil, documentation: nil, sourceLocation: nil)
-                        relationships.insert(Relationship(subject: symbol, predicate: .inheritsFrom, object: inherited))
+                        relationships.insert(Relationship(subject: symbol, predicate: .conformsTo, object: inherited))
                     } else {
                         for inherited in inheritedTypes {
                             let predicate: Relationship.Predicate

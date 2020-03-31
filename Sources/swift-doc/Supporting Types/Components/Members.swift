@@ -81,19 +81,22 @@ struct Members: Component {
         return #"""
         \#(sections.map { section -> HypertextLiteral.HTML in
             #"""
-            <section id=\#(section.title.lowercased())>
-                <h2>\#(section.title)</h2>
-                \#(section.members.map { member -> HypertextLiteral.HTML in
-                    #"""
-                    <details role="article" open id=\#(member.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>
-                        <summary role="heading" aria-level="3">
-                            \#(softbreak(member.name))
-                        </summary>
-                        \#(Documentation(for: member, in: module).html)
-                    </details>
-                    """#
-                })
-            </section>
+                <section id=\#(section.title.lowercased())>
+                    <h2>\#(section.title)</h2>
+            
+                    \#(section.members.map { member -> HypertextLiteral.HTML in
+                        let descriptor = String(describing: type(of: symbol.api)).lowercased()
+
+                        return #"""
+                        <div role="article" class="\#(descriptor)" id=\#(member.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>
+                            <h3>
+                                <code>\#(softbreak(member.name))</code>
+                            </h3>
+                            \#(Documentation(for: member, in: module).html)
+                        </div>
+                        """#
+                    })
+                </section>
             """#
         })
 
@@ -105,7 +108,7 @@ struct Members: Component {
                 \#(genericallyConstrainedMembers.map { (requirements, members) -> HypertextLiteral.HTML in
                     #"""
                     <section>
-                        <h3>where \#(requirements.map { $0.description }.joined(separator: ", "))</h3>
+                        <h3>where \#(requirements.map { softbreak($0.description) }.joined(separator: ", "))</h3>
                         \#(members.map { member -> HypertextLiteral.HTML in
                             #"""
                             <h4>\#(softbreak(member.name))</h4>

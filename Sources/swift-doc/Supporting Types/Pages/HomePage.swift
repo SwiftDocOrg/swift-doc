@@ -6,7 +6,9 @@ import HypertextLiteral
 struct HomePage: Page {
     var module: Module
 
-    var types: [Symbol] = []
+    var classes: [Symbol] = []
+    var enumerations: [Symbol] = []
+    var structures: [Symbol] = []
     var protocols: [Symbol] = []
     var operatorNames: Set<String> = []
     var globalTypealiasNames: Set<String> = []
@@ -18,10 +20,12 @@ struct HomePage: Page {
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
-            case is Class,
-                 is Enumeration,
-                 is Structure:
-                types.append(symbol)
+            case is Class:
+                classes.append(symbol)
+            case is Enumeration:
+                enumerations.append(symbol)
+            case is Structure:
+                structures.append(symbol)
             case is Protocol:
                 protocols.append(symbol)
             case let `typealias` as Typealias:
@@ -47,6 +51,7 @@ struct HomePage: Page {
     }
 
     var document: CommonMark.Document {
+        let types = classes + enumerations + structures
         let typeNames = Set(types.map { $0.id.description })
         let protocolNames = Set(protocols.map { $0.id.description })
 
@@ -92,25 +97,32 @@ struct HomePage: Page {
     var html: HypertextLiteral.HTML {
         return #"""
         \#([
-            ("Types", types),
+            ("Classes", classes),
+            ("Structures", structures),
+            ("Enumerations", enumerations),
             ("Protocols", protocols),
         ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
             guard !symbols.isEmpty else { return nil }
 
             return #"""
-            <h2>\#(heading)</h2>
-            <ul>
-                \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
-                let descriptor = String(describing: type(of: symbol.api))
-                return #"""
-                <li class="\#(descriptor.lowercased())">
-                    <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
-                        \#(symbol.id.description)
-                    </a>
-                </li>
-                """# as HypertextLiteral.HTML
-                })
-            </ul>
+            <section id=\#(heading.lowercased())>
+                <h2>\#(heading)</h2>
+                <dl>
+                    \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
+                    let descriptor = String(describing: type(of: symbol.api)).lowercased()
+                    return #"""
+                    <dt class="\#(descriptor)">
+                        <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
+                            \#(symbol.id.description)
+                        </a>
+                    </dt>
+                    <dd>
+                        \#(commonmark: symbol.documentation?.summary ?? "")
+                    </dd>
+                    """# as HypertextLiteral.HTML
+                    })
+                </dl>
+            </section>
         """# as HypertextLiteral.HTML
         })
         """#

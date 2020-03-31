@@ -10,7 +10,7 @@ let package = Package(
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .branch("master")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.0.5")),
-        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .revision("ce0327a62c4b5a5ddd4741406ea54f164f228a54")),
+        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .revision("03405c13dc1c31f50c08bbec6e7587cbee1c7fb3")),
         .package(url: "https://github.com/NSHipster/HypertextLiteral.git", .upToNextMinor(from: "0.0.2")),
         .package(url: "https://github.com/SwiftDocOrg/Markup.git", .revision("bcc9bff98749f8ed92221375591a1afd61b02f1a")),
         .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("fe39b4ec07e1e37872adf4b506d223ab27cf8cea")),

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftDoc
+import SwiftSemantics
 import SwiftMarkup
 import CommonMarkBuilder
 import HypertextLiteral
@@ -126,17 +127,52 @@ struct Documentation: Component {
         }
 
         if !documentation.parameters.isEmpty {
+            let typedParameters: [(name: String, type: String?, description: String)] = documentation.parameters.map { entry in
+                let type: String?
+                switch symbol.api {
+                case let function as Function:
+                    type = function.signature.input.first(where: { $0.firstName == entry.name || $0.secondName == entry.name })?.type
+                case let initializer as Initializer:
+                    type = initializer.parameters.first(where: { $0.firstName == entry.name || $0.secondName == entry.name })?.type
+                case let `subscript` as Subscript:
+                    type = `subscript`.indices.first(where: { $0.firstName == entry.name || $0.secondName == entry.name })?.type
+                default:
+                    type = nil
+                }
+
+                return (entry.name, type, entry.description)
+            }
+
             fragments.append(#"""
               <h4>Parameters</h4>
 
-              <dl class="parameters">
-                  \#(documentation.parameters.map { parameter in
-                  #"""
-                  <dt>\#(parameter.name)</dt>
-                  <dd>\#(commonmark: parameter.description)</dd>
-                  """# as HypertextLiteral.HTML
-                  })
-              </dl>
+              <table class="parameters">
+                <thead hidden>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                  \#(typedParameters.map { entry -> HypertextLiteral.HTML in
+                        let typeCell: HypertextLiteral.HTML
+                        if let type = entry.type {
+                            typeCell = #"<td><code class="type">\#(softbreak(type))</code></td>"# as HypertextLiteral.HTML
+                        } else {
+                            typeCell = "<td></td>" as HypertextLiteral.HTML
+                        }
+
+                      return #"""
+                      <tr>
+                          <th>\#(softbreak(entry.name))</th>
+                          \#(typeCell)</td>
+                          <td>\#(commonmark: entry.description)</td>
+                      </tr>
+                      """# as HypertextLiteral.HTML
+                      })
+                </tbody>
+              </table>
               """# as HypertextLiteral.HTML)
         }
 
