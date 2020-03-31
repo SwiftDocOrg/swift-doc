@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "swift-doc",
+    products: [
+        .executable(name: "swift-doc", targets: ["swift-doc"]),
+        .library(name: "SwiftDoc", targets: ["SwiftDoc"])
+    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", .revision("swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .branch("swift-5.2")),
