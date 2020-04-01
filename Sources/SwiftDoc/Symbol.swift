@@ -5,23 +5,25 @@ import SwiftSemantics
 public final class Symbol {
     public typealias ID = Identifier
 
-    public let declaration: API
+    public let api: API
     public let context: [Contextual]
+    public let declaration: String
     public let documentation: Documentation?
     public let sourceLocation: SourceLocation?
 
     public private(set) lazy var `extension`: Extension? = context.compactMap { $0 as? Extension }.first
     public private(set) lazy var conditions: [CompilationCondition] = context.compactMap { $0 as? CompilationCondition }
 
-    init(declaration: API, context: [Contextual], documentation: Documentation?, sourceLocation: SourceLocation?) {
-        self.declaration = declaration
+    init(api: API, context: [Contextual], declaration: String?, documentation: Documentation?, sourceLocation: SourceLocation?) {
+        self.api = api
         self.context = context
+        self.declaration = declaration ?? "\(api)"
         self.documentation = documentation
         self.sourceLocation = sourceLocation
     }
 
     public var name: String {
-        return declaration.name
+        return api.name
     }
 
     public private(set) lazy var id: ID = {
@@ -31,7 +33,7 @@ public final class Symbol {
     }()
 
     public var isPublic: Bool {
-        if declaration.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {
+        if api.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {
             return true
         }
 
@@ -41,14 +43,14 @@ public final class Symbol {
             return true
         }
 
-        if let symbol = context.compactMap({ $0 as? Symbol }).first,
-            symbol.declaration.modifiers.contains(where: { $0.name == "public" })
+        if let symbol = context.compactMap({ $0 as? Symbol }).last,
+            symbol.api.modifiers.contains(where: { $0.name == "public" })
         {
-            switch symbol.declaration {
+            switch symbol.api {
             case is Enumeration:
-                return declaration is Enumeration.Case
+                return api is Enumeration.Case
             case is Protocol:
-                return declaration is Function || declaration is Variable
+                return api is Function || api is Variable
             default:
                 break
             }
@@ -84,7 +86,7 @@ extension Symbol: Equatable {
             }
         }
 
-        switch (lhs.declaration, rhs.declaration) {
+        switch (lhs.api, rhs.api) {
         case let (ls, rs) as (AssociatedType, AssociatedType):
             return ls == rs
         case let (ls, rs) as (Class, Class):
@@ -123,7 +125,11 @@ extension Symbol: Equatable {
 
 extension Symbol: Comparable {
     public static func < (lhs: Symbol, rhs: Symbol) -> Bool {
-        return lhs.name < rhs.name
+        if let lsl = lhs.sourceLocation, let rsl = rhs.sourceLocation {
+            return lsl < rsl
+        } else {
+            return lhs.name < rhs.name
+        }
     }
 }
 
@@ -133,7 +139,7 @@ extension Symbol: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(documentation)
         hasher.combine(sourceLocation)
-        switch declaration {
+        switch api {
         case let api as AssociatedType:
             hasher.combine(api)
         case let api as Class:
@@ -172,6 +178,7 @@ extension Symbol: Hashable {
 
 extension Symbol: Codable {
     private enum CodingKeys: String, CodingKey {
+        case declaration
         case documentation
         case sourceLocation
 
@@ -194,79 +201,80 @@ extension Symbol: Codable {
     public convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let declaration: API
+        let api: API
         if container.contains(.associatedType) {
-            declaration = try container.decode(AssociatedType.self, forKey: .associatedType)
+            api = try container.decode(AssociatedType.self, forKey: .associatedType)
         } else if container.contains(.`case`) {
-            declaration = try container.decode(Enumeration.Case.self, forKey: .case)
+            api = try container.decode(Enumeration.Case.self, forKey: .case)
         } else if container.contains(.`class`) {
-            declaration = try container.decode(Class.self, forKey: .class)
+            api = try container.decode(Class.self, forKey: .class)
         } else if container.contains(.enumeration) {
-            declaration = try container.decode(Enumeration.self, forKey: .enumeration)
+            api = try container.decode(Enumeration.self, forKey: .enumeration)
         } else if container.contains(.function) {
-            declaration = try container.decode(Function.self, forKey: .function)
+            api = try container.decode(Function.self, forKey: .function)
         } else if container.contains(.initializer) {
-            declaration = try container.decode(Initializer.self, forKey: .initializer)
+            api = try container.decode(Initializer.self, forKey: .initializer)
         } else if container.contains(.`operator`) {
-            declaration = try container.decode(Operator.self, forKey: .operator)
+            api = try container.decode(Operator.self, forKey: .operator)
         } else if container.contains(.precedenceGroup) {
-            declaration = try container.decode(PrecedenceGroup.self, forKey: .precedenceGroup)
+            api = try container.decode(PrecedenceGroup.self, forKey: .precedenceGroup)
         } else if container.contains(.`protocol`) {
-            declaration = try container.decode(Protocol.self, forKey: .protocol)
+            api = try container.decode(Protocol.self, forKey: .protocol)
         } else if container.contains(.structure) {
-            declaration = try container.decode(Structure.self, forKey: .structure)
+            api = try container.decode(Structure.self, forKey: .structure)
         } else if container.contains(.`subscript`) {
-            declaration = try container.decode(Subscript.self, forKey: .subscript)
+            api = try container.decode(Subscript.self, forKey: .subscript)
         } else if container.contains(.`typealias`) {
-            declaration = try container.decode(Typealias.self, forKey: .typealias)
+            api = try container.decode(Typealias.self, forKey: .typealias)
         } else if container.contains(.variable) {
-            declaration = try container.decode(Variable.self, forKey: .variable)
+            api = try container.decode(Variable.self, forKey: .variable)
         } else if container.contains(.unknown) {
-            declaration = try container.decode(Unknown.self, forKey: .variable)
+            api = try container.decode(Unknown.self, forKey: .variable)
         } else {
             let context = DecodingError.Context(codingPath: container.codingPath, debugDescription: "missing declaration")
             throw DecodingError.dataCorrupted(context)
         }
 
-        let documentation = try container.decode(Documentation.self, forKey: .documentation)
-        let sourceLocation = try container.decode(SourceLocation.self, forKey: .sourceLocation)
+        let declaration = try container.decodeIfPresent(String.self, forKey: .declaration)
+        let documentation = try container.decodeIfPresent(Documentation.self, forKey: .documentation)
+        let sourceLocation = try container.decodeIfPresent(SourceLocation.self, forKey: .sourceLocation)
 
-        self.init(declaration: declaration, context: [] /* TODO */, documentation: documentation, sourceLocation: sourceLocation)
+        self.init(api: api, context: [] /* TODO */, declaration: declaration, documentation: documentation, sourceLocation: sourceLocation)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if let declaration = declaration as? AssociatedType {
+        if let declaration = api as? AssociatedType {
             try container.encode(declaration, forKey: .associatedType)
-        } else if let declaration = declaration as? Class {
+        } else if let declaration = api as? Class {
             try container.encode(declaration, forKey: .class)
-        } else if let declaration = declaration as? Enumeration {
+        } else if let declaration = api as? Enumeration {
             try container.encode(declaration, forKey: .enumeration)
-        } else if let declaration = declaration as? Enumeration.Case {
+        } else if let declaration = api as? Enumeration.Case {
             try container.encode(declaration, forKey: .case)
-        } else if let declaration = declaration as? Function {
+        } else if let declaration = api as? Function {
             try container.encode(declaration, forKey: .function)
-        } else if let declaration = declaration as? Initializer {
+        } else if let declaration = api as? Initializer {
             try container.encode(declaration, forKey: .initializer)
-        } else if let declaration = declaration as? Operator {
+        } else if let declaration = api as? Operator {
             try container.encode(declaration, forKey: .operator)
-        } else if let declaration = declaration as? PrecedenceGroup {
+        } else if let declaration = api as? PrecedenceGroup {
             try container.encode(declaration, forKey: .precedenceGroup)
-        } else if let declaration = declaration as? Protocol {
+        } else if let declaration = api as? Protocol {
             try container.encode(declaration, forKey: .protocol)
-        } else if let declaration = declaration as? Structure {
+        } else if let declaration = api as? Structure {
             try container.encode(declaration, forKey: .structure)
-        } else if let declaration = declaration as? Subscript {
+        } else if let declaration = api as? Subscript {
             try container.encode(declaration, forKey: .subscript)
-        } else if let declaration = declaration as? Typealias {
+        } else if let declaration = api as? Typealias {
             try container.encode(declaration, forKey: .typealias)
-        } else if let declaration = declaration as? Variable {
+        } else if let declaration = api as? Variable {
             try container.encode(declaration, forKey: .variable)
-        } else if let declaration = declaration as? Unknown {
+        } else if let declaration = api as? Unknown {
             try container.encode(declaration, forKey: .unknown)
         } else  {
             let context = EncodingError.Context(codingPath: container.codingPath, debugDescription: "unhandled declaration type")
-            throw EncodingError.invalidValue(declaration, context)
+            throw EncodingError.invalidValue(api, context)
         }
 
         try container.encode(documentation, forKey: .documentation)

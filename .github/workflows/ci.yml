@@ -23,5 +23,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Install System Dependencies
+        run: |
+          apt-get update
+          apt-get install -y libxml2-dev
       - name: Build and Test
         run: swift test --enable-test-discovery

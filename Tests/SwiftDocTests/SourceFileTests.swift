@@ -59,18 +59,18 @@ final class SourceFileTests: XCTestCase {
         XCTAssertEqual(sourceFile.symbols.count, 12)
 
         for symbol in sourceFile.symbols {
-            XCTAssert(symbol.isPublic, "\(symbol.declaration) isn't public")
+            XCTAssert(symbol.isPublic, "\(symbol.api) isn't public")
         }
 
         do {
             let `protocol` = sourceFile.symbols[0]
-            XCTAssert(`protocol`.declaration is Protocol)
+            XCTAssert(`protocol`.api is Protocol)
             XCTAssertEqual(`protocol`.documentation?.summary, "Protocol")
 
             do {
                 let function = sourceFile.symbols[1]
 
-                XCTAssert(function.declaration is Function)
+                XCTAssert(function.api is Function)
 
                 XCTAssertEqual(function.context.count, 1)
                 XCTAssert(function.context.first is Symbol)
@@ -82,7 +82,7 @@ final class SourceFileTests: XCTestCase {
             do {
                 let property = sourceFile.symbols[2]
 
-                XCTAssert(property.declaration is Variable)
+                XCTAssert(property.api is Variable)
 
                 XCTAssertEqual(property.context.count, 1)
                 XCTAssert(property.context.first is Symbol)
@@ -94,13 +94,13 @@ final class SourceFileTests: XCTestCase {
 
         do {
             let enumeration = sourceFile.symbols[3]
-            XCTAssert(enumeration.declaration is Enumeration)
+            XCTAssert(enumeration.api is Enumeration)
             XCTAssertEqual(enumeration.documentation?.summary, "Enumeration")
 
             do {
                 let `case` = sourceFile.symbols[4]
 
-                XCTAssert(`case`.declaration is Enumeration.Case)
+                XCTAssert(`case`.api is Enumeration.Case)
 
                 XCTAssertEqual(`case`.context.count, 1)
                 XCTAssert(`case`.context.first is Symbol)
@@ -112,7 +112,7 @@ final class SourceFileTests: XCTestCase {
 
         do {
             let structure = sourceFile.symbols[5]
-            XCTAssert(structure.declaration is Structure)
+            XCTAssert(structure.api is Structure)
             XCTAssertEqual(structure.documentation?.summary, "Structure")
         }
 
@@ -120,7 +120,7 @@ final class SourceFileTests: XCTestCase {
             do {
                 let function = sourceFile.symbols[6]
 
-                XCTAssert(function.declaration is Function)
+                XCTAssert(function.api is Function)
 
                 XCTAssertEqual(function.context.count, 1)
                 XCTAssert(function.context.first is Extension)
@@ -132,7 +132,7 @@ final class SourceFileTests: XCTestCase {
             do {
                 let property = sourceFile.symbols[7]
 
-                XCTAssert(property.declaration is Variable)
+                XCTAssert(property.api is Variable)
 
                 XCTAssertEqual(property.context.count, 1)
                 XCTAssert(property.context.first is Extension)
@@ -144,13 +144,13 @@ final class SourceFileTests: XCTestCase {
 
         do {
             let `class` = sourceFile.symbols[8]
-            XCTAssert(`class`.declaration is Class)
+            XCTAssert(`class`.api is Class)
             XCTAssertEqual(`class`.documentation?.summary, "Class")
 
             do {
                 let function = sourceFile.symbols[9]
 
-                XCTAssert(function.declaration is Function)
+                XCTAssert(function.api is Function)
 
                 XCTAssertEqual(function.context.count, 1)
                 XCTAssert(function.context.first is Symbol)
@@ -162,7 +162,7 @@ final class SourceFileTests: XCTestCase {
             do {
                 let property = sourceFile.symbols[10]
 
-                XCTAssert(property.declaration is Variable)
+                XCTAssert(property.api is Variable)
 
                 XCTAssertEqual(property.context.count, 1)
                 XCTAssert(property.context.first is Symbol)
@@ -174,8 +174,8 @@ final class SourceFileTests: XCTestCase {
 
         do {
             let `class` = sourceFile.symbols[11]
-            XCTAssert(`class`.declaration is Class)
-            XCTAssertEqual((`class`.declaration as? Class)?.inheritance, ["C"])
+            XCTAssert(`class`.api is Class)
+            XCTAssertEqual((`class`.api as? Class)?.inheritance, ["C"])
             XCTAssertEqual(`class`.documentation?.summary, "Subclass")
         }
     }

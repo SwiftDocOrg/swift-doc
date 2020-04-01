@@ -1,17 +1,21 @@
 import Dispatch
 
-extension Array {
+public extension RandomAccessCollection {
     func parallelMap<T>(_ transform: (Element) throws -> T) throws -> [T] {
         guard count > 1 else {
             return try map(transform)
         }
 
-        var results = [(index: Int, result: Result<T, Error>)]()
+        let indices = Array(self.indices)
+
+        var results = [(index: Index, result: Result<T, Error>)]()
         results.reserveCapacity(count)
 
-        let queue = DispatchQueue(label: "org.swiftdoc.swift-doc.parallelMap")
+        let queue = DispatchQueue(label: #function)
         withoutActuallyEscaping(transform) { escapingtransform in
-            DispatchQueue.concurrentPerform(iterations: count) { (index) in
+            DispatchQueue.concurrentPerform(iterations: count) { (iteration) in
+                let index = indices[iteration]
+
                 do {
                     let transformed = try escapingtransform(self[index])
                     queue.sync {
@@ -35,5 +39,9 @@ extension Array {
 
     func parallelFlatMap<T>(transform: (Element) throws -> [T]) throws -> [T] {
         return try parallelMap(transform).flatMap { $0 }
+    }
+
+    func parallelForEach(_ body: (Element) throws -> Void) throws {
+        _ = try parallelMap(body)
     }
 }

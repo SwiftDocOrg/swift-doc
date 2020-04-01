@@ -5,6 +5,7 @@ import SwiftSemantics
 import GraphViz
 import DOT
 
+
 extension SwiftDoc {
     struct Diagram: ParsableCommand {
         struct Options: ParsableArguments {
@@ -36,7 +37,7 @@ fileprivate func diagram(of module: Module) -> String {
             var subclassNode = Node("\(subclass.id)")
             subclassNode.shape = .box
 
-            if subclass.declaration.modifiers.contains(where: { $0.name == "final" }) {
+            if subclass.api.modifiers.contains(where: { $0.name == "final" }) {
                 subclassNode.strokeWidth = 2.0
             }
 
@@ -60,7 +61,7 @@ fileprivate func diagram(of module: Module) -> String {
     }
     
 
-    for symbol in (module.interface.symbols.filter { $0.isPublic && $0.declaration is Type }) {
+    for symbol in (module.interface.symbols.filter { $0.isPublic && $0.api is Type }) {
         let symbolNode = Node("\(symbol.id)")
         graph.append(symbolNode)
 

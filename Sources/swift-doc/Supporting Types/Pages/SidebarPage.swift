@@ -1,26 +1,23 @@
 import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
+import HypertextLiteral
 
 struct SidebarPage: Page {
     var module: Module
 
+    var typeNames: Set<String> = []
+    var protocolNames: Set<String> = []
+    var operatorNames: Set<String> = []
+    var globalTypealiasNames: Set<String> = []
+    var globalFunctionNames: Set<String> = []
+    var globalVariableNames: Set<String> = []
+
     init(module: Module) {
         self.module = module
-    }
-
-    // MARK: - Page
-
-    var body: Document {
-        var typeNames: Set<String> = []
-        var protocolNames: Set<String> = []
-        var operatorNames: Set<String> = []
-        var globalTypealiasNames: Set<String> = []
-        var globalFunctionNames: Set<String> = []
-        var globalVariableNames: Set<String> = []
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
-            switch symbol.declaration {
+            switch symbol.api {
             case is Class:
                 typeNames.insert(symbol.id.description)
             case is Enumeration:
@@ -43,7 +40,11 @@ struct SidebarPage: Page {
                 continue
             }
         }
+    }
 
+    // MARK: - Page
+
+    var document: CommonMark.Document {
         return Document {
             ForEach(in: (
                 [
@@ -58,17 +59,23 @@ struct SidebarPage: Page {
                 // FIXME: This should be an HTML block
                 Fragment {
                     #"""
-                    <details open>
+                    <details>
                     <summary>\#(section.title)</summary>
                     """#
                 }
 
                 List(of: section.names.sorted()) { name in
-                    Link(urlString: path(for: name), text: name)
+                    Link(urlString: "/" + path(for: name), text: name)
                 }
 
                 Fragment { "</details>" }
             }
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        #"""
+        \#(document)
+        """#
     }
 }

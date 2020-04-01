@@ -1,35 +1,46 @@
 import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
+import HypertextLiteral
 
 struct TypePage: Page {
     let module: Module
     let symbol: Symbol
 
     init(module: Module, symbol: Symbol) {
-        precondition(symbol.declaration is Type)
+        precondition(symbol.api is Type)
         self.module = module
         self.symbol = symbol
     }
 
     // MARK: - Page
 
-    var body: Document {
-        return Document {
+    var title: String {
+        return symbol.id.description
+    }
+
+    var document: CommonMark.Document {
+        return CommonMark.Document {
             Heading { symbol.id.description }
 
-            Documentation(for: symbol)
-
-            Inheritance(of: symbol, in: module)
-
-            if symbol.declaration is Protocol {
-                ConformingTypes(to: symbol, in: module)
-            } else if symbol.declaration is Type {
-                NestedTypes(of: symbol, in: module)
-            }
-
+            Documentation(for: symbol, in: module)
+            Relationships(of: symbol, in: module)
             Members(of: symbol, in: module)
             Requirements(of: symbol, in: module)
         }
+    }
+
+    var html: HypertextLiteral.HTML {
+        return #"""
+        <h1>
+            <small>\#(String(describing: type(of: symbol.api)))</small>
+            <code class="name">\#(softbreak(symbol.id.description))</code>
+        </h1>
+
+        \#(Documentation(for: symbol, in: module).html)
+        \#(Relationships(of: symbol, in: module).html)
+        \#(Members(of: symbol, in: module).html)
+        \#(Requirements(of: symbol, in: module).html)
+        """#
     }
 }
