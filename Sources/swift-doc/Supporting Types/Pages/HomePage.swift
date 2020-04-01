@@ -113,7 +113,7 @@ struct HomePage: Page {
                     return #"""
                     <dt class="\#(descriptor)">
                         <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
-                            \#(symbol.id.description)
+                            \#(softbreak(symbol.id.description))
                         </a>
                     </dt>
                     <dd>
