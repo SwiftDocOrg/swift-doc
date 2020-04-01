@@ -43,16 +43,15 @@ struct GlobalPage: Page {
             description = "Global"
         }
 
+        return #"""
+        <h1>
+        <small>\#(description)</small>
+        <span class="name">\#(softbreak(name))</span>
+        </h1>
 
-         return #"""
-         <h1>
-             <small>\#(description)</small>
-             <span class="name">\#(softbreak(name))</span>
-         </h1>
-
-         \#(symbols.map { symbol in
-            Documentation(for: symbol, in: module).html
-         })
-         """#
-     }
+        \#(symbols.map { symbol in
+        Documentation(for: symbol, in: module).html
+        })
+        """#
+    }
 }
