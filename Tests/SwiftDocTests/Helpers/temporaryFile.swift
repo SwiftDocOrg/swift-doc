@@ -1,10 +1,10 @@
 import Foundation
 
 func temporaryFile(path: String? = nil, contents: String) throws -> URL {
-    let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(ProcessInfo().globallyUniqueString)
+    let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString)
     try FileManager.default.createDirectory(at: temporaryDirectoryURL, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o766])
 
-    let path = path ?? ProcessInfo().globallyUniqueString
+    let path = path ?? ProcessInfo.processInfo.globallyUniqueString
     let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(path)
 
     try contents.data(using: .utf8)?.write(to: temporaryFileURL)
