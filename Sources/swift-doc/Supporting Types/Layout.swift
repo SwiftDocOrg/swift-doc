@@ -17,9 +17,13 @@ func layout(_ page: Page) -> HTML {
     </head>
     <body>
         <header>
-            <strong>
-                <a href="/">\#(page.module.name)</a>
-            </strong>
+            <a href="/">
+                <strong>
+                    \#(page.module.name)
+                </strong>
+                <span>Documentation</span>
+            </a>
+            <sup>Beta</sup>
         </header>
 
         <!--

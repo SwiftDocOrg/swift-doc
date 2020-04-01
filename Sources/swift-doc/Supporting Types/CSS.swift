@@ -166,8 +166,8 @@ let css = #"""
 
 :root {
     --large-title: 600 32pt / 39pt sans-serif;
-    --title-1: 500 26pt / 32pt sans-serif;
-    --title-2: 500 20pt / 25pt sans-serif;
+    --title-1: 600 26pt / 32pt sans-serif;
+    --title-2: 600 20pt / 25pt sans-serif;
     --title-3: 500 18pt / 23pt sans-serif;
     --headline: 500 15pt / 20pt sans-serif;
     --body: 300 15pt / 20pt sans-serif;
@@ -353,12 +353,12 @@ dfn {
     font-style: italic;
 }
 
-sup {
+/* sup {
     font-size: 0.6em;
     vertical-align: top;
     position: relative;
     bottom: -0.2em;
-}
+} */
 
 :matches(h1, h2, h3) sup {
     font-size: 0.4em;
@@ -773,13 +773,6 @@ body {
     width: 90vw;
     max-width: 1280px;
     margin: 1em auto;
-    /* display: grid;
-    grid-template-areas:
-        "header search"
-        "main nav"
-        "footer footer";
-    grid-template-columns: 4fr 2fr;
-    gap: 1em; */
 }
 
 body > header {
@@ -790,6 +783,18 @@ body > header a {
     color: var(--label);
 }
 
+body > header span {
+    font-weight: normal;
+}
+
+body > header sup {
+    text-transform: uppercase;
+    font-size: small;
+    font-weight: 300;
+    color: var(--secondary-label);
+    letter-spacing: 0.1ch;
+}
+
 @media screen and (max-width: 768px) {
     body {
         width: 96vw;
@@ -797,8 +802,9 @@ body > header a {
     }
 
     body > header {
-        font: var(--title-1);
-        text-align: center;
+        font: var(--title-3);
+        text-align: left;
+        padding: 1em 0;
     }
 
     body > nav {
@@ -808,10 +814,21 @@ body > header a {
     body > main {
         padding: 0 1em;
     }
+
+    #relationships figure {
+        display: none;
+    }
+
+    section > [role="article"][class] pre {
+        margin-left: -2.5em;
+    }
+
+    section > [role="article"][class] div {
+        margin-left: -2em;
+    }
 }
 
 body > header {
-    grid-area: header;
     padding: 0.5em 0;
 }
 
@@ -950,7 +967,7 @@ article > .summary:last-child {
 }
 
 dl {
-    padding-bottom: 1em;
+    padding-top: 1em;
 }
 
 dt {
@@ -1068,13 +1085,15 @@ dl dt[class] {
 
 section > [role="article"] {
     margin-bottom: 1em;
+    padding-bottom: 1em;
     border-bottom: 1px var(--separator) solid;
     padding-left: 2em !important;
 }
 
 section > [role="article"]:last-of-type {
-    border-bottom: none;
     margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 nav li[class],
