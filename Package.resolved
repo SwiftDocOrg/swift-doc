@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/NSHipster/HypertextLiteral.git",
         "state": {
           "branch": null,
-          "revision": "8d31a0905c346a45c87773ad50862b5b3df8dff6",
-          "version": "0.0.4"
+          "revision": "3e45da849e507d171c7264146176bb834a01be4f",
+          "version": "0.0.2"
         }
       },
       {
@@ -86,17 +86,17 @@
         "package": "SwiftSemantics",
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftSemantics.git",
         "state": {
-          "branch": "swift-5.2",
+          "branch": null,
           "revision": "4fdc48bddbbb8311079ed111e5a4f2b92423b05c",
-          "version": null
+          "version": "0.1.0"
         }
       },
       {
         "package": "SwiftSyntaxHighlighter",
         "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
         "state": {
-          "branch": null,
-          "revision": "fe39b4ec07e1e37872adf4b506d223ab27cf8cea",
+          "branch": "1.0.0",
+          "revision": "4a20d10bba17241b66650d99081801536146b43c",
           "version": null
         }
       }

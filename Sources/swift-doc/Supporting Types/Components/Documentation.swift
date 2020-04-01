@@ -110,7 +110,7 @@ struct Documentation: Component {
                                 codeBlock.fenceInfo?.compare("swift", options: .caseInsensitive) == .orderedSame,
                             let source = codeBlock.literal
                         {
-                            var html = try! highlight(source, using: Xcode.self)
+                            var html = try! SwiftSyntaxHighlighter.highlight(source: source, using: Xcode.self)
                             html = linkCodeElements(of: html, for: symbol, in: module)
                             return HTML(html)
                         } else {

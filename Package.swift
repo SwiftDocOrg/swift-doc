@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .revision("03405c13dc1c31f50c08bbec6e7587cbee1c7fb3")),
         .package(url: "https://github.com/NSHipster/HypertextLiteral.git", .upToNextMinor(from: "0.0.2")),
         .package(url: "https://github.com/SwiftDocOrg/Markup.git", .upToNextMinor(from: "0.0.3")),
-        .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("fe39b4ec07e1e37872adf4b506d223ab27cf8cea")),
+        .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("1.0.0")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "0.0.2")),
     ],
     targets: [

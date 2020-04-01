@@ -26,7 +26,7 @@ struct Declaration: Component {
     }
 
     var html: HypertextLiteral.HTML {
-        var html = try! highlight(symbol.declaration, using: Xcode.self)
+        var html = try! SwiftSyntaxHighlighter.highlight(source: symbol.declaration, using: Xcode.self)
         html = linkCodeElements(of: html, for: symbol, in: module)
         return HTML(html)
     }
