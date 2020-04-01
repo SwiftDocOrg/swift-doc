@@ -19,6 +19,10 @@ For an example of generated documentation,
 > Output is currently limited to CommonMark,
 > but the plan is to support HTML and other formats as well.
 
+## Requirements
+
+- Swift 5.2
+
 ## Command-Line Utility
 
 `swift-doc` can be used from the command-line on macOS and Linux.
@@ -50,7 +54,7 @@ collecting all Swift files into a single "module"
 and generating documentation accordingly.
 
 ```terminal
-$ swift doc path/to/SwiftProject/Sources --output Documentation
+$ swift doc generate path/to/SwiftProject/Sources --output Documentation
 $ tree Documentation
 $ Documentation/
 ├── Home
@@ -170,7 +174,7 @@ jobs:
           inputs: "Source"
           output: "Documentation"
       - name: Upload Documentation to Wiki
-        uses: SwiftDocOrg/github-wiki-publish-action@master
+        uses: SwiftDocOrg/github-wiki-publish-action@v1
         with:
           path: "Documentation"
         env:
@@ -281,48 +285,6 @@ some of that is simply Jazzy doing more,
 generating HTML, CSS, and a search index instead of just text.
 Compare its [generated HTML output][jazzy swiftsemantics]
 to [a GitHub wiki generated with `swift-doc`][swift-doc swiftsemantics].
-
-## What About [SwiftDoc.org][swiftdoc.org]?
-
-**tl;dr:**
-SwiftDoc.org is now updated for Swift 5.1,
-but we're still working to migrate over a few missing parts
-(notably, the beloved
-[type inheritance graphs](https://swiftdoc.org/v4.2/protocol/expressiblebyfloatliteral/hierarchy/)).
-
-SwiftDoc.org,
-[originally "Swifter"](http://natecook.com/blog/2014/09/introducing-swifter/),
-was created by Nate Cook ([@natecook1000][@natecook1000])
-in September 2014.
-At the time,
-Swift tooling was still in its infancy,
-so Nate actually
-[wrote a parser (from scratch!)](https://github.com/SwiftDocOrg/swiftdoc-parser)
-to pull symbols and documentation from the Swift standard library.
-Nate became managing editor of [NSHipster][nshipster] in 2015,
-bringing SwiftDoc with him as an affiliated project.
-When Mattt took over NSHipster duties for Nate in 2018,
-he inherited SwiftDoc along with it.
-
-After the hand-off,
-we were able to get the site updated for Swift 4.2 without too much trouble.
-But when it came time to regenerate the site for Swift 5,
-we found ourselves deep in ["dependency hell"][dependency hell]
-(something to do with the [regular expression][pcre] library
-that Nate had used for the parser).
-After begging and pleading with
-the spirits possessing our `node_modules` directory to no avail,
-we decided to roll up our sleeves and get started on a long-term replacement —
-this time, written in Swift.
-
-_Thanks for all of your encouragement about the site over the years
-and your patience throughout this whole process.
-We're sorry it took so long to get around to getting it updated,
-but we hope this all will have been worth the wait!_ 🙇‍♂️
-
-## Project Roadmap
-
-_(Coming soon!)_
 
 ## License
 

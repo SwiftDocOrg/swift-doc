@@ -40,5 +40,4 @@ public final class Module: Codable {
 
         self.init(name: name, sourceFiles: sourceFiles)
     }
-
 }

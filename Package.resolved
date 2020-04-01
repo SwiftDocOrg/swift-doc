@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/NSHipster/HypertextLiteral.git",
         "state": {
           "branch": null,
-          "revision": "3e45da849e507d171c7264146176bb834a01be4f",
-          "version": "0.0.2"
+          "revision": "8d31a0905c346a45c87773ad50862b5b3df8dff6",
+          "version": "0.0.4"
         }
       },
       {
@@ -68,8 +68,8 @@
         "package": "SwiftSyntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
-          "branch": "swift-5.2-DEVELOPMENT-SNAPSHOT-2020-03-09-a",
-          "revision": "75914650fd1f4a8e65c3bf27f2f7599762aae1f5",
+          "branch": "0.50200.0",
+          "revision": "0688b9cfc4c3dd234e4f55f1f056b2affc849873",
           "version": null
         }
       },
