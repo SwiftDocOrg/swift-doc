@@ -14,7 +14,7 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
-  args: ["${{ inputs.inputs }}", --output, "${{ inputs.output }}"]
+  args: ["generate", "${{ inputs.inputs }}", --output, "${{ inputs.output }}"]
 
 branding:
   icon: "book"
