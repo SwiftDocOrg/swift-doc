@@ -14,7 +14,7 @@ extension SwiftDoc {
             var output: String?
         }
 
-        static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
+        static var configuration = CommandConfiguration(abstract: "Generates documentation coverage statistics for Swift files")
 
         @OptionGroup()
         var options: Options
