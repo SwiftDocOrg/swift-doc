@@ -6,6 +6,12 @@ inputs:
     description: "One or more paths to Swift files"
     required: true
     default: "./Sources"
+  module-name:
+    description: "The name of the module "
+    required: true
+  format:
+    description: "The output format"
+    default: "commonmark"
   output:
     description: "The path for generated output"
     required: true
@@ -14,7 +20,17 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
-  args: ["generate", "${{ inputs.inputs }}", --output, "${{ inputs.output }}"]
+  args:
+    [
+      generate,
+      "${{ inputs.inputs }}",
+      --format,
+      "${{ inputs.format }}",
+      --module-name,
+      "${{ inputs.module-name }}",
+      --output,
+      "${{ inputs.output }}",
+    ]
 
 branding:
   icon: "book"

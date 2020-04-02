@@ -72,13 +72,13 @@ $ Documentation/
 
 #### swift-doc coverage
 
-The `coverage` subcommand 
+The `coverage` subcommand
 generates documentation coverage statistics for Swift files.
 
 ```terminal
 $ git clone https://github.com/SwiftDocOrg/SwiftSemantics.git
 
-$ swift run swift-doc coverage SwiftSemantics/Sources/ --output "dcov.json" 
+$ swift run swift-doc coverage SwiftSemantics/Sources/ --output "dcov.json"
 $ cat dcov.json | jq ".data.totals"
 {
   "count": 207,
@@ -145,7 +145,8 @@ are formatted for publication to your project's [GitHub Wiki][github wiki],
 which you can do with
 [github-wiki-publish-action][github-wiki-publish-action].
 Alternatively,
-you could publish `swift-doc`-generated documentation to GitHub Pages,
+you could specify HTML format publish documentation to
+[GitHub Pages](https://pages.github.com)
 or bundle them into a release artifact.
 
 ### Inputs
@@ -153,6 +154,11 @@ or bundle them into a release artifact.
 - `inputs`:
   One or more paths to Swift files in your workspace.
   (Default: `"./Sources"`)
+- `format`:
+  The output format (`"commonmark"` or `"html"`)
+  (Default: `"commonmark"`)
+- `module-name`:
+  The name of the module.
 - `output`:
   The path for generated output.
   (Default: `"./.build/documentation"`)
@@ -175,6 +181,7 @@ jobs:
         uses: SwiftDocOrg/swift-doc@master
         with:
           inputs: "Source"
+          module-name: MyLibrary
           output: "Documentation"
       - name: Upload Documentation to Wiki
         uses: SwiftDocOrg/github-wiki-publish-action@v1
@@ -193,7 +200,6 @@ MIT
 Mattt ([@mattt](https://twitter.com/mattt))
 
 [ci badge]: https://github.com/SwiftDocOrg/swift-doc/workflows/CI/badge.svg
-
 [alamofire wiki]: https://github.com/SwiftDocOrg/Alamofire/wiki
 [swiftsemantics html]: https://swift-doc-preview.netlify.app
 [github wiki]: https://help.github.com/en/github/building-a-strong-community/about-wikis
