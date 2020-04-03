@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "IndexStoreDB",
+        "repositoryURL": "https://github.com/SwiftDocOrg/indexstore-db.git",
+        "state": {
+          "branch": "master",
+          "revision": "8bd364ac4407f03b45cf0324c089d6337ac7937f",
+          "version": null
+        }
+      },
+      {
         "package": "Markup",
         "repositoryURL": "https://github.com/SwiftDocOrg/Markup.git",
         "state": {
