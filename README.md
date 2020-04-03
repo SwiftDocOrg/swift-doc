@@ -152,7 +152,7 @@ or bundle them into a release artifact.
 ### Inputs
 
 - `inputs`:
-  One or more paths to Swift files in your workspace.
+  A path to a directory containing Swift (`.swift`) files in your workspace.
   (Default: `"./Sources"`)
 - `format`:
   The output format (`"commonmark"` or `"html"`)
