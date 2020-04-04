@@ -1,0 +1,5 @@
+package-lock.json -diff -merge
+package-lock.json linguist-generated=true
+
+Assets/index.css -diff -merge
+Assets/index.css linguist-generated=true
