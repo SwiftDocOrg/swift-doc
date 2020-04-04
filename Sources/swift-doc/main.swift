@@ -20,7 +20,7 @@ struct SwiftDoc: ParsableCommand {
 let libIndexStorePath = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libIndexStore.dylib"
 let library = try IndexStoreLibrary(dylibPath: libIndexStorePath)
 
-let storePath = "/Users/mattt/Code/swiftdoc/SwiftSemantics/.build/debug/index/store"
+let storePath = "/Users/mattt/Code/swiftdoc/Hello/.build/debug/index/store"
 let databasePath = NSTemporaryDirectory() + "index_\(getpid())"
 
 let db = try! IndexStoreDB(storePath: storePath, databasePath: databasePath, library: library, waitUntilDoneInitializing: true)
@@ -34,11 +34,25 @@ let db = try! IndexStoreDB(storePath: storePath, databasePath: databasePath, lib
 let symbolNames = db.allSymbolNames()
 
 
-db.forEachSymbolOccurrence(byKind: .class) { occurrence in
-    guard occurrence.location.moduleName == "SwiftSemantics" else { return true }
+db.forEachSymbolOccurrence(byKind: .protocol) { occurrence in
+//    guard occurrence.location.moduleName == "Hello" else { return true }
+
+    print("!!!", occurrence.symbol.usr, occurrence.symbol.name)
+//    for relation in occurrence.relations {
+//        print("-", relation.roles, relation.symbol)
+//    }
+//    print("")
+
+    db.forEachSymbolOccurrence(byUSR: occurrence.symbol.usr, roles: [.all]) {
+        for relation in $0.relations {
+            print("-", relation.roles, relation.symbol)
+        }
+
+        return true
+    }
+
+        print("")
 
 
-
-    print(occurrence.relations.first)
     return true
 }
