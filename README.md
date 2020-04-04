@@ -243,6 +243,27 @@ jobs:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 ```
 
+### Development
+## Web Assets
+
+[Parcel](https://parceljs.org) is used to process Web assets such as CSS and JavaScript. To make changes, you need to have Node and a package manager such as `npm` installed. In the project root, run `npm install` to install the dependencies.
+
+During development, run the following command in a terminal:
+
+```terminal
+$ npm run watch
+```
+
+This will start watching the source files in `Sources/web`  with hot-reload support, auto-generating non-optimized assets in `Assets` whenever a source file is saved.
+
+Once happy with the results, run this command to create production-ready assets:
+
+```terminal
+$ npm run build
+```
+
+Both the source files and the generated files are checked into this repository.
+
 ## License
 
 MIT

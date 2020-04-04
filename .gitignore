@@ -4,3 +4,7 @@
 /*.xcodeproj
 xcuserdata/
 .swiftpm
+node_modules/
+.parcel-cache
+.vscode
+.cache

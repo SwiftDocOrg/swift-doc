@@ -1,0 +1,29 @@
+{
+  "name": "swift-doc-assets",
+  "version": "1.0.0",
+  "browserslist": ["> 1%", "not dead"],
+  "description": "Front-end assets for swift-doc",
+  "main": "Assets/index.css",
+  "scripts": {
+    "clean": "rm -rf .parcel-cache",
+    "watch": "parcel watch Sources/web/css/**/*.css",
+    "build": "parcel build Sources/web/css/styles.css"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "parcel": "^2.0.0-alpha.3.2",
+    "postcss-preset-env": "^6.7.0",
+    "autoprefixer": "^9.7.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SwiftDocOrg/swift-doc.git"
+  },
+  "keywords": [],
+  "contributors": ["Reda Lemeden <hello@redalemeden.com> (http://redalemeden.com)"],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SwiftDocOrg/swift-doc/issues"
+  },
+  "homepage": "https://github.com/SwiftDocOrg/swift-doc#readme"
+}
