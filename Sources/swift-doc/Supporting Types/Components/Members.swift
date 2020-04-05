@@ -49,9 +49,12 @@ struct Members: Component {
             ForEach(in: sections) { section -> BlockConvertible in
                 Section {
                     Heading { section.title }
-                    ForEach(in: section.members) { member in
-                        Heading { member.name }
-                        Documentation(for: member, in: module)
+                    
+                    Section {
+                        ForEach(in: section.members) { member in
+                            Heading { member.name }
+                            Documentation(for: member, in: module)
+                        }
                     }
                 }
             }
