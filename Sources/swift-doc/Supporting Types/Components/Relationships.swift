@@ -86,7 +86,7 @@ struct Relationships: Component {
         do {
             svg = try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
         } catch {
-            print(error)
+            logger.error("\(error)")
         }
 
         return #"""
