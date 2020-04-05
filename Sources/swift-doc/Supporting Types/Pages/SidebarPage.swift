@@ -30,7 +30,7 @@ struct SidebarPage: Page {
                 globalTypealiasNames.insert(`typealias`.name)
             case let `operator` as Operator:
                 operatorNames.insert(`operator`.name)
-            case let function as Function where !function.isOperator:
+            case let function as Function where function.isOperator:
                 operatorNames.insert(function.name)
             case let function as Function:
                 globalFunctionNames.insert(function.name)
