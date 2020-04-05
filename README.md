@@ -44,12 +44,43 @@ $ make install
 
 ### Usage
 
-`swift-doc` takes one or more paths and enumerates them recursively,
+    OVERVIEW: A utility for generating documentation for Swift code.
+    
+    USAGE: swift-doc <subcommand>
+    
+    OPTIONS:
+      -h, --help              Show help information.
+    
+    SUBCOMMANDS:
+      generate                Generates Swift documentation
+      coverage                Generates documentation coverage statistics for Swift
+                              files
+      diagram                 Generates diagram of Swift symbol relationships
+
+#### swift-doc generate
+
+    OVERVIEW: Generates Swift documentation
+
+    USAGE: swift-doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>]
+
+    ARGUMENTS:
+      <inputs>                One or more paths to Swift files 
+
+    OPTIONS:
+      -n, --module-name <module-name>
+                              The name of the module 
+      -o, --output <output>   The path for generated output (default:
+                              .build/documentation)
+      -f, --format <format>   The output format (default: commonmark)
+      -h, --help              Show help information.
+
+The `generate` subcommand 
+takes one or more paths and enumerates them recursively,
 collecting all Swift files into a single "module"
 and generating documentation accordingly.
 
 ```terminal
-$ swift doc generate path/to/SwiftProject/Sources
+$ swift doc generate path/to/SwiftProject/Sources --module-name SwiftProject
 $ tree .build/documentation
 $ documentation/
 ├── Home
@@ -64,7 +95,7 @@ in CommonMark / GitHub Wiki format,
 but you can change that with the `--output` and `--format` option flags.
 
 ```terminal
-$ swift doc generate path/to/SwiftProject/Sources --output Documentation --format html
+$ swift doc generate path/to/SwiftProject/Sources --module-name SwiftProject --output Documentation --format html
 $ Documentation/
 ├── (...)
 └── index.html
@@ -72,13 +103,24 @@ $ Documentation/
 
 #### swift-doc coverage
 
+    OVERVIEW: Generates documentation coverage statistics for Swift files
+
+    USAGE: swift-doc coverage [<inputs> ...] [--output <output>]
+
+    ARGUMENTS:
+      <inputs>                One or more paths to Swift files 
+
+    OPTIONS:
+      -o, --output <output>   The path for generated report 
+      -h, --help              Show help information.
+
 The `coverage` subcommand
 generates documentation coverage statistics for Swift files.
 
 ```terminal
 $ git clone https://github.com/SwiftDocOrg/SwiftSemantics.git
 
-$ swift run swift-doc coverage SwiftSemantics/Sources/ --output "dcov.json"
+$ swift run swift-doc coverage SwiftSemantics/Sources --output "dcov.json"
 $ cat dcov.json | jq ".data.totals"
 {
   "count": 207,
@@ -109,6 +151,16 @@ that you think might be better suited for this purpose,
 please reach out by [opening an Issue][open an issue]!
 
 #### swift-doc diagram
+
+    OVERVIEW: Generates diagram of Swift symbol relationships
+
+    USAGE: swift-doc diagram [<inputs> ...]
+
+    ARGUMENTS:
+      <inputs>                One or more paths to Swift files 
+
+    OPTIONS:
+      -h, --help              Show help information.
 
 The `diagram` subcommand
 generates a graph of APIs in [DOT format][dot]
