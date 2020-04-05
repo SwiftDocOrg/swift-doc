@@ -89,6 +89,7 @@ public struct SourceFile: Hashable, Codable {
             visitedImports.append(`import`)
         }
 
+        @discardableResult
         func pop() -> Contextual? {
             return context.popLast()
         }
@@ -187,27 +188,33 @@ public struct SourceFile: Hashable, Codable {
         // MARK: -
 
         override func visitPost(_ node: ClassDeclSyntax) {
-            assert((pop() as? Symbol)?.api is Class)
+            let context = pop()
+            assert((context as? Symbol)?.api is Class)
         }
 
         override func visitPost(_ node: EnumDeclSyntax) {
-            assert((pop() as? Symbol)?.api is Enumeration)
+            let context = pop()
+            assert((context as? Symbol)?.api is Enumeration)
         }
 
         override func visitPost(_ node: ExtensionDeclSyntax) {
-            assert(pop() is Extension)
+            let context = pop()
+            assert(context is Extension)
         }
 
         override func visitPost(_ node: IfConfigClauseSyntax) {
-            assert(pop() is CompilationCondition)
+            let context = pop()
+            assert(context is CompilationCondition)
         }
 
         override func visitPost(_ node: ProtocolDeclSyntax) {
-            assert((pop() as? Symbol)?.api is Protocol)
+            let context = pop()
+            assert((context as? Symbol)?.api is Protocol)
         }
 
         override func visitPost(_ node: StructDeclSyntax) {
-            assert((pop() as? Symbol)?.api is Structure)
+            let context = pop()
+            assert((context as? Symbol)?.api is Structure)
         }
     }
 }
