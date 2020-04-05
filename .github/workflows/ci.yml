@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build and Test
-        run: swift test
+        run: swift test -c release
         env:
           DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
 
@@ -28,4 +28,4 @@ jobs:
           apt-get update
           apt-get install -y libxml2-dev
       - name: Build and Test
-        run: swift test --enable-test-discovery
+        run: swift test -c release --enable-test-discovery

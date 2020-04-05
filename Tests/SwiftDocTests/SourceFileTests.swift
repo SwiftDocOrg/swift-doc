@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import SwiftDoc
+import SwiftDoc
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 import SwiftSyntax
