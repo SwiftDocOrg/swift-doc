@@ -52,7 +52,9 @@ struct Members: Component {
                     
                     Section {
                         ForEach(in: section.members) { member in
-                            Heading { member.name }
+                            Heading {
+                                Code { member.name }
+                            }
                             Documentation(for: member, in: module)
                         }
                     }
