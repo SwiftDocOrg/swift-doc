@@ -19,13 +19,15 @@ let package = Package(
         .package(url: "https://github.com/SwiftDocOrg/Markup.git", .upToNextMinor(from: "0.0.3")),
         .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("1.0.0")),
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "0.0.2")),
+        .package(url: "https://github.com/apple/swift-log.git", .upToNextMinor(from: "1.2.0")),
+        .package(url: "https://github.com/NSHipster/swift-log-github-actions.git", .upToNextMinor(from: "0.0.1")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "swift-doc",
-            dependencies: ["ArgumentParser", "SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "HypertextLiteral", "Markup", "DCOV", "GraphViz", "SwiftSyntaxHighlighter"]
+            dependencies: ["ArgumentParser", "SwiftDoc", "SwiftSemantics", "SwiftMarkup", "CommonMarkBuilder", "HypertextLiteral", "Markup", "DCOV", "GraphViz", "SwiftSyntaxHighlighter", "Logging", "LoggingGitHubActions"]
         ),
         .target(
             name: "DCOV",

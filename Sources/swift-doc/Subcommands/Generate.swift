@@ -105,6 +105,8 @@ extension SwiftDoc {
                         try $0.value.write(to: url, format: format)
                     }
                 }
+            } catch {
+                logger.error("\(error)")
             }
         }
     }

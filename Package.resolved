@@ -65,6 +65,24 @@
         }
       },
       {
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
+        "state": {
+          "branch": null,
+          "revision": "74d7b91ceebc85daf387ebb206003f78813f71aa",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "LoggingGitHubActions",
+        "repositoryURL": "https://github.com/NSHipster/swift-log-github-actions.git",
+        "state": {
+          "branch": null,
+          "revision": "13ce1e95e5b0c5fffa7667214d42e1f316693ef5",
+          "version": "0.0.1"
+        }
+      },
+      {
         "package": "SwiftSyntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
