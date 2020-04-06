@@ -17,7 +17,7 @@ extension SwiftDoc {
             var inputs: [String]
 
             @Option(name: [.long, .customShort("n")],
-                      help: "The name of the module")
+                    help: "The name of the module")
             var moduleName: String
 
             @Option(name: .shortAndLong,
@@ -47,15 +47,6 @@ extension SwiftDoc {
 
                 var pages: [String: Page] = [:]
 
-                switch format {
-                case .commonmark:
-                    pages["Home"] = HomePage(module: module)
-                    pages["_Sidebar"] = SidebarPage(module: module)
-                    pages["_Footer"] = FooterPage()
-                case .html:
-                    pages["Home"] = HomePage(module: module)
-                }
-
                 var globals: [String: [Symbol]] = [:]
                 for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
                     switch symbol.api {
@@ -76,19 +67,43 @@ extension SwiftDoc {
                     pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
                 }
 
-                try pages.map { $0 }.parallelForEach {
+                guard !pages.isEmpty else { return }
+
+                if pages.count == 1, let page = pages.first?.value {
                     let filename: String
                     switch format {
                     case .commonmark:
-                        filename = "\($0.key).md"
-                    case .html where $0.key == "Home":
-                        filename = "index.html"
+                        filename = "Home.md"
                     case .html:
-                        filename = "\($0.key)/index.html"
+                        filename = "index.html"
                     }
 
                     let url = outputDirectoryURL.appendingPathComponent(filename)
-                    try $0.value.write(to: url, format: format)
+                    try page.write(to: url, format: format)
+                } else {
+                    switch format {
+                    case .commonmark:
+                        pages["Home"] = HomePage(module: module)
+                        pages["_Sidebar"] = SidebarPage(module: module)
+                        pages["_Footer"] = FooterPage()
+                    case .html:
+                        pages["Home"] = HomePage(module: module)
+                    }
+
+                    try pages.map { $0 }.parallelForEach {
+                        let filename: String
+                        switch format {
+                        case .commonmark:
+                            filename = "\($0.key).md"
+                        case .html where $0.key == "Home":
+                            filename = "index.html"
+                        case .html:
+                            filename = "\($0.key)/index.html"
+                        }
+
+                        let url = outputDirectoryURL.appendingPathComponent(filename)
+                        try $0.value.write(to: url, format: format)
+                    }
                 }
             } catch {
                 logger.error("\(error)")

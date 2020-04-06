@@ -112,9 +112,14 @@ public struct SourceFile: Hashable, Codable {
         }
 
         override func visit(_ node: EnumCaseDeclSyntax) -> SyntaxVisitorContinueKind {
-            for `case` in Enumeration.Case.cases(from: node) {
+            let cases = node.elements.compactMap { element in
+                Enumeration.Case(element.withRawValue(nil))
+            }
+
+            for `case` in cases {
                 push(symbol(node, api: `case`))
             }
+
             return .skipChildren
         }
 
@@ -179,9 +184,14 @@ public struct SourceFile: Hashable, Codable {
         }
 
         override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
-            for variable in Variable.variables(from: node) {
+            let variables = node.bindings.compactMap { binding in
+                Variable(binding.withInitializer(nil))
+            }
+
+            for variable in variables {
                 push(symbol(node, api: variable))
             }
+            
             return .skipChildren
         }
 

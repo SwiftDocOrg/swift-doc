@@ -22,13 +22,9 @@ struct GlobalPage: Page {
     
     var document: CommonMark.Document {
         return Document {
-            Heading { name }
-
-            Section {
-                ForEach(in: symbols) { symbol in
-                    Heading { symbol.id.description }
-                    Documentation(for: symbol, in: module)
-                }
+            ForEach(in: symbols) { symbol in
+                Heading { symbol.id.description }
+                Documentation(for: symbol, in: module)
             }
         }
     }
