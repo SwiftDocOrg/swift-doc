@@ -90,7 +90,7 @@ struct Relationships: Component {
     }
 
     var html: HypertextLiteral.HTML {
-        guard sections.map({ $0.symbols.count }).reduce(0, +) != 0 else { return "" }
+        guard !sections.isEmpty else { return "" }
 
         return #"""
         <section id="relationships">
@@ -105,8 +105,6 @@ struct Relationships: Component {
                     """#
                 } ?? "")
                 \#(sections.compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
-                    guard !symbols.isEmpty else { return nil }
-
                     let partitioned = symbols.filter { !($0.api is Unknown) } + symbols.filter { ($0.api is Unknown) }
 
                     return #"""
