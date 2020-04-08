@@ -36,6 +36,23 @@ struct Relationships: Component {
         self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
     }
 
+    var graphHTML: HypertextLiteral.HTML? {
+        var graph = symbol.graph(in: module)
+        guard !graph.edges.isEmpty else { return nil }
+
+        graph.aspectRatio = 0.125
+        graph.center = true
+        graph.overlap = "compress"
+
+        let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
+
+        do {
+            return try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
+        } catch {
+            logger.error("\(error)")
+            return nil
+        }
+    }
 
     var sections: [(title: String, symbols: [Symbol])] {
         return [
@@ -73,31 +90,15 @@ struct Relationships: Component {
     }
 
     var html: HypertextLiteral.HTML {
-        guard sections.map(\.symbols.count).reduce(0, +) != 0 else { return "" }
-
-        var svg: HypertextLiteral.HTML?
-        var graph = symbol.graph(in: module)
-        if !graph.edges.isEmpty {
-            graph.aspectRatio = 0.125
-            graph.center = true
-            graph.overlap = "compress"
-
-            let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
-
-            do {
-                svg = try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
-            } catch {
-                logger.error("\(error)")
-            }
-        }
+        guard sections.map({ $0.symbols.count }).reduce(0, +) != 0 else { return "" }
 
         return #"""
         <section id="relationships">
             <h2 hidden>Relationships</h2>
-                \#(svg.flatMap { svg in
+                \#(graphHTML.flatMap { graphHTML in
                     return #"""
                     <figure>
-                        \#(svg)
+                        \#(graphHTML)
 
                         <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
                     </figure>
