@@ -65,4 +65,63 @@ final class NestedTypesTests: XCTestCase {
             [classRelationships, enumRelationships].joined().count
         )
     }
+
+    #if false // Disabling tests for `swift-doc` code, executable targers are not testable.
+
+    func testRelationshipsSectionWithNestedTypes() throws {
+        let source = #"""
+        public class C {
+            public enum E {
+            }
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        // `class C`
+        let `class` = sourceFile.symbols[0]
+        XCTAssert(`class`.api is Class)
+
+        // `enum E`
+        let `enum` = sourceFile.symbols[1]
+        XCTAssert(`enum`.api is Enumeration)
+
+        let classRelationships = Relationships(of: `class`, in: module)
+        XCTAssertNotEqual(classRelationships.html, "")
+
+        let enumRelationships = Relationships(of: `enum`, in: module)
+        XCTAssertNotEqual(enumRelationships.html, "")
+    }
+
+    func testNoRelationshipsSeciont() throws {
+        let source = #"""
+        public class C {
+        }
+
+        public enum E {
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        // `class C`
+        let `class` = sourceFile.symbols[0]
+        XCTAssert(`class`.api is Class)
+
+        // `enum E`
+        let `enum` = sourceFile.symbols[1]
+        XCTAssert(`enum`.api is Enumeration)
+
+        let classRelationships = Relationships(of: `class`, in: module)
+        XCTAssertEqual(classRelationships.html, "")
+
+        let enumRelationships = Relationships(of: `enum`, in: module)
+        XCTAssertEqual(enumRelationships.html, "")
+    }
+
+    #endif
 }
