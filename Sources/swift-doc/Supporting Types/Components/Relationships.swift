@@ -73,30 +73,36 @@ struct Relationships: Component {
     }
 
     var html: HypertextLiteral.HTML {
-        var graph = symbol.graph(in: module)
-        guard !graph.edges.isEmpty else { return "" }
+        guard sections.map(\.symbols.count).reduce(0, +) != 0 else { return "" }
 
-        graph.aspectRatio = 0.125
-        graph.center = true
-        graph.overlap = "compress"
-
-        let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
         var svg: HypertextLiteral.HTML?
+        var graph = symbol.graph(in: module)
+        if !graph.edges.isEmpty {
+            graph.aspectRatio = 0.125
+            graph.center = true
+            graph.overlap = "compress"
 
-        do {
-            svg = try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
-        } catch {
-            logger.error("\(error)")
+            let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
+
+            do {
+                svg = try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
+            } catch {
+                logger.error("\(error)")
+            }
         }
 
         return #"""
         <section id="relationships">
             <h2 hidden>Relationships</h2>
-            <figure>
-                \#(svg ?? "")
+                \#(svg.flatMap { svg in
+                    return #"""
+                    <figure>
+                        \#(svg)
 
-                <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
-            </figure>
+                        <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
+                    </figure>
+                    """#
+                } ?? "")
                 \#(sections.compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
                     guard !symbols.isEmpty else { return nil }
 
