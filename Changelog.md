@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.2] - 2020-04-08
+
 ### Changed
 
 - **Breaking Change**
@@ -157,6 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 [unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.1...master
+[1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1
 [0.1.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/0.1.1
 [0.1.0]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/0.1.0
