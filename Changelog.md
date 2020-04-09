@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `--base-url` option.
+  #65 by @kean.
+
 ## [1.0.0-beta.2] - 2020-04-08
 
 ### Changed
