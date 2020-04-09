@@ -30,7 +30,7 @@ extension SwiftDoc {
                     help: "The output format")
             var format: Format
 
-            @Option(name: .shortAndLong,
+            @Option(name: .customLong("base-url"),
                     default: "/",
                     help: "The base URL where the HTML documentation is going to be hosted")
             var baseUrl: String
