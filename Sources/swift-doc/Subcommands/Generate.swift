@@ -33,7 +33,7 @@ extension SwiftDoc {
             @Option(name: .customLong("base-url"),
                     default: "/",
                     help: "The base URL where the HTML documentation is going to be hosted")
-            var baseUrl: String
+            var baseURL: String
         }
 
         static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -84,7 +84,7 @@ extension SwiftDoc {
                     }
 
                     let url = outputDirectoryURL.appendingPathComponent(filename)
-                    try page.write(to: url, format: format, baseUrl: options.baseUrl)
+                    try page.write(to: url, format: format, baseURL: options.baseURL)
                 } else {
                     switch format {
                     case .commonmark:
@@ -107,7 +107,7 @@ extension SwiftDoc {
                         }
 
                         let url = outputDirectoryURL.appendingPathComponent(filename)
-                        try $0.value.write(to: url, format: format, baseUrl: options.baseUrl)
+                        try $0.value.write(to: url, format: format, baseURL: options.baseURL)
                     }
                 }
             } catch {
