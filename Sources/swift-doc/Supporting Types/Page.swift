@@ -19,13 +19,13 @@ extension Page {
 }
 
 extension Page {
-    func write(to url: URL, format: SwiftDoc.Generate.Format) throws {
+    func write(to url: URL, format: SwiftDoc.Generate.Format, baseUrl: String) throws {
         let data: Data?
         switch format {
         case .commonmark:
             data = document.render(format: .commonmark).data(using: .utf8)
         case .html:
-            data = layout(self).description.data(using: .utf8)
+            data = layout(self, baseUrl: baseUrl).description.data(using: .utf8)
         }
 
         let fileManager = FileManager.default

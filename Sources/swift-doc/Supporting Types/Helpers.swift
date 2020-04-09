@@ -12,7 +12,7 @@ public func linkCodeElements(of html: String, for symbol: Symbol, in module: Mod
             let candidate = candidates.filter({ $0 != symbol }).first
         {
             let a = Element(name: "a")
-            a["href"] = "/" + path(for: candidate)
+            a["href"] = path(for: candidate)
             element.wrap(inside: a)
         }
     }
