@@ -110,9 +110,22 @@ extension SwiftDoc {
                         try $0.value.write(to: url, format: format, baseURL: options.baseURL)
                     }
                 }
+
+                if case .html = format {
+                    let cssData = try fetchRemoteCSS()
+                    let cssURL = outputDirectoryURL.appendingPathComponent("all.css")
+                    try writeFile(cssData, to: cssURL)
+                }
+
+
             } catch {
                 logger.error("\(error)")
             }
         }
     }
+}
+
+func fetchRemoteCSS() throws -> Data {
+    let url = URL(string: "https://raw.githubusercontent.com/kaishin/swift-doc/reda/css-build/Resources/all.css")!
+    return try Data(contentsOf: url)
 }
