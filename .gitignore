@@ -4,7 +4,65 @@
 /*.xcodeproj
 xcuserdata/
 .swiftpm
+
+# NodeJS
+## Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+## Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+## Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+## Dependency directories
 node_modules/
-.parcel-cache
-.vscode
+jspm_packages/
+
+## Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+## Optional npm cache directory
+.npm
+
+## Optional eslint cache
+.eslintcache
+
+## Yarn Integrity file
+.yarn-integrity
+
+## dotenv environment variables file
+.env
+.env.test
+
+## parcel-bundler cache (https://parceljs.org/)
 .cache
+.parcel-cache
+
+## Gatsby files
+.cache/
+
+## yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp.*
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+## Local History for Visual Studio Code
+.history/
