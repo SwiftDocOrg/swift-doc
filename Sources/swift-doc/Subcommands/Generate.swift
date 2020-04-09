@@ -32,7 +32,7 @@ extension SwiftDoc {
 
             @Option(name: .customLong("base-url"),
                     default: "/",
-                    help: "The base URL where the HTML documentation is going to be hosted")
+                    help: "The base URL used for all relative URLs in generated documents.")
             var baseURL: String
         }
 
