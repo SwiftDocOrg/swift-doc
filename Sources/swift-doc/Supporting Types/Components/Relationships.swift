@@ -95,7 +95,7 @@ struct Relationships: Component {
         return #"""
         <section id="relationships">
             <h2 hidden>Relationships</h2>
-                \#(graphHTML.flatMap { graphHTML in
+                \#(graphHTML.flatMap { (graphHTML) -> HypertextLiteral.HTML in
                     return #"""
                     <figure>
                         \#(graphHTML)
