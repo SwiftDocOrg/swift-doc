@@ -95,7 +95,7 @@ final class NestedTypesTests: XCTestCase {
         XCTAssertNotEqual(enumRelationships.html, "")
     }
 
-    func testNoRelationshipsSeciont() throws {
+    func testNoRelationshipsSection() throws {
         let source = #"""
         public class C {
         }
