@@ -36,6 +36,23 @@ struct Relationships: Component {
         self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
     }
 
+    var graphHTML: HypertextLiteral.HTML? {
+        var graph = symbol.graph(in: module)
+        guard !graph.edges.isEmpty else { return nil }
+
+        graph.aspectRatio = 0.125
+        graph.center = true
+        graph.overlap = "compress"
+
+        let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
+
+        do {
+            return try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
+        } catch {
+            logger.error("\(error)")
+            return nil
+        }
+    }
 
     var sections: [(title: String, symbols: [Symbol])] {
         return [
@@ -73,33 +90,21 @@ struct Relationships: Component {
     }
 
     var html: HypertextLiteral.HTML {
-        var graph = symbol.graph(in: module)
-        guard !graph.edges.isEmpty else { return "" }
-
-        graph.aspectRatio = 0.125
-        graph.center = true
-        graph.overlap = "compress"
-
-        let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
-        var svg: HypertextLiteral.HTML?
-
-        do {
-            svg = try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
-        } catch {
-            logger.error("\(error)")
-        }
+        guard !sections.isEmpty else { return "" }
 
         return #"""
         <section id="relationships">
             <h2 hidden>Relationships</h2>
-            <figure>
-                \#(svg ?? "")
+                \#(graphHTML.flatMap { graphHTML in
+                    return #"""
+                    <figure>
+                        \#(graphHTML)
 
-                <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
-            </figure>
+                        <figcaption hidden>Inheritance graph for \#(symbol.id).</figcaption>
+                    </figure>
+                    """#
+                } ?? "")
                 \#(sections.compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
-                    guard !symbols.isEmpty else { return nil }
-
                     let partitioned = symbols.filter { !($0.api is Unknown) } + symbols.filter { ($0.api is Unknown) }
 
                     return #"""
