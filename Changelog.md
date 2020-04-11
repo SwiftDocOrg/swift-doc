@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `--base-url` option.
   #65 by @kean.
 
+### Fixed
+
+- Fixed relationship handling for members of nested types.
+  #62 by @victor-pavlychko.
+- Fixed rendering of type relationships section when no graph data is available.
+  #62 by @victor-pavlychko.
+- Fixed rendering of protocol requirements in the HTML version.
+  #76 by @victor-pavlychko.
+  
+
 ## [1.0.0-beta.2] - 2020-04-08
 
 ### Changed

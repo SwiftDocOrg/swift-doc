@@ -55,9 +55,9 @@ public final class Interface: Codable {
     public private(set) lazy var relationships: [Relationship] = {
         var relationships: Set<Relationship> = []
         for symbol in symbols {
-            let `extension` = symbol.context.compactMap({ $0 as? Extension }).first
+            let lastDeclarationScope = symbol.context.last(where: { $0 is Extension || $0 is Symbol })
 
-            if let container = symbol.context.compactMap({ $0 as? Symbol }).last {
+            if let container = lastDeclarationScope as? Symbol {
                 let predicate: Relationship.Predicate
 
                 switch container.api {
@@ -74,7 +74,7 @@ public final class Interface: Codable {
                 relationships.insert(Relationship(subject: symbol, predicate: predicate, object: container))
             }
 
-            if let `extension` = `extension` {
+            if let `extension` = lastDeclarationScope as? Extension {
                 if let extended = symbols.first(where: { $0.api is Type &&  $0.id.matches(`extension`.extendedType) }) {
 
                     let predicate: Relationship.Predicate
