@@ -95,19 +95,19 @@ extension SwiftDoc {
                         pages["Home"] = HomePage(module: module)
                     }
 
-                    try pages.map { $0 }.parallelForEach {
+                    for (name, page) in pages {
                         let filename: String
                         switch format {
                         case .commonmark:
-                            filename = "\($0.key).md"
-                        case .html where $0.key == "Home":
+                            filename = "\(name).md"
+                        case .html where name == "Home":
                             filename = "index.html"
                         case .html:
-                            filename = "\($0.key)/index.html"
+                            filename = "\(name)/index.html"
                         }
 
                         let url = outputDirectoryURL.appendingPathComponent(filename)
-                        try $0.value.write(to: url, format: format, baseURL: options.baseURL)
+                        try page.write(to: url, format: format, baseURL: options.baseURL)
                     }
                 }
             } catch {
