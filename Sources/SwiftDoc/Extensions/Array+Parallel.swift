@@ -12,19 +12,17 @@ public extension RandomAccessCollection {
         results.reserveCapacity(count)
 
         let queue = DispatchQueue(label: #function)
-        withoutActuallyEscaping(transform) { escapingtransform in
-            DispatchQueue.concurrentPerform(iterations: count) { (iteration) in
-                let index = indices[iteration]
-
-                do {
-                    let transformed = try escapingtransform(self[index])
-                    queue.sync {
-                        results.append((index, .success(transformed)))
-                    }
-                } catch {
-                    queue.sync {
-                        results.append((index, .failure(error)))
-                    }
+        DispatchQueue.concurrentPerform(iterations: count) { (iteration) in
+            let index = indices[iteration]
+            
+            do {
+                let transformed = try transform(self[index])
+                queue.sync {
+                    results.append((index, .success(transformed)))
+                }
+            } catch {
+                queue.sync {
+                    results.append((index, .failure(error)))
                 }
             }
         }
