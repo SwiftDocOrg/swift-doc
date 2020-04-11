@@ -112,24 +112,67 @@ struct HomePage: Page {
             return #"""
             <section id=\#(heading.lowercased())>
                 <h2>\#(heading)</h2>
-                <dl>
-                    \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
-                    let descriptor = String(describing: type(of: symbol.api)).lowercased()
-                    return #"""
-                    <dt class="\#(descriptor)">
-                        <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
-                            \#(softbreak(symbol.id.description))
-                        </a>
-                    </dt>
-                    <dd>
-                        \#(commonmark: symbol.documentation?.summary ?? "")
-                    </dd>
-                    """# as HypertextLiteral.HTML
-                    })
-                </dl>
+                \#(listHTML(symbols: symbols))
             </section>
-        """# as HypertextLiteral.HTML
+        """#
         })
+        \#(globalsHTML)
+        """#
+    }
+
+    private var globalsHTML: HypertextLiteral.HTML {
+        guard !globalTypealias.isEmpty ||
+            !globalFunctions.isEmpty ||
+            !globalVariables.isEmpty else {
+                return ""
+        }
+
+        let heading = "Globals"
+        return #"""
+        <section id=\#(heading.lowercased())>
+            <h2>\#(heading)</h2>
+            \#(globalsListHTML)
+        </section>
+        """#
+    }
+
+    private var globalsListHTML: HypertextLiteral.HTML {
+        let globals = [
+            ("Typealiases", globalTypealias),
+            ("Functions", globalFunctions),
+            ("Variables", globalVariables),
+        ]
+        return #"""
+        \#(globals.compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
+            guard !symbols.isEmpty else { return nil }
+
+            return #"""
+            <section id=\#(heading.lowercased())>
+                <h3>\#(heading)</h3>
+                \#(listHTML(symbols: symbols))
+            </section>
+        """#
+        })
+        """#
+    }
+
+    private func listHTML(symbols: [Symbol]) -> HypertextLiteral.HTML {
+        #"""
+        <dl>
+            \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
+            let descriptor = String(describing: type(of: symbol.api)).lowercased()
+            return #"""
+            <dt class="\#(descriptor)">
+                <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
+                    \#(softbreak(symbol.id.description))
+                </a>
+            </dt>
+            <dd>
+                \#(commonmark: symbol.documentation?.summary ?? "")
+            </dd>
+            """#
+            })
+        </dl>
         """#
     }
 }
