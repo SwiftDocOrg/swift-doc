@@ -10,10 +10,10 @@ struct HomePage: Page {
     var enumerations: [Symbol] = []
     var structures: [Symbol] = []
     var protocols: [Symbol] = []
-    var operatorNames: Set<String> = []
-    var globalTypealiasNames: Set<String> = []
-    var globalFunctionNames: Set<String> = []
-    var globalVariableNames: Set<String> = []
+    var operators: [Symbol] = []
+    var globalTypealias: [Symbol] = []
+    var globalFunctions: [Symbol] = []
+    var globalVariables: [Symbol] = []
 
     init(module: Module) {
         self.module = module
@@ -28,16 +28,16 @@ struct HomePage: Page {
                 structures.append(symbol)
             case is Protocol:
                 protocols.append(symbol)
-            case let `typealias` as Typealias:
-                globalTypealiasNames.insert(`typealias`.name)
-            case let `operator` as Operator:
-                operatorNames.insert(`operator`.name)
+            case is Typealias:
+                globalTypealias.append(symbol)
+            case is Operator:
+                operators.append(symbol)
             case let function as Function where function.isOperator:
-                operatorNames.insert(function.name)
-            case let function as Function:
-                globalFunctionNames.insert(function.name)
-            case let variable as Variable:
-                globalVariableNames.insert(variable.name)
+                operators.append(symbol)
+            case is Function:
+                globalFunctions.append(symbol)
+            case is Variable:
+                globalVariables.append(symbol)
             default:
                 continue
             }
@@ -54,6 +54,11 @@ struct HomePage: Page {
         let types = classes + enumerations + structures
         let typeNames = Set(types.map { $0.id.description })
         let protocolNames = Set(protocols.map { $0.id.description })
+        let operatorNames = Set(operators.map { $0.id.description })
+
+        let globalTypealiasNames = Set(globalTypealias.map { $0.id.description })
+        let globalFunctionNames = Set(globalFunctions.map { $0.id.description })
+        let globalVariableNames = Set(globalVariables.map { $0.id.description })
 
         return Document {
             ForEach(in: [
