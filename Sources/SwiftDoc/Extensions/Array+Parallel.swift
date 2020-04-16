@@ -7,30 +7,23 @@ public extension RandomAccessCollection {
         }
 
         let indices = Array(self.indices)
-
-        var results = [(index: Index, result: Result<T, Error>)]()
-        results.reserveCapacity(count)
+        var results = [Result<T, Error>?](repeating: nil, count: count)
 
         let queue = DispatchQueue(label: #function)
-        withoutActuallyEscaping(transform) { escapingtransform in
-            DispatchQueue.concurrentPerform(iterations: count) { (iteration) in
-                let index = indices[iteration]
-
-                do {
-                    let transformed = try escapingtransform(self[index])
-                    queue.sync {
-                        results.append((index, .success(transformed)))
-                    }
-                } catch {
-                    queue.sync {
-                        results.append((index, .failure(error)))
-                    }
+        DispatchQueue.concurrentPerform(iterations: count) { (iteration) in
+            do {
+                let transformed = try transform(self[indices[iteration]])
+                queue.sync {
+                    results[iteration] = .success(transformed)
+                }
+            } catch {
+                queue.sync {
+                    results[iteration] = .failure(error)
                 }
             }
         }
 
-        return try results.sorted { $0.index < $1.index }
-                          .map { try $0.result.get() }
+        return try results.map { try $0!.get() }
     }
 
     func parallelCompactMap<T>(transform: (Element) throws -> T?) throws -> [T] {
