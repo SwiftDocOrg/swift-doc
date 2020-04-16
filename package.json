@@ -1,7 +1,9 @@
 {
-  "name": "swift-doc-assets",
-  "version": "1.0.0",
-  "browserslist": ["> 1%", "not dead"],
+  "private": true,
+  "browserslist": [
+    "> 1%",
+    "not dead"
+  ],
   "main": "Resources/all.css",
   "scripts": {
     "clean": "rm -rf .parcel-cache",
