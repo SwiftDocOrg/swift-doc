@@ -246,11 +246,17 @@ jobs:
 ## Development
 ### Web Assets
 
-[Parcel](https://parceljs.org) is used to process Web assets such as CSS and JavaScript. To make changes, you need to have Node and a package manager such as `npm` installed. In the project root, run `npm install` to install the dependencies.
-
-During development, run the following command in a terminal:
+To make changes to the CSS files, you need to have Node and a package manager such as `npm` installed. To get started:
 
 ```terminal
+$ cd .node
+$ npm install
+```
+
+To process the PostCSS files during development:
+
+```terminal
+$ cd .node
 $ npm run watch
 ```
 
