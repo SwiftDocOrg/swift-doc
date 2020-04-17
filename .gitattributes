@@ -1,5 +1,5 @@
-package-lock.json -diff -merge
-package-lock.json linguist-generated=true
+.node/package-lock.json -diff -merge
+.node/package-lock.json linguist-generated=true
 
-Assets/index.css -diff -merge
-Assets/index.css linguist-generated=true
+Resources/all.min.css -diff -merge
+Resources/all.min.css linguist-generated=true
