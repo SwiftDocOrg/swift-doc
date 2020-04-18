@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added asset pipeline for CSS assets.
   #49 by @kaishin.
 
+### Changed
+
+- Changed Home page to display globals for HTML format.
+  #81 by @kean.
+
 ### Fixed
 
 - Fixed relationship handling for members of nested types.
