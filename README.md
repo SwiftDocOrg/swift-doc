@@ -272,7 +272,7 @@ run the `watch` script
 to start watching for changes to files in the `Assets` folder.
 Whenever an asset source file is added, removed, or updated,
 its corresponding (unoptimized) product is automatically generated
-in the `Resouces` folder.
+in the `Resources` folder.
 
 ```terminal
 $ npm run watch
