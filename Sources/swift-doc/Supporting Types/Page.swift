@@ -28,11 +28,9 @@ extension Page {
             data = layout(self, baseURL: baseURL).description.data(using: .utf8)
         }
 
-        let fileManager = FileManager.default
-        try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
+        guard let filedata = data else { return }
 
-        try data?.write(to: url)
-        try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
+        try writeFile(filedata, to: url)
     }
 }
 
@@ -42,4 +40,12 @@ func path(for symbol: Symbol) -> String {
 
 func path(for identifier: CustomStringConvertible) -> String {
     return "\(identifier)".replacingOccurrences(of: ".", with: "_")
+}
+
+func writeFile(_ data: Data, to url: URL) throws {
+    let fileManager = FileManager.default
+    try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
+
+    try data.write(to: url)
+    try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
 }

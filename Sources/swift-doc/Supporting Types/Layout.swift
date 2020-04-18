@@ -12,9 +12,7 @@ func layout(_ page: Page, baseURL: String) -> HTML {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>\#(page.module.name) - \#(page.title)</title>
         <base href="\#(baseURL)"/>
-        <style type="text/css">
-        \#(unsafeUnescaped: css)
-        </style>
+        <link rel="stylesheet" type="text/css" href="all.css" media="all" />
     </head>
     <body>
         <header>
