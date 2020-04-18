@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `--base-url` option.
   #65 by @kean.
+- Added asset pipeline for CSS assets.
+  #49 by @kaishin.
 
 ### Fixed
 
@@ -20,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #62 by @victor-pavlychko.
 - Fixed rendering of protocol requirements in the HTML version.
   #76 by @victor-pavlychko.
-  
 
 ## [1.0.0-beta.2] - 2020-04-08
 
