@@ -205,7 +205,8 @@ button {
 }
 
 @custom-selector :--heading h1, h2, h3, h4, h5, h6;
-@custom-selector :--text-input input[type="text"],
+@custom-selector :--text-input
+  input[type="text"],
   input[type="email"],
   input[type="number"],
   input[type="password"],
@@ -644,7 +645,8 @@ caption {
 
 code,
 .graph text {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-weight: 300;
 }
 

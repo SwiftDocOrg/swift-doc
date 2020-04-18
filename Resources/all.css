@@ -701,7 +701,8 @@ caption {
 
 code,
 .graph text {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-weight: 300;
 }
 
@@ -1128,7 +1129,7 @@ nav li[class] {
 
 .structure {
   --background-image: var(--icon-structure);
-  --link: red;
+  --link: var(--system-purple);
 }
 
 .typealias {
