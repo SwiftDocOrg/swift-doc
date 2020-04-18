@@ -345,7 +345,7 @@ dfn {
 
 sup a {
   color: inherit;
-  vertical-align: inherit
+  vertical-align: inherit;
 }
 
 sup a:hover {
@@ -403,7 +403,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="password
   position: relative;
   vertical-align: top;
   width: 100%;
-  z-index: 1
+  z-index: 1;
 }
 
 input[type="text"],input[type="email"],input[type="number"],input[type="password"],input[type="tel"],input[type="url"],textarea,
@@ -477,7 +477,7 @@ textarea {
   min-height: 134px;
   overflow-y: auto;
   resize: vertical;
-  transform: translate3d(0, 0, 0)
+  transform: translate3d(0, 0, 0);
 }
 
 textarea,
@@ -497,7 +497,7 @@ select {
   height: 34px;
   margin: 0;
   padding: 0 1em;
-  width: 100%
+  width: 100%;
 }
 
 select,
@@ -527,7 +527,7 @@ input[type="file"] {
   position: relative;
   vertical-align: top;
   width: 100%;
-  z-index: 1
+  z-index: 1;
 }
 
 input[type="file"]:focus {
@@ -724,13 +724,13 @@ code,
 body {
   width: 90vw;
   max-width: 1280px;
-  margin: 1em auto
+  margin: 1em auto;
 }
 
 body > header {
     font: 600 26pt / 32pt sans-serif;
     font: var(--title-1);
-    padding: 0.5em 0
+    padding: 0.5em 0;
   }
 
 body > header a {
@@ -806,7 +806,7 @@ main {
   background: rgb(255, 255, 255);
   background: var(--system-background);
   border-radius: 8px;
-  padding: 0 2em
+  padding: 0 2em;
 }
 
 main section {
@@ -833,7 +833,7 @@ nav {
   position: -webkit-sticky;
   position: sticky;
   top: 1em;
-  width: 20vw
+  width: 20vw;
 }
 
 nav a {
@@ -896,7 +896,7 @@ blockquote {
   color: var(--secondary-label);
   font-size: smaller;
   margin-left: 0;
-  padding-left: 2em
+  padding-left: 2em;
 }
 
 blockquote a {
@@ -904,7 +904,7 @@ blockquote a {
   }
 
 article {
-  padding: 2em 0 1em 0
+  padding: 2em 0 1em 0;
 }
 
 article > .summary {
@@ -942,7 +942,7 @@ dt {
 
 dd {
   margin-left: 2em;
-  margin-bottom: 1em
+  margin-bottom: 1em;
 }
 
 dd p {
@@ -959,7 +959,7 @@ dd p {
   padding: 1em;
   padding-left: 3em;
   text-indent: -2em;
-  white-space: pre-line
+  white-space: pre-line;
 }
 
 .highlight .p {
@@ -1015,7 +1015,7 @@ main summary:hover {
 
 figure {
   margin: 2em 0;
-  padding: 1em 0
+  padding: 1em 0;
 }
 
 figure svg {
