@@ -5,8 +5,7 @@
     "not dead"
   ],
   "scripts": {
-    "build": "postcss ../Assets/css/all.css -o ../Resources/all.min.css --config ./postcss.config.js -u cssnano",
-    "watch": "postcss -w ../Assets/**/*.css --dir ../Resources --config ./postcss.config.js "
+    "watch": "postcss -w ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js"
   },
   "dependencies": {
     "cssnano": "^4.1.10",

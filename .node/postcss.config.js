@@ -7,5 +7,8 @@ module.exports = {
         "matches-pseudo-class": false,
       },
     }),
+    require("cssnano")({
+      preset: "default",
+    }),
   ],
 };
