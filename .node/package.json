@@ -10,7 +10,6 @@
   "dependencies": {
     "cssnano": "^4.1.10",
     "postcss-cli": "^7.1.0",
-    "postcss-nested": "^4.2.1",
     "postcss-preset-env": "^6.7.0"
   }
 }
