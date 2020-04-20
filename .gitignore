@@ -5,6 +5,9 @@
 xcuserdata/
 .swiftpm
 
+Resources/*.css
+!Resources/*.min.css
+
 # NodeJS
 ## Logs
 logs
