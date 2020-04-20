@@ -57,6 +57,12 @@ $ make install
                               files
       diagram                 Generates diagram of Swift symbol relationships
 
+> **Note**:
+> The `swift` driver provides extensibility through subcommands.
+> If you type an unknown subcommand like `swift foo`,
+> the system looks for a command called `swift-foo` in your `PATH`.
+> This mechanism allows `swift-doc` to be run either directly or as `swift doc`.
+
 #### swift-doc generate
 
     OVERVIEW: Generates Swift documentation
