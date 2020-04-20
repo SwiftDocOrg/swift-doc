@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed Home page to display globals for HTML format.
   #81 by @kean.
+- Changed README to clarify use of `swift-doc` vs. `swift doc`
+  on the command line.
+  #89 by @mattt.
 
 ### Fixed
 
