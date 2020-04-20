@@ -279,15 +279,8 @@ $ npm run watch
 ```
 
 When you're happy with the results,
-run the `build` script to generate production-ready assets.
-
-```terminal
-$ npm run build
-```
-
-Finally,
 commit any changes to the source files in `Assets`
-as well as the generated files in `Resources`. 
+as well as the generated files in `Resources`.
 
 ```terminal
 $ git add Assets Resources
