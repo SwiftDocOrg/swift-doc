@@ -23,7 +23,7 @@ final class NestedTypesTests: XCTestCase {
 
         let url = try temporaryFile(contents: source)
         let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
-        let module = Module(name: "Module", sourceFiles: [sourceFile])
+        let module = Module(name: "Module", sourceFiles: [sourceFile], minimumAccessLevel: .public)
 
         XCTAssertEqual(sourceFile.symbols.count, 4)
 

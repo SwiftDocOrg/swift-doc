@@ -21,7 +21,7 @@ extension Report {
     public init(module: Module) {
         let entries = module.sourceFiles
                             .flatMap { $0.symbols }
-                            .filter { $0.isPublic }
+                            .filter { $0.isIncluded(minimumAccessLevel: module.minimumAccessLevel) }
                             .map { Entry($0) }
 
         self.init(entries: entries)

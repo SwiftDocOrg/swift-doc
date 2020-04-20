@@ -16,7 +16,7 @@ struct SidebarPage: Page {
     init(module: Module) {
         self.module = module
 
-        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
+        for symbol in module.interface.topLevelSymbols.filter({ $0.isIncluded(minimumAccessLevel: module.minimumAccessLevel) }) {
             switch symbol.api {
             case is Class:
                 typeNames.insert(symbol.id.description)

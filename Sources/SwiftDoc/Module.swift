@@ -7,18 +7,21 @@ public final class Module: Codable {
 
     public let sourceFiles: [SourceFile]
 
+    public let minimumAccessLevel: AccessLevel
+    
     public lazy var interface: Interface = {
         let imports = sourceFiles.flatMap { $0.imports }
         let symbols = sourceFiles.flatMap { $0.symbols }
-        return Interface(imports: imports, symbols: symbols)
+        return Interface(imports: imports, symbols: symbols, minimumAccessLevel: minimumAccessLevel)
     }()
 
-    public required init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
+    public required init(name: String = "Anonymous", sourceFiles: [SourceFile], minimumAccessLevel: AccessLevel) {
         self.name = name
         self.sourceFiles = sourceFiles
+        self.minimumAccessLevel = minimumAccessLevel
     }
 
-    public convenience init(name: String = "Anonymous", paths: [String]) throws {
+    public convenience init(name: String = "Anonymous", paths: [String], minimumAccessLevel: AccessLevel) throws {
         var sources: [(file: URL, directory: URL)] = []
 
         let fileManager = FileManager.default
@@ -38,6 +41,6 @@ public final class Module: Codable {
 
         let sourceFiles = try sources.parallelMap { try SourceFile(file: $0.file, relativeTo: $0.directory) }
 
-        self.init(name: name, sourceFiles: sourceFiles)
+        self.init(name: name, sourceFiles: sourceFiles, minimumAccessLevel: minimumAccessLevel)
     }
 }

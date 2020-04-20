@@ -55,3 +55,9 @@ extension Subscript: API {
 
 extension Typealias: API {}
 extension Variable: API {}
+
+public enum AccessLevel: String, Codable {
+    case `public`
+    case `internal`
+    case `private`
+}

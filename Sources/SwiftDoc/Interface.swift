@@ -5,10 +5,12 @@ import struct SwiftSemantics.Protocol
 public final class Interface: Codable {
     public let imports: [Import]
     public let symbols: [Symbol]
+    public let minimumAccessLevel: AccessLevel
 
-    public required init(imports: [Import], symbols: [Symbol]) {
+    public required init(imports: [Import], symbols: [Symbol], minimumAccessLevel: AccessLevel) {
         self.imports = imports
-        self.symbols = symbols.filter { $0.isPublic }
+        self.symbols = symbols.filter { $0.isIncluded(minimumAccessLevel: minimumAccessLevel) }
+        self.minimumAccessLevel = minimumAccessLevel
     }
 
     // MARK: -
@@ -37,7 +39,7 @@ public final class Interface: Codable {
             var superclasses = Set(CollectionOfOne(baseClass))
 
             while !superclasses.isEmpty {
-                let subclasses = Set(superclasses.flatMap { typesInheriting(from: $0) }.filter { $0.isPublic })
+                let subclasses = Set(superclasses.flatMap { typesInheriting(from: $0) }.filter { $0.isIncluded(minimumAccessLevel: self.minimumAccessLevel) })
                 defer { superclasses = subclasses }
                 classClusters[baseClass, default: []].formUnion(subclasses)
             }

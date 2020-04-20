@@ -58,7 +58,26 @@ public final class Symbol {
 
         return false
     }
-
+    
+    public var isInternal: Bool {
+        if api.modifiers.contains(where: { $0.name == "private" }) {
+            return false
+        }
+        
+        return true
+    }
+    
+    public func isIncluded(minimumAccessLevel: AccessLevel) -> Bool {
+        switch minimumAccessLevel {
+        case .public:
+            return isPublic
+        case .internal:
+            return isInternal
+        case .private:
+            return true
+        }
+    }
+    
     public var isDocumented: Bool {
         return documentation?.isEmpty == false
     }

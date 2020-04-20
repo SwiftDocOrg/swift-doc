@@ -5,6 +5,8 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
+extension AccessLevel: ExpressibleByArgument { }
+
 extension SwiftDoc {
   struct Generate: ParsableCommand {
     enum Format: String, ExpressibleByArgument {
@@ -30,6 +32,11 @@ extension SwiftDoc {
               help: "The output format")
       var format: Format
 
+      @Option(name: .customLong("minimum-access-level"),
+              default: .public,
+              help: "The minimum access level for declarations to be included")
+      var minimumAccessLevel: AccessLevel
+        
       @Option(name: .customLong("base-url"),
               default: "/",
               help: "The base URL used for all relative URLs in generated documents.")
@@ -42,7 +49,7 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
-      let module = try Module(name: options.moduleName, paths: options.inputs)
+      let module = try Module(name: options.moduleName, paths: options.inputs, minimumAccessLevel: options.minimumAccessLevel)
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
       try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
@@ -53,7 +60,7 @@ extension SwiftDoc {
         var pages: [String: Page] = [:]
 
         var globals: [String: [Symbol]] = [:]
-        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
+        for symbol in module.interface.topLevelSymbols.filter({ $0.isIncluded(minimumAccessLevel: options.minimumAccessLevel) }) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
             pages[path(for: symbol)] = TypePage(module: module, symbol: symbol)

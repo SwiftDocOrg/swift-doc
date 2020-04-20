@@ -9,6 +9,11 @@ extension SwiftDoc {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
 
+            @Option(name: .customLong("minimum-access-level"),
+                    default: .public,
+                    help: "The minimum access level for declarations to be included")
+            var minimumAccessLevel: AccessLevel
+              
             @Option(name: .shortAndLong,
                     help: "The path for generated report")
             var output: String?
@@ -20,7 +25,7 @@ extension SwiftDoc {
         var options: Options
 
         func run() throws {
-            let module = try Module(paths: options.inputs)
+            let module = try Module(paths: options.inputs, minimumAccessLevel: options.minimumAccessLevel)
             let report = Report(module: module)
 
             if let output = options.output {

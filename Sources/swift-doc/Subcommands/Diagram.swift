@@ -11,6 +11,11 @@ extension SwiftDoc {
         struct Options: ParsableArguments {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
+
+            @Option(name: .customLong("minimum-access-level"),
+                    default: .public,
+                    help: "The minimum access level for declarations to be included")
+            var minimumAccessLevel: AccessLevel
         }
         
         static var configuration = CommandConfiguration(abstract: "Generates diagram of Swift symbol relationships")
@@ -19,7 +24,7 @@ extension SwiftDoc {
         var options: Options
         
         func run() throws {
-            let module = try Module(paths: options.inputs)
+            let module = try Module(paths: options.inputs, minimumAccessLevel: options.minimumAccessLevel)
             print(diagram(of: module), to: &standardOutput)
         }
     }
@@ -61,7 +66,7 @@ fileprivate func diagram(of module: Module) -> String {
     }
     
 
-    for symbol in (module.interface.symbols.filter { $0.isPublic && $0.api is Type }) {
+    for symbol in (module.interface.symbols.filter { $0.isIncluded(minimumAccessLevel: module.minimumAccessLevel) && $0.api is Type }) {
         let symbolNode = Node("\(symbol.id)")
         graph.append(symbolNode)
 
