@@ -72,7 +72,10 @@ extension SwiftDoc {
           pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
         }
 
-        guard !pages.isEmpty else { return }
+        guard !pages.isEmpty else {
+            logger.warning("No pages were found to render.")
+            return
+        }
 
         if pages.count == 1, let page = pages.first?.value {
           let filename: String
