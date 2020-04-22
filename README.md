@@ -238,7 +238,7 @@ jobs:
       - name: Generate Documentation
         uses: SwiftDocOrg/swift-doc@master
         with:
-          inputs: "Source"
+          inputs: "Sources"
           module-name: MyLibrary
           output: "Documentation"
       - name: Upload Documentation to Wiki
