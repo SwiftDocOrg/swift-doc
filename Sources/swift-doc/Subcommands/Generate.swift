@@ -73,7 +73,7 @@ extension SwiftDoc {
         }
 
         guard !pages.isEmpty else {
-            logger.warning("No pages were found to render.")
+            logger.warning("No public API symbols were found at the specified path. No output was written.")
             return
         }
 
