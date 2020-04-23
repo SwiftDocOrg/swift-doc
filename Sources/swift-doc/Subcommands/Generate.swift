@@ -72,7 +72,10 @@ extension SwiftDoc {
           pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
         }
 
-        guard !pages.isEmpty else { return }
+        guard !pages.isEmpty else {
+            logger.warning("No public API symbols were found at the specified path. No output was written.")
+            return
+        }
 
         if pages.count == 1, let page = pages.first?.value {
           let filename: String

@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed README to clarify use of `swift-doc` vs. `swift doc`
   on the command line.
   #89 by @mattt.
+- Changed the `generate` command to emit a warning if no source
+  files are found.
+  #92 by @heckj
 
 ### Fixed
 
@@ -30,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #62 by @victor-pavlychko.
 - Fixed rendering of protocol requirements in the HTML version.
   #76 by @victor-pavlychko.
+- Fixed default location of sources reference in README
+  #92 by @heckj
 
 ## [1.0.0-beta.2] - 2020-04-08
 
