@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #62 by @victor-pavlychko.
 - Fixed rendering of protocol requirements in the HTML version.
   #76 by @victor-pavlychko.
-- Fixed defaulty location of sources reference in README
+- Fixed default location of sources reference in README
   #92 by @heckj
 
 ## [1.0.0-beta.2] - 2020-04-08
