@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed README to clarify use of `swift-doc` vs. `swift doc`
   on the command line.
   #89 by @mattt.
-- Changed the generate command to emit a warning if no source
+- Changed the `generate` command to emit a warning if no source
   files are found.
   #92 by @heckj
 
