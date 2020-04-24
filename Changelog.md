@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `--base-url` option.
-  #65 by @kean.
+  #65 by @kean and #93 by @mattt.
 - Added asset pipeline for CSS assets.
   #49 by @kaishin.
 
