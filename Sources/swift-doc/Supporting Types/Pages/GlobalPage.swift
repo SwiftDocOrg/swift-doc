@@ -7,11 +7,13 @@ struct GlobalPage: Page {
     let module: Module
     let name: String
     let symbols: [Symbol]
+    let baseURL: String
 
-    init(module: Module, name: String, symbols: [Symbol]) {
+    init(module: Module, name: String, symbols: [Symbol], baseURL: String) {
         self.module = module
         self.name = name
         self.symbols = symbols
+        self.baseURL = baseURL
     }
 
     // MARK: - Page
@@ -24,7 +26,7 @@ struct GlobalPage: Page {
         return Document {
             ForEach(in: symbols) { symbol in
                 Heading { symbol.id.description }
-                Documentation(for: symbol, in: module)
+                Documentation(for: symbol, in: module, baseURL: baseURL)
             }
         }
     }
@@ -46,7 +48,7 @@ struct GlobalPage: Page {
         </h1>
 
         \#(symbols.map { symbol in
-        Documentation(for: symbol, in: module).html
+        Documentation(for: symbol, in: module, baseURL: baseURL).html
         })
         """#
     }

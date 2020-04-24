@@ -43,6 +43,7 @@ extension SwiftDoc {
 
     func run() throws {
       let module = try Module(name: options.moduleName, paths: options.inputs)
+      let baseURL = options.baseURL
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
       try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
@@ -56,9 +57,9 @@ extension SwiftDoc {
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
-            pages[path(for: symbol)] = TypePage(module: module, symbol: symbol)
+            pages[path(for: symbol, with: baseURL)] = TypePage(module: module, symbol: symbol, baseURL: baseURL)
           case let `typealias` as Typealias:
-            pages[path(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol)
+            pages[path(for: `typealias`.name, with: baseURL)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
           case let function as Function where !function.isOperator:
             globals[function.name, default: []] += [symbol]
           case let variable as Variable:
@@ -69,7 +70,7 @@ extension SwiftDoc {
         }
 
         for (name, symbols) in globals {
-          pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
+            pages[path(for: name, with: baseURL)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL)
         }
 
         guard !pages.isEmpty else {
@@ -87,15 +88,15 @@ extension SwiftDoc {
           }
 
           let url = outputDirectoryURL.appendingPathComponent(filename)
-          try page.write(to: url, format: format, baseURL: options.baseURL)
+          try page.write(to: url, format: format)
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module)
-            pages["_Sidebar"] = SidebarPage(module: module)
-            pages["_Footer"] = FooterPage()
+            pages["Home"] = HomePage(module: module, baseURL: baseURL)
+            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL)
+            pages["_Footer"] = FooterPage(baseURL: baseURL)
           case .html:
-            pages["Home"] = HomePage(module: module)
+            pages["Home"] = HomePage(module: module, baseURL: baseURL)
           }
 
           try pages.map { $0 }.parallelForEach {
@@ -110,7 +111,7 @@ extension SwiftDoc {
             }
 
             let url = outputDirectoryURL.appendingPathComponent(filename)
-            try $0.value.write(to: url, format: format, baseURL: options.baseURL)
+            try $0.value.write(to: url, format: format)
           }
         }
 

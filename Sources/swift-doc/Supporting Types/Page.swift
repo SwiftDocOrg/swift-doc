@@ -8,6 +8,7 @@ import HypertextLiteral
 
 protocol Page: HypertextLiteralConvertible {
     var module: Module { get }
+    var baseURL: String { get }
     var title: String { get }
     var document: CommonMark.Document { get }
     var html: HypertextLiteral.HTML { get }
@@ -19,13 +20,13 @@ extension Page {
 }
 
 extension Page {
-    func write(to url: URL, format: SwiftDoc.Generate.Format, baseURL: String) throws {
+    func write(to url: URL, format: SwiftDoc.Generate.Format) throws {
         let data: Data?
         switch format {
         case .commonmark:
             data = document.render(format: .commonmark).data(using: .utf8)
         case .html:
-            data = layout(self, baseURL: baseURL).description.data(using: .utf8)
+            data = layout(self).description.data(using: .utf8)
         }
 
         guard let filedata = data else { return }
@@ -34,12 +35,19 @@ extension Page {
     }
 }
 
-func path(for symbol: Symbol) -> String {
-    return path(for: symbol.id.description)
+func path(for symbol: Symbol, with baseURL: String) -> String {
+    return path(for: symbol.id.description, with: baseURL)
 }
 
-func path(for identifier: CustomStringConvertible) -> String {
-    return "\(identifier)".replacingOccurrences(of: ".", with: "_")
+func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
+    var urlComponents = URLComponents(string: baseURL)
+    urlComponents?.path += "\(identifier)".replacingOccurrences(of: ".", with: "_")
+    guard let path = urlComponents?.string else {
+        logger.critical("Unable to construct path for \(identifier) with baseURL \(baseURL)")
+        fatalError()
+    }
+    
+    return path
 }
 
 func writeFile(_ data: Data, to url: URL) throws {

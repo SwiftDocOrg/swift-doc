@@ -5,6 +5,7 @@ import HypertextLiteral
 
 struct HomePage: Page {
     var module: Module
+    let baseURL: String
 
     var classes: [Symbol] = []
     var enumerations: [Symbol] = []
@@ -15,8 +16,9 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module) {
+    init(module: Module, baseURL: String) {
         self.module = module
+        self.baseURL = baseURL
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
@@ -69,7 +71,7 @@ struct HomePage: Page {
                 if (!names.isEmpty) {
                     Heading { heading }
                     List(of: names.sorted()) { name in
-                        Link(urlString: path(for: name), text: name)
+                        Link(urlString: path(for: name, with: baseURL), text: name)
                     }
                 }
             }
@@ -90,7 +92,7 @@ struct HomePage: Page {
                           Heading { heading }
                             
                           List(of: names.sorted()) { name in
-                            Link(urlString: path(for: name), text: softbreak(name))
+                            Link(urlString: path(for: name, with: baseURL), text: softbreak(name))
                           }
                         }
                     }
@@ -163,7 +165,7 @@ struct HomePage: Page {
             let descriptor = String(describing: type(of: symbol.api)).lowercased()
             return #"""
             <dt class="\#(descriptor)">
-                <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
+                <a href=\#(path(for: symbol, with: baseURL)) title="\#(descriptor) - \#(symbol.id.description)">
                     \#(softbreak(symbol.id.description))
                 </a>
             </dt>

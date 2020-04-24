@@ -10,10 +10,12 @@ import Xcode
 struct Documentation: Component {
     var symbol: Symbol
     var module: Module
+    let baseURL: String
 
-    init(for symbol: Symbol, in module: Module) {
+    init(for symbol: Symbol, in module: Module, baseURL: String) {
         self.symbol = symbol
         self.module = module
+        self.baseURL = baseURL
     }
 
     // MARK: - Component
@@ -37,7 +39,7 @@ struct Documentation: Component {
                 Fragment { "\(documentation.summary!)" }
             }
 
-            Declaration(of: symbol, in: module)
+            Declaration(of: symbol, in: module, baseURL: baseURL)
 
             ForEach(in: documentation.discussionParts) { part in
                 if part is SwiftMarkup.Documentation.Callout {
@@ -87,7 +89,7 @@ struct Documentation: Component {
 
         var fragments: [HypertextLiteralConvertible] = []
 
-        fragments.append(Declaration(of: symbol, in: module))
+        fragments.append(Declaration(of: symbol, in: module, baseURL: baseURL))
 
         if let summary = documentation.summary {
             fragments.append(#"""
@@ -111,11 +113,11 @@ struct Documentation: Component {
                             let source = codeBlock.literal
                         {
                             var html = try! SwiftSyntaxHighlighter.highlight(source: source, using: Xcode.self)
-                            html = linkCodeElements(of: html, for: symbol, in: module)
+                            html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
                             return HTML(html)
                         } else {
                             var html = (try! CommonMark.Document(part)).render(format: .html, options: [.unsafe])
-                            html = linkCodeElements(of: html, for: symbol, in: module)
+                            html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
                             return HTML(html)
                         }
                     } else {
