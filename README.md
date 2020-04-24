@@ -46,9 +46,10 @@ $ make install
 
     OVERVIEW: A utility for generating documentation for Swift code.
     
-    USAGE: swift-doc <subcommand>
+    USAGE: swift doc <subcommand>
     
     OPTIONS:
+      --version               Show the version.
       -h, --help              Show help information.
     
     SUBCOMMANDS:
@@ -67,7 +68,7 @@ $ make install
 
     OVERVIEW: Generates Swift documentation
 
-    USAGE: swift-doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>]
+    USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>]
 
     ARGUMENTS:
       <inputs>                One or more paths to Swift files 
@@ -111,7 +112,7 @@ $ Documentation/
 
     OVERVIEW: Generates documentation coverage statistics for Swift files
 
-    USAGE: swift-doc coverage [<inputs> ...] [--output <output>]
+    USAGE: swift doc coverage [<inputs> ...] [--output <output>]
 
     ARGUMENTS:
       <inputs>                One or more paths to Swift files 
@@ -160,7 +161,7 @@ please reach out by [opening an Issue][open an issue]!
 
     OVERVIEW: Generates diagram of Swift symbol relationships
 
-    USAGE: swift-doc diagram [<inputs> ...]
+    USAGE: swift doc diagram [<inputs> ...]
 
     ARGUMENTS:
       <inputs>                One or more paths to Swift files 
