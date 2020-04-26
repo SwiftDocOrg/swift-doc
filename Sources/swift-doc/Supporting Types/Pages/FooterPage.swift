@@ -31,7 +31,7 @@ struct FooterPage: Page {
 
         return Document {
             Fragment {
-                "Generated at \(timestamp) using [swift-doc](\(href))."
+                "Generated at \(timestamp) using [swift-doc](\(href)) \(SwiftDoc.configuration.version)."
             }
         }
     }
@@ -42,7 +42,7 @@ struct FooterPage: Page {
 
         return #"""
         <p>
-            Generated on <time datetime=\#(timestamp)>\#(dateString)</time> using <a href=\#(href)>swift-doc</a>.
+            Generated on <time datetime=\#(timestamp)>\#(dateString)</time> using <a href=\#(href)>swift-doc</a> <span class="version">\#(SwiftDoc.configuration.version)</span>.
         </p>
         """#
     }

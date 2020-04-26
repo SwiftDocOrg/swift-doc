@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #65 by @kean and #93 by @mattt.
 - Added asset pipeline for CSS assets.
   #49 by @kaishin.
+- Add `swift-doc` version number to command and generated output.
+  #94 by @mattt.
 
 ### Changed
 
