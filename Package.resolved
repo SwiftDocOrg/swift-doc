@@ -5,9 +5,9 @@
         "package": "CommonMark",
         "repositoryURL": "https://github.com/SwiftDocOrg/CommonMark.git",
         "state": {
-          "branch": "master",
-          "revision": "00d3a8ce879b6578979a3470430867f85af26b92",
-          "version": null
+          "branch": null,
+          "revision": "62176a332884826997928ba578d9d322c16772fb",
+          "version": "0.4.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/Markup.git",
         "state": {
           "branch": null,
-          "revision": "9a429d0011d738059bc94f5f92ee406689597a91",
-          "version": "0.0.3"
+          "revision": "029ad8c1115ab32b7c20ab52eb092fbc030deb17",
+          "version": "0.0.4"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
         "state": {
           "branch": null,
-          "revision": "1168665f6b36be747ffe6b7b90bc54cfc17f42b7",
-          "version": "0.28.3+20200207.1168665"
+          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
+          "version": "0.28.3+20200110.2a76603"
         }
       },
       {
@@ -95,9 +95,9 @@
         "package": "SwiftMarkup",
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftMarkup.git",
         "state": {
-          "branch": null,
-          "revision": "431f418ae1833a312646e934a2891e778c1b03b0",
-          "version": "0.0.5"
+          "branch": "0.2.0",
+          "revision": "f395f3bd9e345402cc744aa9051780ed403d3b26",
+          "version": null
         }
       },
       {
