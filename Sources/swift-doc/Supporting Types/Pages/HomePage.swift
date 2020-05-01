@@ -11,7 +11,7 @@ struct HomePage: Page {
     var structures: [Symbol] = []
     var protocols: [Symbol] = []
     var operators: [Symbol] = []
-    var globalTypealias: [Symbol] = []
+    var globalTypealiases: [Symbol] = []
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
@@ -29,7 +29,7 @@ struct HomePage: Page {
             case is Protocol:
                 protocols.append(symbol)
             case is Typealias:
-                globalTypealias.append(symbol)
+                globalTypealiases.append(symbol)
             case is Operator:
                 operators.append(symbol)
             case let function as Function where function.isOperator:
@@ -51,47 +51,22 @@ struct HomePage: Page {
     }
 
     var document: CommonMark.Document {
-        let types = classes + enumerations + structures
-        let typeNames = Set(types.map { $0.id.description })
-        let protocolNames = Set(protocols.map { $0.id.description })
-        let operatorNames = Set(operators.map { $0.id.description })
-
-        let globalTypealiasNames = Set(globalTypealias.map { $0.id.description })
-        let globalFunctionNames = Set(globalFunctions.map { $0.id.description })
-        let globalVariableNames = Set(globalVariables.map { $0.id.description })
-
         return Document {
             ForEach(in: [
-                ("Types", typeNames),
-                ("Protocols", protocolNames),
-                ("Operators", operatorNames)
-            ]) { (heading, names) in
-                if (!names.isEmpty) {
+                ("Types", classes + enumerations + structures),
+                ("Protocols", protocols),
+                ("Operators", operators),
+                ("Global Typealiases", globalTypealiases),
+                ("Global Functions", globalFunctions),
+                ("Global Variables", globalVariables),
+            ]) { (heading, symbols) in
+                if (!symbols.isEmpty) {
                     Heading { heading }
-                    List(of: names.sorted()) { name in
-                        Link(urlString: path(for: name), text: name)
-                    }
-                }
-            }
 
-            if !globalTypealiasNames.isEmpty ||
-                !globalFunctionNames.isEmpty ||
-                !globalVariableNames.isEmpty
-            {
-                Heading { "Globals" }
-
-                Section {
-                    ForEach(in: [
-                          ("Typealiases", globalTypealiasNames),
-                          ("Functions", globalFunctionNames),
-                          ("Variables", globalVariableNames)
-                      ]) { (heading, names) in
-                        if (!names.isEmpty) {
-                          Heading { heading }
-                            
-                          List(of: names.sorted()) { name in
-                            Link(urlString: path(for: name), text: softbreak(name))
-                          }
+                    // FIXME: HTMLBlock doesn't render for some reason
+                    Paragraph {
+                        RawHTML {
+                            listHTML(symbols: symbols).description
                         }
                     }
                 }
@@ -121,7 +96,7 @@ struct HomePage: Page {
     }
 
     private var globalsHTML: HypertextLiteral.HTML {
-        guard !globalTypealias.isEmpty ||
+        guard !globalTypealiases.isEmpty ||
             !globalFunctions.isEmpty ||
             !globalVariables.isEmpty else {
                 return ""
@@ -138,7 +113,7 @@ struct HomePage: Page {
 
     private var globalsListHTML: HypertextLiteral.HTML {
         let globals = [
-            ("Typealiases", globalTypealias),
+            ("Typealiases", globalTypealiases),
             ("Functions", globalFunctions),
             ("Variables", globalVariables),
         ]
