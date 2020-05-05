@@ -94,3 +94,8 @@ public func softbreak(_ string: String) -> String {
 
     return regex.stringByReplacingMatches(in: string, options: [], range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "$1\u{200B}$2")
 }
+
+func fetchRemoteCSS() throws -> Data {
+    let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
+    return try Data(contentsOf: url)
+}

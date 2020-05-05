@@ -31,9 +31,12 @@ struct TypePage: Page {
     }
 
     var html: HypertextLiteral.HTML {
+        let typeName = String(describing: type(of: symbol.api))
+
         return #"""
+        <a name="//apple_ref/cpp/\#(typeName)/\#(symbol.id.description)" class="dashAnchor"></a>
         <h1>
-            <small>\#(String(describing: type(of: symbol.api)))</small>
+            <small>\#(typeName)</small>
             <code class="name">\#(softbreak(symbol.id.description))</code>
         </h1>
 

@@ -5,7 +5,6 @@ import SwiftSemantics
 import GraphViz
 import DOT
 
-
 extension SwiftDoc {
     struct Diagram: ParsableCommand {
         struct Options: ParsableArguments {

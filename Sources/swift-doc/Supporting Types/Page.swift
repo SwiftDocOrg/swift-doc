@@ -18,22 +18,6 @@ extension Page {
     var title: String { fatalError("unimplemented") }
 }
 
-extension Page {
-    func write(to url: URL, format: SwiftDoc.Generate.Format, baseURL: String) throws {
-        let data: Data?
-        switch format {
-        case .commonmark:
-            data = document.render(format: .commonmark).data(using: .utf8)
-        case .html:
-            data = layout(self, baseURL: baseURL).description.data(using: .utf8)
-        }
-
-        guard let filedata = data else { return }
-
-        try writeFile(filedata, to: url)
-    }
-}
-
 func path(for symbol: Symbol) -> String {
     return path(for: symbol.id.description)
 }
