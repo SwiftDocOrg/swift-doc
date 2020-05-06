@@ -49,7 +49,7 @@ struct Relationships: Component {
         do {
             return try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
         } catch {
-            logger.error("\(error)")
+            logger.warning("Failed to generate relationship graph for \(symbol.id). Please ensure that GraphViz binaries are accessible from your PATH. (\(error))")
             return nil
         }
     }
