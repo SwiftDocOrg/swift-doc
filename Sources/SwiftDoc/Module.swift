@@ -2,20 +2,18 @@ import Foundation
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-public final class Module: Codable {
+public final class Module {
     public let name: String
-
     public let sourceFiles: [SourceFile]
-
-    public lazy var interface: Interface = {
-        let imports = sourceFiles.flatMap { $0.imports }
-        let symbols = sourceFiles.flatMap { $0.symbols }
-        return Interface(imports: imports, symbols: symbols)
-    }()
+    public let interface: Interface
 
     public required init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
         self.name = name
         self.sourceFiles = sourceFiles
+
+        let imports = sourceFiles.flatMap { $0.imports }
+        let symbols = sourceFiles.flatMap { $0.symbols }
+        self.interface = Interface(imports: imports, symbols: symbols)
     }
 
     public convenience init(name: String = "Anonymous", paths: [String]) throws {
