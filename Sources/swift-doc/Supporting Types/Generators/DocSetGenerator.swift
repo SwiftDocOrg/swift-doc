@@ -30,7 +30,8 @@ enum DocSetGenerator: Generator {
             "CFBundleName": module.name,
             "DocSetPlatformFamily": "swift",
             "isDashDocset": true,
-            "DashDocSetFamily": "dashtoc"
+            "DashDocSetFamily": "dashtoc",
+            "dashIndexFilePath": "index.html"
         ]
 
         let plist = try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
