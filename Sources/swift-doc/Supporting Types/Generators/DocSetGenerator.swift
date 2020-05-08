@@ -151,7 +151,7 @@ fileprivate extension Symbol {
         case is Class:
             return "Class"
         case is Initializer:
-            return "Constructor"
+            return "Method"
         case is Enumeration:
             return "Enum"
         case is Enumeration.Case:
@@ -176,6 +176,8 @@ fileprivate extension Symbol {
             return "Protocol"
         case is Structure:
             return "Struct"
+        case is Subscript:
+            return "Method"
         case is Type, is AssociatedType:
             return "Type"
         default:
