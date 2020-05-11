@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed logging behavior to better communicate errors encountered
   when generating relationship graphs using GraphViz.
   #100 by @mattt.
+- Changed HTML format output of Home page
+  to move enumeration cases under initializers.
+  #103 by @mattt.
 
 ### Fixed
 
