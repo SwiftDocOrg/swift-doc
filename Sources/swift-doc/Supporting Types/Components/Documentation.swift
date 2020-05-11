@@ -42,11 +42,7 @@ struct Documentation: Component {
             Declaration(of: symbol, in: module, baseURL: baseURL)
 
             ForEach(in: documentation.discussionParts) { part in
-                if part is SwiftMarkup.Documentation.Callout {
-                    Callout(part as! SwiftMarkup.Documentation.Callout)
-                } else {
-                    Fragment { "\(part)" }
-                }
+                DiscussionPart(part, for: symbol, in: module, baseURL: baseURL)
             }
 
             if !documentation.parameters.isEmpty {
@@ -102,27 +98,8 @@ struct Documentation: Component {
         if !documentation.discussionParts.isEmpty {
             fragments.append(#"""
             <div class="discussion">
-                \#(documentation.discussionParts.compactMap { part -> HypertextLiteral.HTML? in
-                    if let part = part as? SwiftMarkup.Documentation.Callout {
-                        return Callout(part).html
-                    } else if let part = part as? String {
-                        if part.starts(with: "```"),
-                            let codeBlock = (try? CommonMark.Document(part))?.children.compactMap({ $0 as? CodeBlock }).first,
-                            (codeBlock.fenceInfo ?? "") == "" ||
-                                codeBlock.fenceInfo?.compare("swift", options: .caseInsensitive) == .orderedSame,
-                            let source = codeBlock.literal
-                        {
-                            var html = try! SwiftSyntaxHighlighter.highlight(source: source, using: Xcode.self)
-                            html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
-                            return HTML(html)
-                        } else {
-                            var html = (try! CommonMark.Document(part)).render(format: .html, options: [.unsafe])
-                            html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
-                            return HTML(html)
-                        }
-                    } else {
-                        return nil
-                    }
+                \#(documentation.discussionParts.compactMap { part -> HTML? in
+                    DiscussionPart(part, for: symbol, in: module, baseURL: baseURL).html
                 })
             </div>
             """# as HypertextLiteral.HTML)
@@ -199,29 +176,88 @@ struct Documentation: Component {
 }
 
 extension Documentation {
-    struct Callout: Component {
-        var callout: SwiftMarkup.Documentation.Callout
+    struct DiscussionPart: Component {
+        var symbol: Symbol
+        var module: Module
+        var part: SwiftMarkup.DiscussionPart
+        let baseURL: String
 
-        init(_ callout: SwiftMarkup.Documentation.Callout) {
-            self.callout = callout
+        init(_ part: SwiftMarkup.DiscussionPart, for symbol: Symbol, in module: Module, baseURL: String) {
+            self.part = part
+            self.symbol = symbol
+            self.module = module
+            self.baseURL = baseURL
         }
 
         // MARK: - Component
 
         var fragment: Fragment {
-            Fragment {
-                """
-                > \(callout.delimiter.rawValue.capitalized): \(callout.content)
-                """
+            switch part {
+            case .blockQuote(let blockquote):
+                return Fragment {
+                    blockquote.render(format: .commonmark)
+                }
+            case .callout(let callout):
+                return Fragment {
+                    BlockQuote {
+                        "\(callout.delimiter.rawValue.capitalized): \(callout.content)"
+                    }
+                }
+            case .codeBlock(let codeBlock):
+                return Fragment {
+                    codeBlock.render(format: .commonmark)
+                }
+            case .heading(let heading):
+                return Fragment {
+                    heading.render(format: .commonmark)
+                }
+            case .htmlBlock(let htmlBlock):
+                return Fragment {
+                    htmlBlock.literal ?? ""
+                }
+            case .list(let list):
+                return Fragment {
+                    list.render(format: .commonmark)
+                }
+            case .paragraph(let paragraph):
+                return Fragment {
+                    paragraph.render(format: .commonmark)
+                }
             }
         }
 
         var html: HypertextLiteral.HTML {
-            return #"""
-            <aside class=\#(callout.delimiter.rawValue)>
-                \#(commonmark: callout.content)
-            </aside>
-            """#
+            switch part {
+            case .blockQuote(let blockquote):
+                return HTML(blockquote.render(format: .html, options: [.unsafe]))
+            case .callout(let callout):
+                return #"""
+                <aside class=\#(callout.delimiter.rawValue)>
+                    \#(commonmark: callout.content)
+                </aside>
+                """# as HTML
+            case .codeBlock(let codeBlock):
+                if (codeBlock.fenceInfo ?? "") == "" ||
+                        codeBlock.fenceInfo?.compare("swift", options: .caseInsensitive) == .orderedSame,
+                    let source = codeBlock.literal
+                {
+                    var html = try! SwiftSyntaxHighlighter.highlight(source: source, using: Xcode.self)
+                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
+                    return HTML(html)
+                } else {
+                    var html = codeBlock.render(format: .html, options: [.unsafe])
+                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
+                    return HTML(html)
+                }
+            case .heading(let heading):
+                return HTML(heading.render(format: .html, options: [.unsafe]))
+            case .htmlBlock(let htmlBlock):
+                return HTML(htmlBlock.literal ?? "")
+            case .list(let list):
+                return HTML(list.render(format: .html, options: [.unsafe]))
+            case .paragraph(let paragraph):
+                return HTML(paragraph.render(format: .html, options: [.unsafe]))
+            }
         }
     }
 }

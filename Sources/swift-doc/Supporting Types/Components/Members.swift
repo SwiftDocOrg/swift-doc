@@ -12,8 +12,8 @@ struct Members: Component {
     var members: [Symbol]
 
     var typealiases: [Symbol]
-    var cases: [Symbol]
     var initializers: [Symbol]
+    var cases: [Symbol]
     var properties: [Symbol]
     var methods: [Symbol]
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
@@ -26,8 +26,8 @@ struct Members: Component {
         self.members = module.interface.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
 
         self.typealiases = members.filter { $0.api is Typealias }
-        self.cases = members.filter { $0.api is Enumeration.Case }
         self.initializers = members.filter { $0.api is Initializer }
+        self.cases = members.filter { $0.api is Enumeration.Case }
         self.properties = members.filter { $0.api is Variable }
         self.methods = members.filter { $0.api is Function }
         self.genericallyConstrainedMembers = Dictionary(grouping: members) { $0.`extension`?.genericRequirements ?? [] }.filter { !$0.key.isEmpty }
@@ -36,8 +36,8 @@ struct Members: Component {
     var sections: [(title: String, members: [Symbol])] {
         return [
             (symbol.api is Protocol ? "Associated Types" : "Nested Type Aliases", typealiases),
-            ("Enumeration Cases", cases),
             ("Initializers", initializers),
+            ("Enumeration Cases", cases),
             ("Properties", properties),
             ("Methods", methods)
         ].filter { !$0.members.isEmpty }

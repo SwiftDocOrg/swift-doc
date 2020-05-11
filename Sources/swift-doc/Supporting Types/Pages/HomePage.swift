@@ -12,7 +12,7 @@ struct HomePage: Page {
     var structures: [Symbol] = []
     var protocols: [Symbol] = []
     var operators: [Symbol] = []
-    var globalTypealias: [Symbol] = []
+    var globalTypealiases: [Symbol] = []
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
@@ -31,7 +31,7 @@ struct HomePage: Page {
             case is Protocol:
                 protocols.append(symbol)
             case is Typealias:
-                globalTypealias.append(symbol)
+                globalTypealiases.append(symbol)
             case is Operator:
                 operators.append(symbol)
             case let function as Function where function.isOperator:
@@ -53,48 +53,20 @@ struct HomePage: Page {
     }
 
     var document: CommonMark.Document {
-        let types = classes + enumerations + structures
-        let typeNames = Set(types.map { $0.id.description })
-        let protocolNames = Set(protocols.map { $0.id.description })
-        let operatorNames = Set(operators.map { $0.id.description })
-
-        let globalTypealiasNames = Set(globalTypealias.map { $0.id.description })
-        let globalFunctionNames = Set(globalFunctions.map { $0.id.description })
-        let globalVariableNames = Set(globalVariables.map { $0.id.description })
-
         return Document {
             ForEach(in: [
-                ("Types", typeNames),
-                ("Protocols", protocolNames),
-                ("Operators", operatorNames)
-            ]) { (heading, names) in
-                if (!names.isEmpty) {
+                ("Types", classes + enumerations + structures),
+                ("Protocols", protocols),
+                ("Operators", operators),
+                ("Global Typealiases", globalTypealiases),
+                ("Global Functions", globalFunctions),
+                ("Global Variables", globalVariables),
+            ]) { (heading, symbols) in
+                if (!symbols.isEmpty) {
                     Heading { heading }
-                    List(of: names.sorted()) { name in
-                        Link(urlString: path(for: name, with: baseURL), text: name)
-                    }
-                }
-            }
 
-            if !globalTypealiasNames.isEmpty ||
-                !globalFunctionNames.isEmpty ||
-                !globalVariableNames.isEmpty
-            {
-                Heading { "Globals" }
-
-                Section {
-                    ForEach(in: [
-                          ("Typealiases", globalTypealiasNames),
-                          ("Functions", globalFunctionNames),
-                          ("Variables", globalVariableNames)
-                      ]) { (heading, names) in
-                        if (!names.isEmpty) {
-                          Heading { heading }
-                            
-                          List(of: names.sorted()) { name in
-                            Link(urlString: path(for: name, with: baseURL), text: softbreak(name))
-                          }
-                        }
+                    List(of: symbols.sorted()) { symbol in
+                        Abstract(for: symbol, baseURL: baseURL).fragment
                     }
                 }
             }
@@ -108,73 +80,21 @@ struct HomePage: Page {
             ("Structures", structures),
             ("Enumerations", enumerations),
             ("Protocols", protocols),
+            ("Typealiases", globalTypealiases),
+            ("Functions", globalFunctions),
+            ("Variables", globalVariables)
         ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
             guard !symbols.isEmpty else { return nil }
 
             return #"""
             <section id=\#(heading.lowercased())>
                 <h2>\#(heading)</h2>
-                \#(listHTML(symbols: symbols))
+                <dl>
+                    \#(symbols.sorted().map { Abstract(for: $0, baseURL: baseURL).html })
+                </dl>
             </section>
         """#
         })
-        \#(globalsHTML)
-        """#
-    }
-
-    private var globalsHTML: HypertextLiteral.HTML {
-        guard !globalTypealias.isEmpty ||
-            !globalFunctions.isEmpty ||
-            !globalVariables.isEmpty else {
-                return ""
-        }
-
-        let heading = "Globals"
-        return #"""
-        <section id=\#(heading.lowercased())>
-            <h2>\#(heading)</h2>
-            \#(globalsListHTML)
-        </section>
-        """#
-    }
-
-    private var globalsListHTML: HypertextLiteral.HTML {
-        let globals = [
-            ("Typealiases", globalTypealias),
-            ("Functions", globalFunctions),
-            ("Variables", globalVariables),
-        ]
-        return #"""
-        \#(globals.compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
-            guard !symbols.isEmpty else { return nil }
-
-            return #"""
-            <section id=\#(heading.lowercased())>
-                <h3>\#(heading)</h3>
-                \#(listHTML(symbols: symbols))
-            </section>
-        """#
-        })
-        """#
-    }
-
-    private func listHTML(symbols: [Symbol]) -> HypertextLiteral.HTML {
-        #"""
-        <dl>
-            \#(symbols.sorted().map { symbol ->  HypertextLiteral.HTML in
-            let descriptor = String(describing: type(of: symbol.api)).lowercased()
-            return #"""
-            <dt class="\#(descriptor)">
-                <a href=\#(path(for: symbol, with: baseURL)) title="\#(descriptor) - \#(symbol.id.description)">
-                    \#(softbreak(symbol.id.description))
-                </a>
-            </dt>
-            <dd>
-                \#(commonmark: symbol.documentation?.summary ?? "")
-            </dd>
-            """#
-            })
-        </dl>
         """#
     }
 }
