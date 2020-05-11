@@ -26,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the `generate` command to emit a warning if no source
   files are found.
   #92 by @heckj
+- Changed CommonMark format output of Home page
+  to include summaries alongside top-level symbols, when available.
+  #97 by @mattt.
+- Changed logging behavior to better communicate errors encountered
+  when generating relationship graphs using GraphViz.
+  #100 by @mattt.
 
 ### Fixed
 
