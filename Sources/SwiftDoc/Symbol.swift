@@ -62,6 +62,12 @@ public final class Symbol {
     public var isDocumented: Bool {
         return documentation?.isEmpty == false
     }
+
+    public var availabilityAttributes: [AvailabilityAttribute] {
+        let availableAttributes = api.attributes.filter({ $0.name == "available" }) 
+
+        return availableAttributes.compactMap { AvailabilityAttribute(arguments: $0.arguments) }
+    }
 }
 
 // MARK: - Equatable
