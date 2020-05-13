@@ -5,8 +5,8 @@
         "package": "CommonMark",
         "repositoryURL": "https://github.com/SwiftDocOrg/CommonMark.git",
         "state": {
-          "branch": "master",
-          "revision": "00d3a8ce879b6578979a3470430867f85af26b92",
+          "branch": null,
+          "revision": "902cc82abc2e8ad23b73c982eed27c63ae3d9384",
           "version": null
         }
       },
@@ -104,9 +104,9 @@
         "package": "SwiftMarkup",
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftMarkup.git",
         "state": {
-          "branch": null,
-          "revision": "431f418ae1833a312646e934a2891e778c1b03b0",
-          "version": "0.0.5"
+          "branch": "0.2.0",
+          "revision": "f395f3bd9e345402cc744aa9051780ed403d3b26",
+          "version": null
         }
       },
       {

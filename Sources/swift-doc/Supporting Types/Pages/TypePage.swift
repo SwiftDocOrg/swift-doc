@@ -6,11 +6,13 @@ import HypertextLiteral
 struct TypePage: Page {
     let module: Module
     let symbol: Symbol
+    let baseURL: String
 
-    init(module: Module, symbol: Symbol) {
+    init(module: Module, symbol: Symbol, baseURL: String) {
         precondition(symbol.api is Type)
         self.module = module
         self.symbol = symbol
+        self.baseURL = baseURL
     }
 
     // MARK: - Page
@@ -23,10 +25,10 @@ struct TypePage: Page {
         return CommonMark.Document {
             Heading { symbol.id.description }
 
-            Documentation(for: symbol, in: module)
-            Relationships(of: symbol, in: module)
-            Members(of: symbol, in: module)
-            Requirements(of: symbol, in: module)
+            Documentation(for: symbol, in: module, baseURL: baseURL)
+            Relationships(of: symbol, in: module, baseURL: baseURL)
+            Members(of: symbol, in: module, baseURL: baseURL)
+            Requirements(of: symbol, in: module, baseURL: baseURL)
         }
     }
 
@@ -40,10 +42,10 @@ struct TypePage: Page {
             <code class="name">\#(softbreak(symbol.id.description))</code>
         </h1>
 
-        \#(Documentation(for: symbol, in: module).html)
-        \#(Relationships(of: symbol, in: module).html)
-        \#(Members(of: symbol, in: module).html)
-        \#(Requirements(of: symbol, in: module).html)
+        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
+        \#(Relationships(of: symbol, in: module, baseURL: baseURL).html)
+        \#(Members(of: symbol, in: module, baseURL: baseURL).html)
+        \#(Requirements(of: symbol, in: module, baseURL: baseURL).html)
         """#
     }
 }

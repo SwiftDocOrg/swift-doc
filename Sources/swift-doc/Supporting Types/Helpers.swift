@@ -2,7 +2,7 @@ import Foundation
 import SwiftDoc
 import HTML
 
-public func linkCodeElements(of html: String, for symbol: Symbol, in module: Module) -> String {
+public func linkCodeElements(of html: String, for symbol: Symbol, in module: Module, with baseURL: String) -> String {
     let document = try! Document(string: html.description)!
     for element in document.search(xpath: "//code | //pre/code//span[contains(@class,'type')]") {
         guard let name = element.content else { continue }
@@ -12,7 +12,7 @@ public func linkCodeElements(of html: String, for symbol: Symbol, in module: Mod
             let candidate = candidates.filter({ $0 != symbol }).first
         {
             let a = Element(name: "a")
-            a["href"] = path(for: candidate)
+            a["href"] = path(for: candidate, with: baseURL)
             element.wrap(inside: a)
         }
     }

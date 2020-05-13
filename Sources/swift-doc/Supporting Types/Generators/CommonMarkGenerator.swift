@@ -18,9 +18,9 @@ enum CommonMarkGenerator: Generator {
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
             case is Class, is Enumeration, is Structure, is Protocol:
-                pages[path(for: symbol)] = TypePage(module: module, symbol: symbol)
+                pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: options.baseURL)
             case let `typealias` as Typealias:
-                pages[path(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol)
+                pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: options.baseURL)
             case let function as Function where !function.isOperator:
                 globals[function.name, default: []] += [symbol]
             case let variable as Variable:
@@ -31,7 +31,7 @@ enum CommonMarkGenerator: Generator {
         }
 
         for (name, symbols) in globals {
-            pages[path(for: name)] = GlobalPage(module: module, name: name, symbols: symbols)
+            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: options.baseURL)
         }
 
         guard !pages.isEmpty else {
@@ -44,9 +44,9 @@ enum CommonMarkGenerator: Generator {
             let url = outputDirectoryURL.appendingPathComponent(filename)
             try page.write(to: url, baseURL: options.baseURL)
         } else {
-            pages["Home"] = HomePage(module: module)
-            pages["_Sidebar"] = SidebarPage(module: module)
-            pages["_Footer"] = FooterPage()
+            pages["Home"] = HomePage(module: module, baseURL: options.baseURL)
+            pages["_Sidebar"] = SidebarPage(module: module, baseURL: options.baseURL)
+            pages["_Footer"] = FooterPage(baseURL: options.baseURL)
 
             try pages.map { $0 }.parallelForEach {
                 let filename = "\($0.key).md"

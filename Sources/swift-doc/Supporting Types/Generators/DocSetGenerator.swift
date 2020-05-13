@@ -135,9 +135,9 @@ fileprivate extension Symbol {
 
     var route: String {
         if let parent = context.compactMap({ $0 as? Symbol }).last {
-            return path(for: parent) + "/index.html" + "#\(id.description.lowercased().replacingOccurrences(of: " ", with: "-"))"
+            return path(for: parent, with: "") + "/index.html" + "#\(id.description.lowercased().replacingOccurrences(of: " ", with: "-"))"
         } else {
-            return path(for: self) + "/index.html"
+            return path(for: self, with: "") + "/index.html"
         }
     }
 }

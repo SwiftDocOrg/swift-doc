@@ -17,6 +17,7 @@ as well as top-level type aliases, functions, and variables.
 ## Requirements
 
 - Swift 5.2
+- [GraphViz][graphviz] _(optional)_
 
 ## Command-Line Utility
 
@@ -68,7 +69,7 @@ $ make install
 
     OVERVIEW: Generates Swift documentation
 
-    USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>]
+    USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>] [--base-url <base-url>]
 
     ARGUMENTS:
       <inputs>                One or more paths to Swift files 
@@ -79,6 +80,8 @@ $ make install
       -o, --output <output>   The path for generated output (default:
                               .build/documentation)
       -f, --format <format>   The output format (default: commonmark)
+      --base-url <base-url>   The base URL used for all relative URLs in generated
+                              documents. (default: /)
       -h, --help              Show help information.
 
 The `generate` subcommand 
