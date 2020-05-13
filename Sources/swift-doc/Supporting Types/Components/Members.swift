@@ -7,6 +7,7 @@ import HypertextLiteral
 struct Members: Component {
     var symbol: Symbol
     var module: Module
+    let baseURL: String
 
     var members: [Symbol]
 
@@ -17,9 +18,11 @@ struct Members: Component {
     var methods: [Symbol]
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
 
-    init(of symbol: Symbol, in module: Module) {
+    init(of symbol: Symbol, in module: Module, baseURL: String) {
         self.symbol = symbol
         self.module = module
+        self.baseURL = baseURL
+
         self.members = module.interface.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
 
         self.typealiases = members.filter { $0.api is Typealias }
@@ -55,7 +58,7 @@ struct Members: Component {
                             Heading {
                                 Code { member.name }
                             }
-                            Documentation(for: member, in: module)
+                            Documentation(for: member, in: module, baseURL: baseURL)
                         }
                     }
                 }
@@ -72,7 +75,7 @@ struct Members: Component {
                             Section {
                                 ForEach(in: members) { member in
                                     Heading { member.name }
-                                    Documentation(for: member, in: module)
+                                    Documentation(for: member, in: module, baseURL: baseURL)
                                 }
                             }
                         }
@@ -97,7 +100,7 @@ struct Members: Component {
                             <h3>
                                 <code>\#(softbreak(member.name))</code>
                             </h3>
-                            \#(Documentation(for: member, in: module).html)
+                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
                         </div>
                         """#
                     })
@@ -117,7 +120,7 @@ struct Members: Component {
                         \#(members.map { member -> HypertextLiteral.HTML in
                             #"""
                             <h4>\#(softbreak(member.name))</h4>
-                            \#(Documentation(for: member, in: module).html)
+                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
                             """#
                         })
                     </section>

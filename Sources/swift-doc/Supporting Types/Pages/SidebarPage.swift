@@ -5,6 +5,7 @@ import HypertextLiteral
 
 struct SidebarPage: Page {
     var module: Module
+    let baseURL: String
 
     var typeNames: Set<String> = []
     var protocolNames: Set<String> = []
@@ -13,8 +14,9 @@ struct SidebarPage: Page {
     var globalFunctionNames: Set<String> = []
     var globalVariableNames: Set<String> = []
 
-    init(module: Module) {
+    init(module: Module, baseURL: String) {
         self.module = module
+        self.baseURL = baseURL
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
@@ -65,7 +67,7 @@ struct SidebarPage: Page {
                 }
 
                 List(of: section.names.sorted()) { name in
-                    Link(urlString: "/" + path(for: name), text: name)
+                    Link(urlString: path(for: name, with: baseURL), text: name)
                 }
 
                 Fragment { "</details>" }

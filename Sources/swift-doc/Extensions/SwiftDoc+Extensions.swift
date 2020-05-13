@@ -15,10 +15,6 @@ extension Symbol {
         node.height = 0.5
         node.fixedSize = .shape
 
-        if !(api is Unknown) {
-            node.href = "/" + path(for: self)
-        }
-
         switch api {
         case let `class` as Class:
             node.class = "class"
@@ -40,7 +36,7 @@ extension Symbol {
         return node
     }
 
-    func graph(in module: Module) -> Graph {
+    func graph(in module: Module, baseURL: String) -> Graph {
         var graph = Graph(directed: true)
 
         let relationships = module.interface.relationships.filter {
@@ -49,6 +45,11 @@ extension Symbol {
         }
 
         var symbolNode = self.node
+
+        if !(api is Unknown) {
+            symbolNode.href = path(for: self, with: baseURL)
+        }
+
         symbolNode.strokeWidth = 3.0
         symbolNode.class = [symbolNode.class, "current"].compactMap { $0 }.joined(separator: " ")
 

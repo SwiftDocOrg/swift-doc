@@ -6,11 +6,13 @@ import HypertextLiteral
 struct TypealiasPage: Page {
     let module: Module
     let symbol: Symbol
+    let baseURL: String
 
-    init(module: Module, symbol: Symbol) {
+    init(module: Module, symbol: Symbol, baseURL: String) {
         precondition(symbol.api is Typealias)
         self.module = module
         self.symbol = symbol
+        self.baseURL = baseURL
     }
 
     // MARK: - Page
@@ -22,7 +24,7 @@ struct TypealiasPage: Page {
     var document: CommonMark.Document {
         Document {
             Heading { symbol.id.description }
-            Documentation(for: symbol, in: module)
+            Documentation(for: symbol, in: module, baseURL: baseURL)
         }
     }
 
@@ -33,7 +35,7 @@ struct TypealiasPage: Page {
             <span class="name">\#(softbreak(symbol.id.description))</span>
         </h1>
 
-        \#(Documentation(for: symbol, in: module).html)
+        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
         """#
     }
 }

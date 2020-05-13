@@ -6,9 +6,11 @@ import HypertextLiteral
 
 struct Abstract: Component {
     var symbol: Symbol
+    let baseURL: String
 
-    init(for symbol: Symbol) {
+    init(for symbol: Symbol, baseURL: String) {
         self.symbol = symbol
+        self.baseURL = baseURL
     }
     
     // MARK: - Component
@@ -18,7 +20,7 @@ struct Abstract: Component {
             return Fragment {
                 List.Item {
                     Paragraph {
-                        Link(urlString: path(for: symbol), text: symbol.id.description)
+                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description)
                         Text { ":" }
                     }
 
@@ -31,7 +33,7 @@ struct Abstract: Component {
             return Fragment {
                 List.Item {
                     Paragraph {
-                        Link(urlString: path(for: symbol), text: symbol.id.description)
+                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description)
                     }
                 }
             }
@@ -43,7 +45,7 @@ struct Abstract: Component {
 
         return #"""
         <dt class="\#(descriptor)">
-            <a href=\#(path(for: symbol)) title="\#(descriptor) - \#(symbol.id.description)">
+            <a href=\#(path(for: symbol, with: baseURL)) title="\#(descriptor) - \#(symbol.id.description)">
                 \#(softbreak(symbol.id.description))
             </a>
         </dt>

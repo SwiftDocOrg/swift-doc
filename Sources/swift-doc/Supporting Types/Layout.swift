@@ -1,7 +1,7 @@
 import HypertextLiteral
 import Foundation
 
-func layout(_ page: Page, baseURL: String) -> HTML {
+func layout(_ page: Page) -> HTML {
     let html = page.html
 
     return #"""
@@ -11,12 +11,11 @@ func layout(_ page: Page, baseURL: String) -> HTML {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>\#(page.module.name) - \#(page.title)</title>
-        <base href="\#(baseURL)"/>
-        <link rel="stylesheet" type="text/css" href="all.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="\#(path(for: "all.css", with: page.baseURL))" media="all" />
     </head>
     <body>
         <header>
-            <a href="\#(baseURL)">
+            <a href="\#(page.baseURL)">
                 <strong>
                     \#(page.module.name)
                 </strong>
@@ -45,7 +44,7 @@ func layout(_ page: Page, baseURL: String) -> HTML {
         </main>
 
         <footer>
-            \#(FooterPage().html)
+            \#(FooterPage(baseURL: page.baseURL).html)
         </footer>
     </body>
     </html>

@@ -5,6 +5,7 @@ import HypertextLiteral
 
 struct HomePage: Page {
     var module: Module
+    let baseURL: String
 
     var classes: [Symbol] = []
     var enumerations: [Symbol] = []
@@ -15,8 +16,9 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module) {
+    init(module: Module, baseURL: String) {
         self.module = module
+        self.baseURL = baseURL
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
@@ -64,7 +66,7 @@ struct HomePage: Page {
                     Heading { heading }
 
                     List(of: symbols.sorted()) { symbol in
-                        Abstract(for: symbol).fragment
+                        Abstract(for: symbol, baseURL: baseURL).fragment
                     }
                 }
             }
@@ -88,7 +90,7 @@ struct HomePage: Page {
             <section id=\#(heading.lowercased())>
                 <h2>\#(heading)</h2>
                 <dl>
-                    \#(symbols.sorted().map { Abstract(for: $0).html })
+                    \#(symbols.sorted().map { Abstract(for: $0, baseURL: baseURL).html })
                 </dl>
             </section>
         """#
