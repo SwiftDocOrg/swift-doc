@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2020-05-19
+
 ### Added
 
 - Added `--base-url` option.
@@ -202,7 +204,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.1...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.3...master
+[1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1
 [0.1.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/0.1.1
