@@ -332,6 +332,8 @@ article > .discussion {
   background: transparent;
   border: 1px var(--separator) solid;
   font: var(--caption-1);
+  padding: 1em;
+  text-indent: 0;
 }
 
 em,
