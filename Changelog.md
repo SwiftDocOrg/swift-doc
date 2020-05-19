@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #76 by @victor-pavlychko.
 - Fixed default location of sources reference in README
   #92 by @heckj
-- Fixed indentation of code examples.
+- Fixed indentation of code examples in HTML output.
   #114 by @samsymons
 - Fixed icons for symbols in HTML output.
   #115 by @samsymons
