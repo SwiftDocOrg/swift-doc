@@ -48,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #92 by @heckj
 - Fixed indentation of code examples.
   #114 by @samsymons
+- Fixed icons for symbols in HTML output.
+  #115 by @samsymons
 
 ## [1.0.0-beta.2] - 2020-04-08
 
