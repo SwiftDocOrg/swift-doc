@@ -64,7 +64,7 @@ struct Relationships: Component {
             ("Subclasses", module.interface.typesInheriting(from: symbol)),
             ("Conforms To", module.interface.typesConformed(by: symbol)),
             ("Types Conforming to <code>\(softbreak(symbol.id.description))</code>", module.interface.typesConforming(to: symbol)),
-        ].filter { !$0.symbols.isEmpty }
+        ].map { (title: $0.0, symbols: $0.1.filter { $0.isPublic }) }.filter { !$0.symbols.isEmpty }
     }
 
     // MARK: - Component
