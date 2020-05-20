@@ -33,6 +33,10 @@ public final class Symbol {
     }()
 
     public var isPublic: Bool {
+        if api is Unknown {
+            return true
+        }
+
         if api.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {
             return true
         }
