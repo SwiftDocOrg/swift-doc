@@ -37,9 +37,8 @@ public final class Symbol {
             return true
         }
 
-        if let `extension` = context.compactMap({ $0 as? Extension }).first,
-            `extension`.modifiers.contains(where: { $0.name == "public" })
-        {
+        if let `extension` = `extension`,
+            `extension`.modifiers.contains(where: { $0.name == "public" }) {
             return true
         }
 
