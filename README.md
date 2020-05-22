@@ -33,6 +33,14 @@ Run the following command to install using [Homebrew](https://brew.sh/):
 $ brew install swiftdocorg/formulae/swift-doc
 ```
 
+#### Mint
+
+Run the following command to install using [Mint](https://github.com/yonaskolb/mint):
+
+```terminal
+$ mint install SwiftDocOrg/swift-doc
+```
+
 #### Manually
 
 Run the following commands to build and install manually:
