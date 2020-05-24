@@ -70,11 +70,7 @@ func writeFile(_ data: Data, to url: URL) throws {
 
 fileprivate extension URLComponents {
     func appendingPathComponent(_ component: String) -> URLComponents? {
-        var urlComponents = self
-        var pathComponents = urlComponents.path.split(separator: "/").map { "\($0)" }
-        pathComponents.append(component)
-        urlComponents.path = "/" + pathComponents.joined(separator: "/")
-
-        return urlComponents
+        return url.map { $0.appendingPathComponent(component) }
+            .flatMap { URLComponents(url: $0, resolvingAgainstBaseURL: true) }
     }
 }
