@@ -12,6 +12,10 @@ inputs:
   format:
     description: "The output format (commonmark or html)"
     default: "commonmark"
+  base-url:
+    description: "The base URL for all relative URLs generated in documents"
+    required: false
+    default: "./"
   output:
     description: "The path for generated output"
     required: true
@@ -26,6 +30,8 @@ runs:
       "${{ inputs.inputs }}",
       --format,
       "${{ inputs.format }}",
+      --base-url,
+      "${{ inputs.base-url }}",
       --module-name,
       "${{ inputs.module-name }}",
       --output,
