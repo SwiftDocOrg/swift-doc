@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2020-05-19
+
 ### Added
 
 - Added `--base-url` option.
-  #65 by @kean.
+  #65 by @kean and #93 by @mattt.
 - Added asset pipeline for CSS assets.
   #49 by @kaishin.
 - Add `swift-doc` version number to command and generated output.
@@ -46,6 +48,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #76 by @victor-pavlychko.
 - Fixed default location of sources reference in README
   #92 by @heckj
+- Fixed indentation of code examples in HTML output.
+  #114 by @samsymons
+- Fixed icons for symbols in HTML output.
+  #115 by @samsymons
 
 ## [1.0.0-beta.2] - 2020-04-08
 
@@ -198,7 +204,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.1...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.3...master
+[1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1
 [0.1.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/0.1.1
