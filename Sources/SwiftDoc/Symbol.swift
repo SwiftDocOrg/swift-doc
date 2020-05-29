@@ -63,10 +63,10 @@ public final class Symbol {
         return documentation?.isEmpty == false
     }
 
-    public var availabilityAttributes: [AvailabilityAttribute] {
+    public var availabilityAttributes: [Availability] {
         let availableAttributes = api.attributes.filter({ $0.name == "available" }) 
-
-        return availableAttributes.compactMap { AvailabilityAttribute(arguments: $0.arguments) }
+     
+        return availableAttributes.compactMap { Availability(arguments: $0.arguments) }
     }
 }
 
