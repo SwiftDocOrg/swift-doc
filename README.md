@@ -207,7 +207,7 @@ are formatted for publication to your project's [GitHub Wiki][github wiki],
 which you can do with
 [github-wiki-publish-action][github-wiki-publish-action].
 Alternatively,
-you could specify HTML format publish documentation to
+you could specify HTML format to publish documentation to
 [GitHub Pages](https://pages.github.com)
 or bundle them into a release artifact.
 
