@@ -48,9 +48,8 @@ func path(for symbol: Symbol, with baseURL: String) -> String {
 }
 
 func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
-    var urlComponents = URLComponents(string: baseURL)
-    urlComponents = urlComponents?.appendingPathComponent("\(identifier)")
-    guard let string = urlComponents?.string else {
+    let url = URL(string: baseURL)?.appendingPathComponent("\(identifier)")
+    guard let string = url?.path else {
         logger.critical("Unable to construct path for \(identifier) with baseURL \(baseURL)")
         fatalError()
     }
@@ -64,17 +63,4 @@ func writeFile(_ data: Data, to url: URL) throws {
 
     try data.write(to: url)
     try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
-}
-
-// MARK: -
-
-fileprivate extension URLComponents {
-    func appendingPathComponent(_ component: String) -> URLComponents? {
-        var urlComponents = self
-        var pathComponents = urlComponents.path.split(separator: "/").map { "\($0)" }
-        pathComponents.append(component)
-        urlComponents.path = "/" + pathComponents.joined(separator: "/")
-
-        return urlComponents
-    }
 }
