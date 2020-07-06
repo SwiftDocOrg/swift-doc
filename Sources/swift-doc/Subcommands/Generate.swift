@@ -4,6 +4,7 @@ import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
+import FoundationNetworking
 
 extension SwiftDoc {
   struct Generate: ParsableCommand {
