@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
         "state": {
           "branch": null,
-          "revision": "9f04d1ff1afbccd02279338a2c91e5f27c45e93a",
-          "version": "0.0.5"
+          "revision": "223d62adc52d51669ae2ee19bdb8b7d9fd6fcd9c",
+          "version": "0.0.6"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
         "state": {
           "branch": null,
-          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
-          "version": "0.28.3+20200110.2a76603"
+          "revision": "1168665f6b36be747ffe6b7b90bc54cfc17f42b7",
+          "version": "0.28.3+20200207.1168665"
         }
       },
       {
