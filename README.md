@@ -69,7 +69,7 @@ $ make install
 
     OVERVIEW: Generates Swift documentation
 
-    USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>] [--base-url <base-url>]
+    USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>] [--base-url <base-url>] [--excluded-symbols <excluded-symbols>]
 
     ARGUMENTS:
       <inputs>                One or more paths to Swift files 
@@ -77,11 +77,12 @@ $ make install
     OPTIONS:
       -n, --module-name <module-name>
                               The name of the module 
-      -o, --output <output>   The path for generated output (default:
-                              .build/documentation)
+      -o, --output <output>   The path for generated output (default: .build/documentation)
       -f, --format <format>   The output format (default: commonmark)
-      --base-url <base-url>   The base URL used for all relative URLs in generated
-                              documents. (default: /)
+      --base-url <base-url>   The base URL used for all relative URLs in generated documents. (default: /)
+      --excluded-symbols <excluded-symbols>
+                              A file containing a line separated list of symbols to be excluded from the generated documentation 
+      --version               Show the version.
       -h, --help              Show help information.
 
 The `generate` subcommand 
