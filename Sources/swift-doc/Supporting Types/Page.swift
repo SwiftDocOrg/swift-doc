@@ -49,7 +49,7 @@ func path(for symbol: Symbol, with baseURL: String) -> String {
 
 func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
     let url = URL(string: baseURL)?.appendingPathComponent("\(identifier)")
-    guard let string = url?.path else {
+    guard let string = url?.absoluteString else {
         logger.critical("Unable to construct path for \(identifier) with baseURL \(baseURL)")
         fatalError()
     }
