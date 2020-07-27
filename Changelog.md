@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #145 by @mattt.
 - Fixed inclusion of non-public subclasses of public superclasses.
   #131 by @MattKiazyk.
+- Fixed display of bullet list items in documentation discussion parts.
+  #130 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
