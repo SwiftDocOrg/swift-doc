@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added icon for associated type symbols.
+  #145 by @mattt.
+
 ### Changed
 
 - Changed HTML output to show scrollbars only when necessary.
@@ -20,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #144 by @mbrandonw.
 - Fixed crash when attempting to generate paths with no base URL specified.
   #127 by @mattpolzin, @kareman, and @mattt.
+- Fixed display of sidebar icons.
+  #145 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
