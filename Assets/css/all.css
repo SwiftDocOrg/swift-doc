@@ -738,7 +738,7 @@ body {
 
 main,
 nav {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 main {
@@ -765,7 +765,7 @@ nav {
   float: right;
   margin-left: 1em;
   max-height: 100vh;
-  overflow: scroll;
+  overflow: auto;
   padding: 0 1em 3em 1em;
   position: sticky;
   top: 1em;
@@ -883,7 +883,7 @@ dd {
   border-radius: 8px;
   font-size: smaller;
   margin-bottom: 2em;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 1em;
   padding-left: 3em;
   text-indent: -2em;
