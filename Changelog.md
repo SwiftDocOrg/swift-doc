@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed runtime error related to networking and processes on Ubuntu Linux.
+  #140 by @JaapWijnen.
+- Fixed whitespace of code listings.
+  #144 by @mbrandonw.
+- Fixed crash when attempting to generate paths with no base URL specified.
+  #127 by @mattpolzin, @kareman, and @mattt.
+
 ## [1.0.0-beta.3] - 2020-05-19
 
 ### Added
