@@ -19,22 +19,6 @@ extension Page {
     var title: String { fatalError("unimplemented") }
 }
 
-extension Page {
-    func write(to url: URL, format: SwiftDoc.Generate.Format) throws {
-        let data: Data?
-        switch format {
-        case .commonmark:
-            data = document.render(format: .commonmark).data(using: .utf8)
-        case .html:
-            data = layout(self).description.data(using: .utf8)
-        }
-
-        guard let filedata = data else { return }
-
-        try writeFile(filedata, to: url)
-    }
-}
-
 func writeFile(_ data: Data, to url: URL) throws {
     let fileManager = FileManager.default
     try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
