@@ -6,6 +6,10 @@ import SwiftSemantics
 import struct SwiftSemantics.Protocol
 import SQLite
 
+#if os(Linux)
+import FoundationNetworking
+#endif
+
 extension SwiftDoc {
     struct Generate: ParsableCommand {
         enum Format: String, ExpressibleByArgument {

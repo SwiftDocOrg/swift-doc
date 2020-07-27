@@ -19,27 +19,20 @@ extension Page {
     var title: String { fatalError("unimplemented") }
 }
 
-func route(for symbol: Symbol) -> String {
-    return route(for: symbol.id)
-}
+extension Page {
+    func write(to url: URL, format: SwiftDoc.Generate.Format) throws {
+        let data: Data?
+        switch format {
+        case .commonmark:
+            data = document.render(format: .commonmark).data(using: .utf8)
+        case .html:
+            data = layout(self).description.data(using: .utf8)
+        }
 
-func route(for name: CustomStringConvertible) -> String {
-    return name.description.replacingOccurrences(of: ".", with: "_")
-}
+        guard let filedata = data else { return }
 
-func path(for symbol: Symbol, with baseURL: String) -> String {
-    return path(for: route(for: symbol), with: baseURL)
-}
-
-func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
-    var urlComponents = URLComponents(string: baseURL)
-    urlComponents = urlComponents?.appendingPathComponent("\(identifier)")
-    guard let string = urlComponents?.string else {
-        logger.critical("Unable to construct path for \(identifier) with baseURL \(baseURL)")
-        fatalError()
+        try writeFile(filedata, to: url)
     }
-
-    return string
 }
 
 func writeFile(_ data: Data, to url: URL) throws {
@@ -48,17 +41,4 @@ func writeFile(_ data: Data, to url: URL) throws {
 
     try data.write(to: url)
     try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
-}
-
-// MARK: -
-
-fileprivate extension URLComponents {
-    func appendingPathComponent(_ component: String) -> URLComponents? {
-        var urlComponents = self
-        var pathComponents = urlComponents.path.split(separator: "/").map { "\($0)" }
-        pathComponents.append(component)
-        urlComponents.path = "/" + pathComponents.joined(separator: "/")
-
-        return urlComponents
-    }
 }

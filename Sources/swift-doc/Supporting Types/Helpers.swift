@@ -29,22 +29,6 @@ public func sidebar(for html: String) -> String {
 
         let li = Element(name: "li")
 
-        var className: String? = nil
-        switch section["id"]?.lowercased() {
-        case "initializers":
-            className = "initializer"
-        case "enumeration cases":
-            className = "case"
-        case "methods":
-            className = "method"
-        case "properties":
-            className = "property"
-        case "nested type aliases":
-            className = "typealias"
-        default:
-            break
-        }
-
         if let id = section["id"] {
             let a = Element(name: "a")
             a["href"] = "#\(id)"
@@ -60,7 +44,7 @@ public func sidebar(for html: String) -> String {
 
             let li = Element(name: "li")
 
-            if let className = className {
+            if let className = article["class"] {
                 li["class"] = className
             }
 

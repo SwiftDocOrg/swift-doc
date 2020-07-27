@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added icon for associated type symbols.
+  #145 by @mattt.
+
+### Changed
+
+- Changed HTML output to show scrollbars only when necessary.
+  #132 by @andrewchang-bird.
+
+### Fixed
+
+- Fixed runtime error related to networking and processes on Ubuntu Linux.
+  #140 by @JaapWijnen.
+- Fixed whitespace of code listings.
+  #144 by @mbrandonw.
+- Fixed crash when attempting to generate paths with no base URL specified.
+  #127 by @mattpolzin, @kareman, and @mattt.
+- Fixed display of sidebar icons.
+  #145 by @mattt.
+- Fixed inclusion of non-public subclasses of public superclasses.
+  #131 by @MattKiazyk.
+- Fixed display of bullet list items in documentation discussion parts.
+  #130 by @mattt.
+
+## [1.0.0-beta.3] - 2020-05-19
+
+### Added
+
 - Added `--base-url` option.
   #65 by @kean and #93 by @mattt.
 - Added asset pipeline for CSS assets.
@@ -46,6 +73,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #76 by @victor-pavlychko.
 - Fixed default location of sources reference in README
   #92 by @heckj
+- Fixed indentation of code examples in HTML output.
+  #114 by @samsymons
+- Fixed icons for symbols in HTML output.
+  #115 by @samsymons
 
 ## [1.0.0-beta.2] - 2020-04-08
 
@@ -198,7 +229,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.1...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.3...master
+[1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1
 [0.1.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/0.1.1
