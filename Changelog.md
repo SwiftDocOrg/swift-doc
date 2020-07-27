@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #127 by @mattpolzin, @kareman, and @mattt.
 - Fixed display of sidebar icons.
   #145 by @mattt.
+- Fixed inclusion of non-public subclasses of public superclasses.
+  #131 by @MattKiazyk.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
