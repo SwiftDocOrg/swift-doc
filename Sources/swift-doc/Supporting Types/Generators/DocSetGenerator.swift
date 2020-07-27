@@ -64,7 +64,7 @@ enum DocSetGenerator: Generator {
                 try db.run(searchIndex.insert(or: .ignore,
                     name <- symbol.id.description,
                     type <- symbol.entryType,
-                    path <- symbol.route
+                    path <- symbol.route(with: options.baseURL)
                 ))
             }
         }
@@ -118,31 +118,6 @@ fileprivate extension Symbol {
         }
     }
 
-    var token: XML {
-        let scope = context.compactMap { $0 as? Symbol }.last?.id.description
-
-        return #"""
-        <Token>
-           <TokenIdentifier>
-             <Name>\#(id)</Name>
-             <APILanguage>swift</APILanguage>
-             <Type>\#(symbolType)</Type>
-             <Scope>\#(scope ?? "")</Scope>
-           </TokenIdentifier>
-        </Token>
-        """#
-    }
-
-    var route: String {
-        if let parent = context.compactMap({ $0 as? Symbol }).last {
-            return path(for: parent, with: "") + "/index.html" + "#\(id.description.lowercased().replacingOccurrences(of: " ", with: "-"))"
-        } else {
-            return path(for: self, with: "") + "/index.html"
-        }
-    }
-}
-
-fileprivate extension Symbol {
     // https://kapeli.com/docsets#supportedentrytypes
     var entryType: String {
         let parent = context.compactMap { $0 as? Symbol }.last?.api
@@ -182,6 +157,29 @@ fileprivate extension Symbol {
             return "Type"
         default:
             return "Entry"
+        }
+    }
+
+    var token: XML {
+        let scope = context.compactMap { $0 as? Symbol }.last?.id.description
+
+        return #"""
+        <Token>
+           <TokenIdentifier>
+             <Name>\#(id)</Name>
+             <APILanguage>swift</APILanguage>
+             <Type>\#(symbolType)</Type>
+             <Scope>\#(scope ?? "")</Scope>
+           </TokenIdentifier>
+        </Token>
+        """#
+    }
+
+    func route(with baseURL: String) -> String {
+        if let parent = context.compactMap({ $0 as? Symbol }).last {
+            return path(for: parent, with: baseURL) + "/index.html" + "#\(id.description.lowercased().replacingOccurrences(of: " ", with: "-"))"
+        } else {
+            return path(for: self, with: baseURL) + "/index.html"
         }
     }
 }
