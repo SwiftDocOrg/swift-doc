@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Changed HTML output to show scrollbars only when necessary.
+  #132 by @andrewchang-bird.
+
 ### Fixed
 
 - Fixed runtime error related to networking and processes on Ubuntu Linux.
