@@ -50,7 +50,7 @@ extension SwiftDoc {
       let baseURL = options.baseURL
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
-      try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
+      try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true)
 
       do {
         let format = options.format

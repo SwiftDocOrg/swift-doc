@@ -35,12 +35,8 @@ extension Page {
     }
 }
 
-
-
 func writeFile(_ data: Data, to url: URL) throws {
     let fileManager = FileManager.default
-    try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
-
+    try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
     try data.write(to: url)
-    try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
 }
