@@ -145,7 +145,7 @@ struct Documentation: Component {
                       return #"""
                       <tr>
                           <th>\#(softbreak(entry.name))</th>
-                          \#(typeCell)</td>
+                          \#(typeCell)
                           <td>\#(commonmark: entry.description)</td>
                       </tr>
                       """# as HypertextLiteral.HTML
