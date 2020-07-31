@@ -40,6 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #150 by @mattt.
 - Fixed visual regression for adjacent linked tokens in code block.
   #152 by @mattt.
+- Fixed regression that caused nodes in relationships graph
+  to not have links to their corresponding symbol documentation.
+  #153 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
