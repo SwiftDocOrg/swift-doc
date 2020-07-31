@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #149 by @mattt.
 - Fixed declarations for properties without explicit type annotations.
   #150 by @mattt.
+- Fixed visual regression for adjacent linked tokens in code block.
+  #152 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
