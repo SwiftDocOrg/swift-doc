@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.4] - 2020-07-31
+
 ### Added
 
 - Added icon for associated type symbols.
@@ -243,7 +245,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.3...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.4...master
+[1.0.0-beta.4]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.4
 [1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1
