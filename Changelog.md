@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added icon for associated type symbols.
+  #145 by @mattt.
+
+### Changed
+
+- Changed HTML output to show scrollbars only when necessary.
+  #132 by @andrewchang-bird.
+
+### Fixed
+
+- Fixed runtime error related to networking and processes on Ubuntu Linux.
+  #140 by @JaapWijnen.
+- Fixed whitespace of code listings.
+  #144 by @mbrandonw.
+- Fixed crash when attempting to generate paths with no base URL specified.
+  #127 by @mattpolzin, @kareman, and @mattt.
+- Fixed display of sidebar icons.
+  #145 by @mattt.
+- Fixed inclusion of non-public subclasses of public superclasses.
+  #131 by @MattKiazyk.
+- Fixed display of bullet list items in documentation discussion parts.
+  #130 by @mattt.
+- Fixed file and directory unexpected permissions.
+  #146 by @niw.
+- Fixed rendering of colon sequences in function signatures
+  as emoji shortcodes (e.g. `:on:` → 🔛).
+  #149 by @mattt.
+- Fixed declarations for properties without explicit type annotations.
+  #150 by @mattt.
+- Fixed visual regression for adjacent linked tokens in code block.
+  #152 by @mattt.
+- Fixed regression that caused nodes in relationships graph
+  to not have links to their corresponding symbol documentation.
+  #153 by @mattt.
+
 ## [1.0.0-beta.3] - 2020-05-19
 
 ### Added

@@ -14,7 +14,6 @@ LoggingSystem.bootstrap { label in
 let logger = Logger(label: "org.swiftdoc.swift-doc")
 
 let fileManager = FileManager.default
-let fileAttributes: [FileAttributeKey : Any] = [.posixPermissions: 0o744]
 
 var standardOutput = FileHandle.standardOutput
 var standardError = FileHandle.standardError
