@@ -119,7 +119,7 @@ struct Documentation: Component {
                     type = nil
                 }
 
-                return (entry.name, type, entry.description)
+                return (entry.name, type, entry.content)
             }
 
             fragments.append(#"""
