@@ -39,23 +39,28 @@ extension Symbol {
     func graph(in module: Module, baseURL: String) -> Graph {
         var graph = Graph(directed: true)
 
+        do {
+            var node = self.node
+
+            if !(api is Unknown) {
+                node.href = path(for: self, with: baseURL)
+            }
+
+            node.strokeWidth = 3.0
+            node.class = [node.class, "current"].compactMap { $0 }.joined(separator: " ")
+
+            graph.append(node)
+        }
+
         let relationships = module.interface.relationships.filter {
             ($0.predicate == .inheritsFrom || $0.predicate == .conformsTo) &&
             ($0.subject == self || $0.object == self)
         }
 
-        var symbolNode = self.node
-
-        if !(api is Unknown) {
-            symbolNode.href = path(for: self, with: baseURL)
-        }
-
-        symbolNode.strokeWidth = 3.0
-        symbolNode.class = [symbolNode.class, "current"].compactMap { $0 }.joined(separator: " ")
-
-        graph.append(symbolNode)
-
-        for node in Set(relationships.flatMap { [$0.subject.node, $0.object.node] }) where node.id != symbolNode.id {
+        for symbol in Set(relationships.flatMap { [$0.subject, $0.object] }) {
+            guard self != symbol else { continue }
+            var node = symbol.node
+            node.href = path(for: symbol, with: baseURL)
             graph.append(node)
         }
 
