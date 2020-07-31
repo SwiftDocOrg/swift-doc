@@ -33,13 +33,16 @@ public final class Symbol {
     }()
 
     public var isPublic: Bool {
+        if api is Unknown {
+            return true
+        }
+
         if api.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {
             return true
         }
 
-        if let `extension` = context.compactMap({ $0 as? Extension }).first,
-            `extension`.modifiers.contains(where: { $0.name == "public" })
-        {
+        if let `extension` = `extension`,
+            `extension`.modifiers.contains(where: { $0.name == "public" }) {
             return true
         }
 

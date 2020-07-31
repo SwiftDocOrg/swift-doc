@@ -23,7 +23,9 @@ struct Members: Component {
         self.module = module
         self.baseURL = baseURL
 
-        self.members = module.interface.members(of: symbol).filter { $0.extension?.genericRequirements.isEmpty != false }
+        self.members = module.interface.members(of: symbol)
+            .filter { $0.extension?.genericRequirements.isEmpty != false }
+            .filter { $0.isPublic }
 
         self.typealiases = members.filter { $0.api is Typealias }
         self.initializers = members.filter { $0.api is Initializer }
