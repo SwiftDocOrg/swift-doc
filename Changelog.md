@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed display of sidebar icons.
   #145 by @mattt.
 - Fixed inclusion of non-public subclasses of public superclasses.
-  #131 by @MattKiazyk.
+  #131 by @MattKiazyk. #116 by @ApolloZhu.
 - Fixed display of bullet list items in documentation discussion parts.
   #130 by @mattt.
 - Fixed file and directory unexpected permissions.
