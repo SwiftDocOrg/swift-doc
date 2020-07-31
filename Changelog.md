@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #130 by @mattt.
 - Fixed file and directory unexpected permissions.
   #146 by @niw.
+- Fixed rendering of colon sequences in function signatures
+  as emoji shortcodes (e.g. `:on:` → 🔛).
+  #149 by @mattt.
 - Fixed declarations for properties without explicit type annotations.
   #150 by @mattt.
 
