@@ -38,4 +38,35 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(subclasses.count, 1)
         XCTAssertEqual(subclasses[0].id, classC.id)
     }
+
+    func testInternalMembers() throws {
+        let source = #"""
+        public struct A: Encodable {
+            enum CodingKeys: String, CodingKey {
+                case a
+            }
+
+            let a: String
+
+            init(a: String) {
+                self.a = a
+            }
+        }
+
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(sourceFile.symbols.count, 5)
+        XCTAssertEqual(module.interface.symbols.count, 1)
+
+        // `struct A`
+        do {
+            let symbol = sourceFile.symbols[0]
+            XCTAssert(symbol.api is Structure)
+            XCTAssertEqual(symbol.api.name, "A")
+        }
+    }
 }
