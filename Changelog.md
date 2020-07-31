@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #130 by @mattt.
 - Fixed file and directory unexpected permissions.
   #146 by @niw.
+- Fixed declarations for properties without explicit type annotations.
+  #150 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
