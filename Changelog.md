@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed version number for swift-doc command.
+  #159 by @mattt.
+
 ## [1.0.0-beta.4] - 2020-07-31
 
 ### Added
