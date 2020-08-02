@@ -22,7 +22,7 @@ struct SwiftDoc: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "swift doc",
         abstract: "A utility for generating documentation for Swift code.",
-        version: "1.0.0-beta.3",
+        version: "1.0.0-beta.4",
         subcommands: [Generate.self, Coverage.self, Diagram.self]
     )
 }
