@@ -58,7 +58,6 @@ public struct SourceFile: Hashable, Codable {
         func symbol<Node: SyntaxProtocol>(_ node: Node, api: API) -> Symbol? {
             guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
             let sourceLocation = sourceLocationConverter.location(for: node.position)
-
             return Symbol(api: api, context: context, declaration: "\(api)", documentation: documentation, sourceLocation: sourceLocation)
         }
 
@@ -184,8 +183,16 @@ public struct SourceFile: Hashable, Codable {
         }
 
         override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
-            let variables = node.bindings.compactMap { binding in
-                Variable(binding.withInitializer(nil))
+            let variables = node.bindings.compactMap { binding -> Variable? in
+                // Omit initializer expression if closure or function call
+                // to ensure reasonable declaration code blocks.
+                if let value = binding.initializer?.value,
+                    value.is(ClosureExprSyntax.self) || value.is(FunctionCallExprSyntax.self)
+                {
+                    return Variable(binding.withInitializer(nil))
+                } else {
+                    return Variable(binding)
+                }
             }
 
             for variable in variables {

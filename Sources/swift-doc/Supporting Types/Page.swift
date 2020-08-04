@@ -24,7 +24,13 @@ extension Page {
         let data: Data?
         switch format {
         case .commonmark:
-            data = document.render(format: .commonmark).data(using: .utf8)
+            var text = document.render(format: .commonmark)
+            // Insert U+200B ZERO WIDTH SPACE
+            // to prevent colon sequences from being interpreted as
+            // emoji shortcodes (without wrapping with code element).
+            // See: https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax#using-emoji
+            text = text.replacingOccurrences(of: ":", with: ":\u{200B}")
+            data = text.data(using: .utf8)
         case .html:
             data = layout(self).description.data(using: .utf8)
         }
@@ -35,46 +41,8 @@ extension Page {
     }
 }
 
-func route(for symbol: Symbol) -> String {
-    return route(for: symbol.id)
-}
-
-func route(for name: CustomStringConvertible) -> String {
-    return name.description.replacingOccurrences(of: ".", with: "_")
-}
-
-func path(for symbol: Symbol, with baseURL: String) -> String {
-    return path(for: route(for: symbol), with: baseURL)
-}
-
-func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
-    var urlComponents = URLComponents(string: baseURL)
-    urlComponents = urlComponents?.appendingPathComponent("\(identifier)")
-    guard let string = urlComponents?.string else {
-        logger.critical("Unable to construct path for \(identifier) with baseURL \(baseURL)")
-        fatalError()
-    }
-    
-    return string
-}
-
 func writeFile(_ data: Data, to url: URL) throws {
     let fileManager = FileManager.default
-    try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: [.posixPermissions: 0o744])
-
+    try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
     try data.write(to: url)
-    try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
-}
-
-// MARK: -
-
-fileprivate extension URLComponents {
-    func appendingPathComponent(_ component: String) -> URLComponents? {
-        var urlComponents = self
-        var pathComponents = urlComponents.path.split(separator: "/").map { "\($0)" }
-        pathComponents.append(component)
-        urlComponents.path = "/" + pathComponents.joined(separator: "/")
-
-        return urlComponents
-    }
 }
