@@ -177,8 +177,8 @@ generates a graph of APIs in [DOT format][dot]
 that can be rendered by [GraphViz][graphviz] into a diagram.
 
 ```terminal
-$ swift run swift-doc diagram Alamofire/Source > graph.dot
-$ head graph.dot
+$ swift run swift-doc diagram Alamofire/Source > Alamofire.gv
+$ head Alamofire.gv
 digraph Anonymous {
   "Session" [shape=box];
   "NetworkReachabilityManager" [shape=box];
@@ -190,7 +190,7 @@ digraph Anonymous {
     "DataRequest" [shape=box];
     "Request" [shape=box];
 
-$ dot -T svg graph.dot > graph.svg
+$ dot -T svg Alamofire.gv > Alamofire.svg
 ```
 
 Here's an excerpt of the graph generated for Alamofire:
