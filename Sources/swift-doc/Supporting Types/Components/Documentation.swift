@@ -49,7 +49,7 @@ struct Documentation: Component {
                 Section {
                     Heading { "Parameters" }
                     List(of:  documentation.parameters) { parameter in
-                        Fragment { "\(parameter.name): \(parameter.description)" }
+                        Fragment { "\(parameter.name): \(parameter.content)" }
                     }
                 }
             }
