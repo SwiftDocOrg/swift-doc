@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed listing of function parameters, when generating CommonMark documentation.
+  #170 by @domcorvasce.
+
 - Fixed version number for swift-doc command.
   #159 by @mattt.
 
