@@ -50,8 +50,13 @@ extension SwiftDoc {
       let baseURL = options.baseURL
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
+      var isDirectory = ObjCBool(true)
+      let dirExists = fileManager.fileExists(atPath: outputDirectoryURL.path, isDirectory: &isDirectory)
 
-      try fileManager.removeItem(at: outputDirectoryURL)
+      if dirExists && isDirectory.boolValue {
+        try fileManager.removeItem(at: outputDirectoryURL)
+      }
+
       try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true)
 
       do {
