@@ -60,7 +60,10 @@ extension Symbol {
         for symbol in Set(relationships.flatMap { [$0.subject, $0.object] }) {
             guard self != symbol else { continue }
             var node = symbol.node
-            node.href = path(for: symbol, with: baseURL)
+
+            if !(symbol.api is Unknown) {
+                node.href = path(for: symbol, with: baseURL)
+            }
             graph.append(node)
         }
 
