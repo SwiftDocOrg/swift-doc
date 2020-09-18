@@ -221,6 +221,9 @@ or bundle them into a release artifact.
   (Default: `"commonmark"`)
 - `module-name`:
   The name of the module.
+- `base-url`:
+  The base URL for all relative URLs generated in documents.
+  (Default: `"/"`)
 - `output`:
   The path for generated output.
   (Default: `"./.build/documentation"`)
