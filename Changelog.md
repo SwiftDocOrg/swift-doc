@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Supply a prebuilt image in Dockerfile.
+  #184 by @MaxDesiatov.
 - Fixed missing GraphViz dependency in Dockerfile.
   #180 by @MaxDesiatov.
 - Fixed listing of function parameters, when generating CommonMark documentation.
