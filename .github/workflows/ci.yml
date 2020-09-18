@@ -27,8 +27,12 @@ jobs:
   linux:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        swift: ["5.3", "5.2"]
+
     container:
-      image: swift:5.3
+      image: swift:${{ matrix.swift }}
 
     steps:
       - name: Checkout
@@ -36,9 +40,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          key: ${{ runner.os }}-spm-swift-${{ matrix.swift }}-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-spm-swift-${{ matrix.swift }}-
       - name: Install System Dependencies
         run: |
           apt-get update
