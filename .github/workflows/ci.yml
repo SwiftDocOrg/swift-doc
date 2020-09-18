@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: swift:5.2
+      image: swift:5.3
 
     steps:
       - name: Checkout
