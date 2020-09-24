@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for Swift 5.3.
+  #183 by @MaxDesiatov and @mattt.
+
 ### Fixed
 
 - Fixed missing GraphViz dependency in Dockerfile.
