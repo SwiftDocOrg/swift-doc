@@ -8,11 +8,13 @@ on:
 
 jobs:
   macos:
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     strategy:
       matrix:
-        xcode: ["12", "11.4"]
+        xcode:
+          - "11.7" # Swift 5.2
+          - "12" # Swift 5.3
 
     steps:
       - name: Checkout
