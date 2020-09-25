@@ -8,7 +8,13 @@ on:
 
 jobs:
   macos:
-    runs-on: macOS-latest
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        xcode:
+          - "11.7" # Swift 5.2
+          - "12" # Swift 5.3
 
     steps:
       - name: Checkout
@@ -16,19 +22,23 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          key: ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
       - name: Build and Test
         run: swift test -c release
         env:
-          DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
   linux:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        swift: ["5.3", "5.2"]
+
     container:
-      image: swift:5.2
+      image: swift:${{ matrix.swift }}
 
     steps:
       - name: Checkout
@@ -36,9 +46,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: .build
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          key: ${{ runner.os }}-spm-swift-${{ matrix.swift }}-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-spm-swift-${{ matrix.swift }}-
       - name: Install System Dependencies
         run: |
           apt-get update

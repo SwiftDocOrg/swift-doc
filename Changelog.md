@@ -7,10 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for Swift 5.3.
+  #183 by @MaxDesiatov and @mattt.
+
 ### Fixed
 
+- Fixed missing GraphViz dependency in Dockerfile.
+  #180 by @MaxDesiatov.
+- Fixed listing of function parameters, when generating CommonMark documentation.
+  #170 by @domcorvasce.
 - Fixed version number for swift-doc command.
   #159 by @mattt.
+- Fixed relationship diagram to prevent linking to unknown symbols.
+  #178 by @MattKiazyk.
+
+### Changed
+
+- Changed GitHub Action to use prebuilt Docker image.
+  #185 by @mattt and @MaxDesiatov.
 
 ## [1.0.0-beta.4] - 2020-07-31
 
