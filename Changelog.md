@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #159 by @mattt.
 - Fixed relationship diagram to prevent linking to unknown symbols.
   #178 by @MattKiazyk.
+- Fixed problems in CommonMark output related to escaping emoji shortcode. 
+  #167 by @mattt.
 
 ### Changed
 
