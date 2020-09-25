@@ -21,7 +21,7 @@ struct Abstract: Component {
                 List.Item {
                     Fragment {
                         #"""
-                        [\#(symbol.id)](\#(path(for: symbol, with: baseURL))):
+                        [\#(symbol.id.description.escapingEmojiShortcodes)](\#(path(for: symbol, with: baseURL))):
                         \#(summary)
                         """#
                     }
@@ -31,7 +31,7 @@ struct Abstract: Component {
             return Fragment {
                 List.Item {
                     Paragraph {
-                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description)
+                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description.escapingEmojiShortcodes)
                     }
                 }
             }

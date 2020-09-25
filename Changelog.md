@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #159 by @mattt.
 - Fixed relationship diagram to prevent linking to unknown symbols.
   #178 by @MattKiazyk.
+- Fixed problems in CommonMark output related to escaping emoji shortcode. 
+  #167 by @mattt.
 
 ### Changed
 
@@ -56,9 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #130 by @mattt.
 - Fixed file and directory unexpected permissions.
   #146 by @niw.
-- Fixed rendering of colon sequences in function signatures
-  as emoji shortcodes (e.g. `:on:` → 🔛).
-  #149 by @mattt.
 - Fixed declarations for properties without explicit type annotations.
   #150 by @mattt.
 - Fixed visual regression for adjacent linked tokens in code block.

@@ -31,9 +31,11 @@ struct Requirements: Component {
             ForEach(in: sections) { section -> BlockConvertible in
                 Section {
                     Heading { section.title }
-                    ForEach(in: section.requirements) { requirement in
-                        Heading { requirement.name }
-                        Documentation(for: requirement, in: module, baseURL: baseURL)
+                    Section {
+                        ForEach(in: section.requirements) { requirement in
+                            Heading { requirement.name.escapingEmojiShortcodes }
+                            Documentation(for: requirement, in: module, baseURL: baseURL)
+                        }
                     }
                 }
             }

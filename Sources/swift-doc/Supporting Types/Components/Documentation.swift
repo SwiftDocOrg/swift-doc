@@ -36,7 +36,7 @@ struct Documentation: Component {
             }
 
             if documentation.summary != nil {
-                Fragment { "\(documentation.summary!)" }
+                Fragment { "\(documentation.summary!.escapingEmojiShortcodes)" }
             }
 
             Declaration(of: symbol, in: module, baseURL: baseURL)
@@ -57,14 +57,14 @@ struct Documentation: Component {
             if documentation.throws != nil {
                 Section {
                     Heading { "Throws" }
-                    Fragment { documentation.throws! }
+                    Fragment { documentation.throws!.escapingEmojiShortcodes }
                 }
             }
 
             if documentation.returns != nil {
                 Section {
                     Heading { "Returns" }
-                    Fragment { documentation.returns! }
+                    Fragment { documentation.returns!.escapingEmojiShortcodes }
                 }
             }
 

@@ -24,13 +24,7 @@ extension Page {
         let data: Data?
         switch format {
         case .commonmark:
-            var text = document.render(format: .commonmark)
-            // Insert U+200B ZERO WIDTH SPACE
-            // to prevent colon sequences from being interpreted as
-            // emoji shortcodes (without wrapping with code element).
-            // See: https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax#using-emoji
-            text = text.replacingOccurrences(of: ":", with: ":\u{200B}")
-            data = text.data(using: .utf8)
+            data = document.render(format: .commonmark).data(using: .utf8)
         case .html:
             data = layout(self).description.data(using: .utf8)
         }
