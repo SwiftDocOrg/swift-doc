@@ -12,4 +12,12 @@ extension StringProtocol {
         guard count < length else { return String(self) }
         return self + String(repeating: " ", count: length - count)
     }
+
+    var escapingEmojiShortcodes: String {
+        // Insert U+200B ZERO WIDTH SPACE
+        // to prevent colon sequences from being interpreted as
+        // emoji shortcodes (without wrapping with code element).
+        // See: https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax#using-emoji
+        return self.replacingOccurrences(of: ":", with: ":\u{200B}")
+    }
 }
