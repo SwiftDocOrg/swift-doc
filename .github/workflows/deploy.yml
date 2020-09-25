@@ -1,0 +1,104 @@
+name: Deploy
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  macos:
+    name: Upload macOS release binary
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Build
+        run: make
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
+      - name: Upload
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./swift-doc
+          asset_name: swift-doc-${{ github.event.release.tag_name }}-macos-x86_64
+          asset_content_type: binary/octet-stream
+
+  linux:
+    name: Upload Linux release binary
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: swift:5.3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Install System Dependencies
+        run: |
+          apt-get update
+          apt-get install -y libxml2-dev graphviz
+      - name: Build
+        run: make
+      - name: Upload
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./swift-doc
+          asset_name: swift-doc-${{ github.event.release.tag_name }}-linux-x86_64
+          asset_content_type: binary/octet-stream
+
+  docker:
+    name: Build and push Docker container
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            swiftdoc/swift-doc:latest
+            swiftdoc/swift-doc:${{ github.event.release.tag_name }}
+
+  homebrew:
+    name: Update Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mislav/bump-homebrew-formula-action@v1
+        with:
+          formula-name: swift-doc
+          homebrew-tap: SwiftDocOrg/homebrew-formulae
+          base-branch: master
+          download-url: https://github.com/SwiftDocOrg/swift-doc/archive/${{ github.event.release.tag_name }}.tar.gz
+          commit-message: "Update formula swift-doc to ${{ github.event.release.tag_name }}"
+        env:
+          COMMITTER_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
