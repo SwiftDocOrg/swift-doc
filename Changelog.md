@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed relationship diagram to prevent linking to unknown symbols.
   #178 by @MattKiazyk.
 
+### Changed
+
+- Changed GitHub Action to use prebuilt Docker image.
+  #185 by @mattt and @MaxDesiatov.
+
 ## [1.0.0-beta.4] - 2020-07-31
 
 ### Added
