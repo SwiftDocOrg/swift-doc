@@ -10,6 +10,11 @@ jobs:
     name: Upload macOS release binary
     runs-on: macos-latest
 
+    strategy:
+      matrix:
+        xcode:
+          - "12" # Swift 5.3
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -18,7 +23,7 @@ jobs:
       - name: Build
         run: make
         env:
-          DEVELOPER_DIR: /Applications/Xcode_12.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
       - name: Upload
         uses: actions/upload-release-asset@v1.0.1
         env:
@@ -34,8 +39,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        swift: ["5.3"]
+
     container:
-      image: swift:5.3
+      image: swift:${{ matrix.swift }}
 
     steps:
       - name: Checkout
