@@ -7,8 +7,8 @@ on:
 
 jobs:
   macos:
-    name: Upload macOS release binary
-    runs-on: macos-latest
+    name: Upload macOS Catalina release binary
+    runs-on: macos-10.15
 
     strategy:
       matrix:
@@ -20,8 +20,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.release.tag_name }}
-      - name: Build
-        run: make
+      - name: Build and Package
+        run: |
+          make swift-doc
+          tar -cf swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar swift-doc
+          gzip -f swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
       - name: Upload
@@ -31,8 +34,8 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./swift-doc
-          asset_name: swift-doc-${{ github.event.release.tag_name }}-macos-x86_64
-          asset_content_type: binary/octet-stream
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
+          asset_content_type: application/gzip
 
   linux:
     name: Upload Linux release binary
@@ -55,8 +58,11 @@ jobs:
         run: |
           apt-get update
           apt-get install -y libxml2-dev graphviz
-      - name: Build
-        run: make
+      - name: Build and Package
+        run: |
+          make swift-doc
+          tar -cf swift-doc-${{ github.event.release.tag_name }}.linux.bottle.tar.gz swift-doc
+          gzip -f swift-doc-${{ github.event.release.tag_name }}.linux.bottle.tar.gz
       - name: Upload
         uses: actions/upload-release-asset@v1.0.1
         env:
@@ -64,8 +70,8 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./swift-doc
-          asset_name: swift-doc-${{ github.event.release.tag_name }}-linux-x86_64
-          asset_content_type: binary/octet-stream
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.linux.bottle.tar.gz
+          asset_content_type: application/gzip
 
   docker:
     name: Build and push Docker container
@@ -100,6 +106,7 @@ jobs:
   homebrew:
     name: Update Homebrew formula
     runs-on: ubuntu-latest
+    needs: [macos, linux]
     steps:
       - uses: mislav/bump-homebrew-formula-action@v1
         with:
