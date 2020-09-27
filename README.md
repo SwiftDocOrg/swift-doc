@@ -300,6 +300,27 @@ $ git add Assets Resources
 $ git commit
 ```
 
+## Release Process
+
+> The following information is primarily for the benefit of project maintainers.
+> That said, if you have any suggestions for how to improve this process,
+> please let us know by [opening an issue][open an issue].
+
+Follow these steps to release a new version of `swift-doc`:
+
+- [x] Verify that the latest commit
+      [passed all CI checks](https://github.com/SwiftDocOrg/swift-doc/actions?query=workflow%3ACI).
+- [x] Update the Changelog by creating a new heading for the release
+      and modifying the last path component for the `unreleased` link reference.
+- [x] Update the [`version` constant](https://github.com/SwiftDocOrg/swift-doc/blob/master/Sources/swift-doc/main.swift#L25)
+      in the command-line executable.
+- [x] Create a new commit with the message "Bump version to `$VERSION`",
+      where `$VERSION` is a [SemVer]-compatible version number.
+- [x] Tag that commit with the tag name "`$VERSION`"
+- [x] Run the command `git push origin master --tags`
+- [x] Create a new [release](https://github.com/SwiftDocOrg/swift-doc/releases)
+      that corresponds to the new tag.
+
 ## License
 
 MIT
@@ -335,3 +356,4 @@ Mattt ([@mattt](https://twitter.com/mattt))
 [pcre]: https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions
 [dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
 [graphviz]: https://www.graphviz.org
+[semver]: https://semver.org
