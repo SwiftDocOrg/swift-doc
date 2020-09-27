@@ -29,4 +29,4 @@ jobs:
           release_name: ${{ github.ref }}
           body: ${{ steps.changelog.outputs.changes }}
           draft: false
-          prerelease: false
+          prerelease: contains(github.ref, '-')
