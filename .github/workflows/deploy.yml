@@ -73,6 +73,19 @@ jobs:
           asset_name: swift-doc-${{ github.event.release.tag_name }}.linux.bottle.tar.gz
           asset_content_type: application/gzip
 
+  homebrew:
+    name: Update Homebrew formula
+    runs-on: ubuntu-latest
+    needs: [macos, linux]
+    steps:
+      - uses: SwiftDocOrg/update-homebrew-formula-action@main
+        with:
+          repository: SwiftDocOrg/swift-doc
+          tap: SwiftDocOrg/homebrew-formulae
+          formula: Formula/swift-doc.rb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   docker:
     name: Build and push Docker container
 
@@ -102,19 +115,3 @@ jobs:
           tags: |
             swiftdoc/swift-doc:latest
             swiftdoc/swift-doc:${{ github.event.release.tag_name }}
-
-  homebrew:
-    name: Update Homebrew formula
-    runs-on: ubuntu-latest
-    needs: [macos, linux]
-    steps:
-      - uses: mislav/bump-homebrew-formula-action@v1
-        with:
-          formula-name: swift-doc
-          homebrew-tap: SwiftDocOrg/homebrew-formulae
-          base-branch: master
-          download-url: https://github.com/SwiftDocOrg/swift-doc/archive/${{ github.event.release.tag_name }}.tar.gz
-          commit-message: "Update formula swift-doc to ${{ github.event.release.tag_name }}"
-        env:
-          COMMITTER_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
