@@ -86,8 +86,8 @@
         "package": "SwiftSyntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
-          "branch": "0.50200.0",
-          "revision": "0688b9cfc4c3dd234e4f55f1f056b2affc849873",
+          "branch": "0.50300.0",
+          "revision": "844574d683f53d0737a9c6d706c3ef31ed2955eb",
           "version": null
         }
       },
@@ -113,8 +113,8 @@
         "package": "SwiftSyntaxHighlighter",
         "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
         "state": {
-          "branch": "1.0.0",
-          "revision": "4a20d10bba17241b66650d99081801536146b43c",
+          "branch": "1.1.0",
+          "revision": "b23b80be3032916dd5aefe9c621be25f75f3681f",
           "version": null
         }
       }
