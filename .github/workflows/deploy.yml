@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [macos, linux]
     steps:
-      - uses: SwiftDocOrg/update-homebrew-formula-action@main
+      - uses: NSHipster/update-homebrew-formula-action@main
         with:
           repository: SwiftDocOrg/swift-doc
           tap: SwiftDocOrg/homebrew-formulae
