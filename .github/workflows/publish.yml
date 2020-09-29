@@ -1,8 +1,8 @@
-name: Deploy
+name: Publish
 
 on:
   release:
-    types: [published]
+    types: [created, published]
 
 jobs:
   macos:
