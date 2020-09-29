@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.5] - 2020-09-29
+
 ### Added
 
 - Added support for Swift 5.3.
@@ -267,7 +269,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.4...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.5...master
+[1.0.0-beta.5]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.5
 [1.0.0-beta.4]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.4
 [1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
