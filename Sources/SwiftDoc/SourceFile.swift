@@ -45,7 +45,7 @@ public struct SourceFile: Hashable, Codable {
             sourceLocationConverter = SourceLocationConverter(file: url.path(relativeTo: directory), tree: tree)
             super.init()
 
-            _ = walk(tree)
+            walk(tree)
 
             assert(context.isEmpty)
         }
