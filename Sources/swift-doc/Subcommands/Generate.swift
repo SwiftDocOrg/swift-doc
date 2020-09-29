@@ -120,9 +120,26 @@ extension SwiftDoc {
         }
 
         if case .html = format {
-          let cssData = try fetchRemoteCSS()
-          let cssURL = outputDirectoryURL.appendingPathComponent("all.css")
-          try writeFile(cssData, to: cssURL)
+            let destinationURL = outputDirectoryURL.appendingPathComponent("all.css")
+
+            func fetchRemoteCSS() throws -> Data {
+              let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
+              return try Data(contentsOf: url)
+            }
+
+            #if swift(>=5.3)
+            if let resourceURL = Bundle.module.url(forResource: "all.min", withExtension: "css") {
+                if !fileManager.fileExists(atPath: destinationURL.path) {
+                    try fileManager.copyItem(at: resourceURL, to: destinationURL)
+                }
+            } else {
+                let cssData = try fetchRemoteCSS()
+                try writeFile(cssData, to: destinationURL)
+            }
+            #else
+            let cssData = try fetchRemoteCSS()
+            try writeFile(cssData, to: destinationURL)
+            #endif
         }
 
       } catch {
@@ -130,9 +147,4 @@ extension SwiftDoc {
       }
     }
   }
-}
-
-func fetchRemoteCSS() throws -> Data {
-  let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
-  return try Data(contentsOf: url)
 }

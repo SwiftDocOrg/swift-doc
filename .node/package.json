@@ -5,7 +5,7 @@
     "not dead"
   ],
   "scripts": {
-    "watch": "postcss -w ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js"
+    "watch": "postcss -w ../Assets/**/*.css -o ../Sources/swift-doc/Resources/all.min.css --config ./postcss.config.js"
   },
   "dependencies": {
     "cssnano": "^4.1.10",
