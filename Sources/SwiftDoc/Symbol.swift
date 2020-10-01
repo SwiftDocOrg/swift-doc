@@ -43,7 +43,11 @@ public final class Symbol {
 
         if let `extension` = `extension`,
             `extension`.modifiers.contains(where: { $0.name == "public" }) {
-            return true
+
+            let isNotLimitedAccessModifier = { (modifier: Modifier) in
+                modifier.name != "internal" && modifier.name != "fileprivate" && modifier.name != "private"
+            }
+            return api.modifiers.allSatisfy(isNotLimitedAccessModifier)
         }
 
         if let symbol = context.compactMap({ $0 as? Symbol }).last,
