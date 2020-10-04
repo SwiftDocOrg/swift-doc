@@ -26,7 +26,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
       - name: Build and Test
-        run: ./test.sh
+        run: |
+          brew install graphviz
+          ./test.sh
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
