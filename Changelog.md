@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added an end-to-end test for validity of generated `all.css` file.
+  #199 by @MaxDesiatov.
+
 ## [1.0.0-beta.5] - 2020-09-29
 
 ### Added
