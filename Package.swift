@@ -40,9 +40,6 @@ let package = Package(
                 .product(name: "SwiftSyntaxHighlighter", package: "SwiftSyntaxHighlighter"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "LoggingGitHubActions", package: "LoggingGitHubActions")
-            ],
-            resources: [
-                .copy("Resources")
             ]
         ),
         .target(
