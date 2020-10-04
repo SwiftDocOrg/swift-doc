@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
       - name: Build and Test
-        run: swift test -c release
+        run: ./test.sh
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
@@ -54,4 +54,4 @@ jobs:
           apt-get update
           apt-get install -y libxml2-dev
       - name: Build and Test
-        run: swift test -c release --enable-test-discovery
+        run: ./test.sh
