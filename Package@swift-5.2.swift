@@ -41,5 +41,11 @@ let package = Package(
             name: "SwiftDocTests",
             dependencies: ["SwiftDoc", "SwiftSyntax", "SwiftSemantics", "SwiftMarkup"]
         ),
+        .testTarget(
+            name: "EndToEndTests",
+            dependencies: [
+                .target(name: "swift-doc"),
+            ]
+        ),
     ]
 )

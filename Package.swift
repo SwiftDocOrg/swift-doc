@@ -63,5 +63,11 @@ let package = Package(
                 .product(name: "SwiftMarkup", package: "SwiftMarkup")
             ]
         ),
+        .testTarget(
+            name: "EndToEndTests",
+            dependencies: [
+                .target(name: "swift-doc"),
+            ]
+        ),
     ]
 )
