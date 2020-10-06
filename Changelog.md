@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added end-to-end tests for generate command-line interface.
+- Added end-to-end tests for `generate` command-line interface.
   #199 by @MaxDesiatov and @mattt.
 
 ## [1.0.0-beta.5] - 2020-09-29
