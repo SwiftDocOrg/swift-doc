@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added an end-to-end test for validity of generated `all.css` file.
-  #199 by @MaxDesiatov.
+- Added end-to-end tests for generate command-line interface.
+  #199 by @MaxDesiatov and @mattt.
 
 ## [1.0.0-beta.5] - 2020-09-29
 
