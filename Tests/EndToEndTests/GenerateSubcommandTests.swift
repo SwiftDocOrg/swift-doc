@@ -1,12 +1,12 @@
-import class Foundation.Bundle
 import XCTest
 
 final class GenerateSubcommandTests: XCTestCase {
     func testCommonMark() throws {
         let command = Bundle.productsDirectory.appendingPathComponent("swift-doc")
-        let outputDirectory = try temporaryDirectory()
 
+        let outputDirectory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
+        
         try Process.run(command: command,
                         arguments: [
                             "generate",
