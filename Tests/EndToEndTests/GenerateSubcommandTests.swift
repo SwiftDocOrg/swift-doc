@@ -6,7 +6,7 @@ final class GenerateSubcommandTests: XCTestCase {
 
         let outputDirectory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
-        
+
         try Process.run(command: command,
                         arguments: [
                             "generate",
@@ -37,7 +37,7 @@ final class GenerateSubcommandTests: XCTestCase {
 
             do {
                 let contents = try FileManager.default.contentsOfDirectory(at: outputDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])
-                let subdirectories = contents.filter { $0.hasDirectoryPath }
+                let subdirectories = try contents.filter { try $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true }
                 XCTAssertEqual(subdirectories.count, 0, "output should not contain any subdirectories")
             }
         }
@@ -73,8 +73,8 @@ final class GenerateSubcommandTests: XCTestCase {
 
             do {
                 let contents = try FileManager.default.contentsOfDirectory(at: outputDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])
-                let subdirectories = contents.filter { $0.hasDirectoryPath }
-                                             .filter { FileManager.default.fileExists(atPath: $0.appendingPathComponent("index.html").path) }
+                let subdirectories = try contents.filter { try $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true }
+                                                 .filter { FileManager.default.fileExists(atPath: $0.appendingPathComponent("index.html").path) }
                 XCTAssertGreaterThanOrEqual(subdirectories.count, 1, "output should contain one or more subdirectories containing index.html")
             }
         }
