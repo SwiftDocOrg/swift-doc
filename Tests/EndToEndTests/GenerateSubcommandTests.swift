@@ -2,7 +2,7 @@ import class Foundation.Bundle
 import XCTest
 
 final class GenerateSubcommandTests: XCTestCase {
-    func testHTMLGeneration() throws {
+    func testHTML() throws {
         let command = Bundle.productsDirectory.appendingPathComponent("swift-doc")
         let outputDirectory = try temporaryDirectory()
 
@@ -28,6 +28,13 @@ final class GenerateSubcommandTests: XCTestCase {
             do {
                 let css = try String(contentsOf: outputDirectory.appendingPathComponent("all.css"))
                 XCTAssertTrue(css.contains(":root"))
+            }
+
+            do {
+                let contents = try FileManager.default.contentsOfDirectory(at: outputDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])
+                let subdirectories = contents.filter { $0.hasDirectoryPath }
+                                             .filter { FileManager.default.fileExists(atPath: $0.appendingPathComponent("index.html").path) }
+                XCTAssertGreaterThanOrEqual(subdirectories.count, 1, "output should contain one or more subdirectories containing index.html")
             }
         }
     }
