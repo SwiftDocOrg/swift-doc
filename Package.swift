@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "swift-doc",
+    platforms: [
+        .macOS(.v10_13)
+    ],
     products: [
         .executable(name: "swift-doc", targets: ["swift-doc"]),
         .library(name: "SwiftDoc", targets: ["SwiftDoc"])

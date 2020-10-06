@@ -10,11 +10,7 @@ final class EndToEndTests: XCTestCase {
     let pipe = Pipe()
     process.standardOutput = pipe
 
-    if #available(OSX 10.13, *) {
-      try process.run()
-    } else {
-      process.launch()
-    }
+    try process.run()
     process.waitUntilExit()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
