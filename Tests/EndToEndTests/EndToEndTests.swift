@@ -4,10 +4,6 @@ import XCTest
 final class EndToEndTests: XCTestCase {
   func testCSS() throws {
     // Some of the APIs that we use below are available in macOS 10.13 and above.
-    guard #available(macOS 10.13, *) else {
-      return
-    }
-
     let process = Process()
     process.executableURL = productsDirectory.appendingPathComponent("swift-doc")
     process.arguments = ["generate", "--module-name", "SwiftDoc", "--format", "html", "Sources"]
@@ -15,7 +11,11 @@ final class EndToEndTests: XCTestCase {
     let pipe = Pipe()
     process.standardOutput = pipe
 
-    try process.run()
+    if #available(OSX 10.13, *) {
+      try process.run()
+    } else {
+      process.launch()
+    }
     process.waitUntilExit()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
@@ -33,7 +33,7 @@ final class EndToEndTests: XCTestCase {
       return XCTFail("Failed to decode a UTF-8 string from `cssData` in \(#function)")
     }
 
-    XCTAssertTrue(css.starts(with: ":root"))
+    XCTAssertTrue(css.contains(":root"))
   }
 
   /// Returns path to the built products directory.
