@@ -97,6 +97,33 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(module.interface.symbols[1].name, "b()", "Function `b()` should be in documented interface")
     }
 
+    func testComputedPropertiesInPublicExtension() throws {
+        let source = #"""
+        public extension Int {
+            var a: Int { 1 }
+            public var b: Int { 1 }
+            internal var c: Int { 1 }
+            fileprivate var d: Int { 1 }
+            private var e: Int { 1 }
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(sourceFile.symbols.count, 5)
+        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `a` should BE marked as public - its visibility is specified by extension")
+        XCTAssertTrue(sourceFile.symbols[1].isPublic, "Property `b` should BE marked as public - its visibility is public")
+        XCTAssertFalse(sourceFile.symbols[2].isPublic, "Property `c` should NOT be marked as public - its visibility is internal")
+        XCTAssertFalse(sourceFile.symbols[3].isPublic, "Property `d` should NOT be marked as public - its visibility is fileprivate")
+        XCTAssertFalse(sourceFile.symbols[4].isPublic, "Property `e` should NOT be marked as public - its visibility is private")
+
+        XCTAssertEqual(module.interface.symbols.count, 2)
+        XCTAssertEqual(module.interface.symbols[0].name, "a", "Property `a` should be in documented interface")
+        XCTAssertEqual(module.interface.symbols[1].name, "b", "Property `b` should be in documented interface")
+    }
+
     func testNestedPropertiesInPublicExtension() throws {
         let source = #"""
         public class RootController {}
