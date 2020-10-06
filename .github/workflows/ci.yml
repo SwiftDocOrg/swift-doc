@@ -25,8 +25,12 @@ jobs:
           key: ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
+      - name: Install System Dependencies
+        run: |
+          brew install graphviz
       - name: Build and Test
-        run: swift test -c release
+        run: |
+          swift test -c release
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
@@ -52,6 +56,6 @@ jobs:
       - name: Install System Dependencies
         run: |
           apt-get update
-          apt-get install -y libxml2-dev
+          apt-get install -y libxml2-dev graphviz
       - name: Build and Test
         run: swift test -c release --enable-test-discovery

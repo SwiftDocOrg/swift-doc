@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "swift-doc",
+    platforms: [
+        .macOS(.v10_13)
+    ],
     products: [
         .executable(name: "swift-doc", targets: ["swift-doc"]),
         .library(name: "SwiftDoc", targets: ["SwiftDoc"])
@@ -40,9 +43,6 @@ let package = Package(
                 .product(name: "SwiftSyntaxHighlighter", package: "SwiftSyntaxHighlighter"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "LoggingGitHubActions", package: "LoggingGitHubActions")
-            ],
-            resources: [
-                .copy("Resources")
             ]
         ),
         .target(
@@ -64,6 +64,12 @@ let package = Package(
                 .product(name: "SwiftSyntax", package: "SwiftSyntax"),
                 .product(name: "SwiftSemantics", package: "SwiftSemantics"),
                 .product(name: "SwiftMarkup", package: "SwiftMarkup")
+            ]
+        ),
+        .testTarget(
+            name: "EndToEndTests",
+            dependencies: [
+                .target(name: "swift-doc"),
             ]
         ),
     ]

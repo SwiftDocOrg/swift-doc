@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added end-to-end tests for command-line interface.
+  #199 by @MaxDesiatov and @mattt.
+
 ### Fixed
 
 - Fixed public extensions exposing nested code of all access levels.
@@ -36,8 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed GitHub Action to use prebuilt Docker image.
   #185 by @mattt and @MaxDesiatov.
-- Changed build command to load CSS from package resource when available.
-  #192 by @mattt.
 
 ## [1.0.0-beta.4] - 2020-07-31
 
