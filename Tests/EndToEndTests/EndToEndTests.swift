@@ -3,7 +3,6 @@ import XCTest
 
 final class EndToEndTests: XCTestCase {
   func testCSS() throws {
-    // Some of the APIs that we use below are available in macOS 10.13 and above.
     let process = Process()
     process.executableURL = productsDirectory.appendingPathComponent("swift-doc")
     process.arguments = ["generate", "--module-name", "SwiftDoc", "--format", "html", "Sources"]
