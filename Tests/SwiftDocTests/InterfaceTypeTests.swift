@@ -124,6 +124,45 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(module.interface.symbols[1].name, "b", "Property `b` should be in documented interface")
     }
 
+    func testComputedPropertiesWithMultipleAccessModifiersInPublicExtension() throws {
+        let source = #"""
+        public extension Int {
+            internal(set) var a: Int {
+                get { 1 }
+                set {}
+            }
+            private(set) var b: Int {
+                get { 1 }
+                set {}
+            }
+            public internal(set) var c: Int {
+                get { 1 }
+                set {}
+            }
+            public private(set) var d: Int {
+                get { 1 }
+                set {}
+            }
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(sourceFile.symbols.count, 4)
+        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `a` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `b` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `c` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `d` should be marked as public - the visibility of its getter is public")
+
+        XCTAssertEqual(module.interface.symbols.count, 4)
+        XCTAssertEqual(module.interface.symbols[0].name, "a", "Property `a` should be in documented interface")
+        XCTAssertEqual(module.interface.symbols[1].name, "b", "Property `b` should be in documented interface")
+        XCTAssertEqual(module.interface.symbols[2].name, "c", "Property `c` should be in documented interface")
+        XCTAssertEqual(module.interface.symbols[3].name, "d", "Property `d` should be in documented interface")
+    }
+
     func testNestedPropertiesInPublicExtension() throws {
         let source = #"""
         public class RootController {}
