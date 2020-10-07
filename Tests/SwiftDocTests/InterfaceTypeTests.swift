@@ -139,7 +139,11 @@ final class InterfaceTypeTests: XCTestCase {
                 get { 1 }
                 set {}
             }
-            public private(set) var d: Int {
+            public fileprivate(set) var d: Int {
+                get { 1 }
+                set {}
+            }
+            public private(set) var e: Int {
                 get { 1 }
                 set {}
             }
@@ -150,17 +154,19 @@ final class InterfaceTypeTests: XCTestCase {
         let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
-        XCTAssertEqual(sourceFile.symbols.count, 4)
+        XCTAssertEqual(sourceFile.symbols.count, 5)
         XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `a` should be marked as public - the visibility of its getter is public")
-        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `b` should be marked as public - the visibility of its getter is public")
-        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `c` should be marked as public - the visibility of its getter is public")
-        XCTAssertTrue(sourceFile.symbols[0].isPublic, "Property `d` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[1].isPublic, "Property `b` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[2].isPublic, "Property `c` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[3].isPublic, "Property `d` should be marked as public - the visibility of its getter is public")
+        XCTAssertTrue(sourceFile.symbols[4].isPublic, "Property `e` should be marked as public - the visibility of its getter is public")
 
-        XCTAssertEqual(module.interface.symbols.count, 4)
+        XCTAssertEqual(module.interface.symbols.count, 5)
         XCTAssertEqual(module.interface.symbols[0].name, "a", "Property `a` should be in documented interface")
         XCTAssertEqual(module.interface.symbols[1].name, "b", "Property `b` should be in documented interface")
         XCTAssertEqual(module.interface.symbols[2].name, "c", "Property `c` should be in documented interface")
         XCTAssertEqual(module.interface.symbols[3].name, "d", "Property `d` should be in documented interface")
+        XCTAssertEqual(module.interface.symbols[4].name, "e", "Property `e` should be in documented interface")
     }
 
     func testNestedPropertiesInPublicExtension() throws {
