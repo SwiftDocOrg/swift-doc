@@ -45,7 +45,7 @@ public final class Symbol {
             `extension`.modifiers.contains(where: { $0.name == "public" }) {
 
             return api.modifiers.allSatisfy { modifier in
-                modifier.name != "internal" && modifier.name != "fileprivate" && modifier.name != "private"
+                modifier.detail != nil || (modifier.name != "internal" && modifier.name != "fileprivate" && modifier.name != "private")
             }
         }
 
