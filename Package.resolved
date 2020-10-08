@@ -56,15 +56,6 @@
         }
       },
       {
-        "package": "HTMLEntities",
-        "repositoryURL": "https://github.com/IBM-Swift/swift-html-entities.git",
-        "state": {
-          "branch": null,
-          "revision": "744c094976355aa96ca61b9b60ef0a38e979feb7",
-          "version": "3.0.14"
-        }
-      },
-      {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
@@ -113,8 +104,8 @@
         "package": "SwiftSyntaxHighlighter",
         "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
         "state": {
-          "branch": "1.1.0",
-          "revision": "b23b80be3032916dd5aefe9c621be25f75f3681f",
+          "branch": "1.1.1",
+          "revision": "76bd23ae4b23f028a8e45f906c2bf98312fb9d33",
           "version": null
         }
       }
