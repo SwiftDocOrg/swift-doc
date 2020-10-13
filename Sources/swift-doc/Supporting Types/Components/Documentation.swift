@@ -34,7 +34,7 @@ struct Documentation: Component {
             }
 
             if documentation.summary != nil {
-                Fragment { "\(documentation.summary!)" }
+                Fragment { "\(documentation.summary!.escapingEmojiShortcodes)" }
             }
 
             Declaration(of: symbol, in: module)
@@ -47,7 +47,7 @@ struct Documentation: Component {
                 Section {
                     Heading { "Parameters" }
                     List(of:  documentation.parameters) { parameter in
-                        Fragment { "\(parameter.name): \(parameter.description)" }
+                        Fragment { "\(parameter.name): \(parameter.content)" }
                     }
                 }
             }
@@ -55,14 +55,14 @@ struct Documentation: Component {
             if documentation.throws != nil {
                 Section {
                     Heading { "Throws" }
-                    Fragment { documentation.throws! }
+                    Fragment { documentation.throws!.escapingEmojiShortcodes }
                 }
             }
 
             if documentation.returns != nil {
                 Section {
                     Heading { "Returns" }
-                    Fragment { documentation.returns! }
+                    Fragment { documentation.returns!.escapingEmojiShortcodes }
                 }
             }
 
@@ -117,7 +117,7 @@ struct Documentation: Component {
                     type = nil
                 }
 
-                return (entry.name, type, entry.description)
+                return (entry.name, type, entry.content)
             }
 
             fragments.append(#"""
@@ -143,7 +143,7 @@ struct Documentation: Component {
                       return #"""
                       <tr>
                           <th>\#(softbreak(entry.name))</th>
-                          \#(typeCell)</td>
+                          \#(typeCell)
                           <td>\#(commonmark: entry.description)</td>
                       </tr>
                       """# as HypertextLiteral.HTML

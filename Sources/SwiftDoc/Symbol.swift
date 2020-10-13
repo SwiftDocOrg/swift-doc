@@ -30,14 +30,20 @@ public final class Symbol {
     public private(set) lazy var id: ID = { Identifier(symbol: self) }()
 
     public var isPublic: Bool {
+        if api is Unknown {
+            return true
+        }
+
         if api.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {
             return true
         }
 
-        if let `extension` = context.compactMap({ $0 as? Extension }).first,
-            `extension`.modifiers.contains(where: { $0.name == "public" })
-        {
-            return true
+        if let `extension` = `extension`,
+            `extension`.modifiers.contains(where: { $0.name == "public" }) {
+
+            return api.modifiers.allSatisfy { modifier in
+                modifier.detail != nil || (modifier.name != "internal" && modifier.name != "fileprivate" && modifier.name != "private")
+            }
         }
 
         if let symbol = context.compactMap({ $0 as? Symbol }).last,

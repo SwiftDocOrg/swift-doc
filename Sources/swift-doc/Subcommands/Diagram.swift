@@ -78,11 +78,3 @@ fileprivate func diagram(of module: Module) -> String {
 
     return dot
 }
-
-// MARK: -
-
-fileprivate extension String {
-    func indented(by spaces: Int = 2) -> String {
-        return String(repeating: " ", count: spaces) + self
-    }
-}

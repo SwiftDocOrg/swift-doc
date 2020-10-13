@@ -309,10 +309,6 @@ a {
   &:active {
     text-decoration: none;
   }
-
-  & + a {
-    display: inline-block;
-  }
 }
 
 b,

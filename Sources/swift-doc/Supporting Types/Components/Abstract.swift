@@ -12,7 +12,7 @@ struct Abstract: Component {
         self.symbol = symbol
         self.router = router
     }
-    
+
     // MARK: - Component
 
     var fragment: Fragment {
@@ -21,7 +21,7 @@ struct Abstract: Component {
                 List.Item {
                     Fragment {
                         #"""
-                        [\#(symbol.id)](\#(router(symbol))):
+                        [\#(symbol.id.description.escapingEmojiShortcodes)](\#(router(symbol))):
                         \#(summary)
                         """#
                     }
@@ -31,7 +31,7 @@ struct Abstract: Component {
             return Fragment {
                 List.Item {
                     Paragraph {
-                        Link(urlString: router(symbol), text: symbol.id.description)
+                        Link(urlString: router(symbol), text: symbol.id.description.escapingEmojiShortcodes)
                     }
                 }
             }
