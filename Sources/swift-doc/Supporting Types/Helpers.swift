@@ -3,21 +3,22 @@ import SwiftDoc
 import HTML
 
 public func linkCodeElements(of html: String, for symbol: Symbol, in module: Module, with baseURL: String) -> String {
-    let document = try! Document(string: html.description)!
-    for element in document.search(xpath: "//code | //pre/code//span[contains(@class,'type')]") {
-        guard let name = element.content else { continue }
-
-        if let candidates = module.interface.symbolsGroupedByQualifiedName[name],
-            candidates.count == 1,
-            let candidate = candidates.filter({ $0 != symbol }).first
-        {
-            let a = Element(name: "a")
-            a["href"] = path(for: candidate, with: baseURL)
-            element.wrap(inside: a)
-        }
-    }
-
-    return document.root?.description ?? html
+    return html
+//    let document = try! Document(string: html.description)!
+//    for element in document.search(xpath: "//code | //pre/code//span[contains(@class,'type')]") {
+//        guard let name = element.content else { continue }
+//
+//        if let candidates = module.interface.symbolsGroupedByQualifiedName[name],
+//            candidates.count == 1,
+//            let candidate = candidates.filter({ $0 != symbol }).first
+//        {
+//            let a = Element(name: "a")
+//            a["href"] = path(for: candidate, with: baseURL)
+//            element.wrap(inside: a)
+//        }
+//    }
+//
+//    return document.root?.description ?? html
 }
 
 public func sidebar(for html: String) -> String {
@@ -77,9 +78,4 @@ public func softbreak(_ string: String) -> String {
                        .replacingOccurrences(of: ":", with: ":\u{200B}")
 
     return regex.stringByReplacingMatches(in: string, options: [], range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "$1\u{200B}$2")
-}
-
-func fetchRemoteCSS() throws -> Data {
-    let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
-    return try Data(contentsOf: url)
 }

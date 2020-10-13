@@ -1,10 +1,33 @@
 import Foundation
+import CommonMark
 import SwiftDoc
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-enum CommonMarkGenerator: Generator {
-    static func generate(for module: Module, with options: SwiftDoc.Generate.Options) throws {
+final class CommonMarkGenerator: Generator {
+    var router: Router
+    var options: SwiftDocCommand.Generate.Options
+
+    init(with options: SwiftDocCommand.Generate.Options) {
+        self.options = options
+        self.router = { routable in
+            switch routable {
+            case let symbol as Symbol:
+                var urlComponents = URLComponents()
+                if symbol.id.pathComponents.isEmpty {
+                    urlComponents.appendPathComponent(symbol.id.escaped)
+                } else {
+                    symbol.id.pathComponents.forEach { urlComponents.appendPathComponent($0) }
+                    urlComponents.fragment = symbol.id.escaped.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+                }
+                return urlComponents.path
+            default:
+                return "\(routable)"
+            }
+        }
+    }
+
+    func generate(for module: Module) throws {
         assert(options.format == .commonmark)
 
         let module = try Module(name: options.moduleName, paths: options.inputs)
@@ -12,15 +35,15 @@ enum CommonMarkGenerator: Generator {
         let outputDirectoryURL = URL(fileURLWithPath: options.output)
         try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
 
-        var pages: [String: Page] = [:]
+        var pages: [String: Page & CommonMarkRenderable] = [:]
 
         var globals: [String: [Symbol]] = [:]
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
             case is Class, is Enumeration, is Structure, is Protocol:
-                pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: options.baseURL)
-            case let `typealias` as Typealias:
-                pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: options.baseURL)
+                pages[router(symbol)] = TypePage(for: symbol, in: module)
+            case is Typealias:
+                pages[router(symbol)] = TypealiasPage(for: symbol, in: module)
             case let function as Function where !function.isOperator:
                 globals[function.name, default: []] += [symbol]
             case let variable as Variable:
@@ -31,7 +54,7 @@ enum CommonMarkGenerator: Generator {
         }
 
         for (name, symbols) in globals {
-            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: options.baseURL)
+            pages[router(symbols.first!)] = GlobalPage(for: symbols, named: name, in: module)
         }
 
         guard !pages.isEmpty else {
@@ -40,28 +63,28 @@ enum CommonMarkGenerator: Generator {
         }
 
         if pages.count == 1, let page = pages.first?.value {
-            let filename = "Home.md"
-            let url = outputDirectoryURL.appendingPathComponent(filename)
-            try page.write(to: url, baseURL: options.baseURL)
+            pages = ["Home": page]
         } else {
-            pages["Home"] = HomePage(module: module, baseURL: options.baseURL)
-            pages["_Sidebar"] = SidebarPage(module: module, baseURL: options.baseURL)
-            pages["_Footer"] = FooterPage(baseURL: options.baseURL)
-
-            try pages.map { $0 }.parallelForEach {
-                let filename = "\($0.key).md"
-                let url = outputDirectoryURL.appendingPathComponent(filename)
-                try $0.value.write(to: url, baseURL: options.baseURL)
-            }
+            pages["Home"] = HomePage(module: module)
+            pages["_Sidebar"] = SidebarPage(module: module)
+            pages["_Footer"] = FooterPage()
         }
+
+        try pages.map { $0 }.parallelForEach {
+            try write(page: $0.value, to: $0.key)
+        }
+    }
+
+    private func write(page: Page & CommonMarkRenderable, to route: String) throws {
+        guard let data = try page.render(with: self).render(format: .commonmark).data(using: .utf8) else { fatalError("Unable to render page \(page)") }
+        let filename = "\(route).md"
+        let url = URL(fileURLWithPath: options.output).appendingPathComponent(filename)
+        try data.write(to: url)
     }
 }
 
 // MARK: -
 
-fileprivate extension Page {
-    func write(to url: URL, baseURL: String) throws {
-        guard let data = document.render(format: .commonmark).data(using: .utf8) else { return }
-        try writeFile(data, to: url)
-    }
+protocol CommonMarkRenderable {
+    func render(with generator: CommonMarkGenerator) throws -> Document
 }

@@ -7,12 +7,10 @@ import HypertextLiteral
 struct Requirements: Component {
     var symbol: Symbol
     var module: Module
-    let baseURL: String
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module) {
         self.symbol = symbol
         self.module = module
-        self.baseURL = baseURL
     }
 
     var sections: [(title: String, requirements: [Symbol])] {
@@ -33,7 +31,7 @@ struct Requirements: Component {
                     Heading { section.title }
                     ForEach(in: section.requirements) { requirement in
                         Heading { requirement.name }
-                        Documentation(for: requirement, in: module, baseURL: baseURL)
+//                        Documentation(for: requirement, in: module)
                     }
                 }
             }
@@ -55,7 +53,7 @@ struct Requirements: Component {
                             <h3>
                                 <code>\#(softbreak(member.name))</code>
                             </h3>
-                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
+                            \#(Documentation(for: member, in: module).html)
                         </div>
                         """#
                     })

@@ -4,9 +4,6 @@ import CommonMarkBuilder
 import HypertextLiteral
 
 struct SidebarPage: Page {
-    var module: Module
-    let baseURL: String
-
     var typeNames: Set<String> = []
     var protocolNames: Set<String> = []
     var operatorNames: Set<String> = []
@@ -14,10 +11,9 @@ struct SidebarPage: Page {
     var globalFunctionNames: Set<String> = []
     var globalVariableNames: Set<String> = []
 
-    init(module: Module, baseURL: String) {
-        self.module = module
-        self.baseURL = baseURL
+    var title: String { "Sidebar" }
 
+    init(module: Module) {
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
             case is Class:
@@ -43,11 +39,11 @@ struct SidebarPage: Page {
             }
         }
     }
+}
 
-    // MARK: - Page
-
-    var document: CommonMark.Document {
-        return Document {
+extension SidebarPage: CommonMarkRenderable {
+    func render(with generator: CommonMarkGenerator) throws -> Document {
+        Document {
             ForEach(in: (
                 [
                     ("Types", typeNames),
@@ -66,18 +62,23 @@ struct SidebarPage: Page {
                     """#
                 }
 
-                List(of: section.names.sorted()) { name in
-                    Link(urlString: path(for: name, with: baseURL), text: name)
-                }
+//                List(of: section.names.sorted()) { name in
+//                    Link(urlString: generator.route(for: name), text: name)
+//                }
 
                 Fragment { "</details>" }
             }
         }
     }
+}
 
-    var html: HypertextLiteral.HTML {
-        #"""
-        \#(document)
+extension SidebarPage: HTMLRenderable {
+    func render(with generator: HTMLGenerator) throws -> HTML {
+        var options = generator.options
+        options.format = .commonmark
+
+        return #"""
+        \#(try render(with: CommonMarkGenerator(with: options)))
         """#
     }
 }

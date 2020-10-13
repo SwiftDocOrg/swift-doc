@@ -6,13 +6,11 @@ import HypertextLiteral
 struct TypePage: Page {
     let module: Module
     let symbol: Symbol
-    let baseURL: String
 
-    init(module: Module, symbol: Symbol, baseURL: String) {
+    init(for symbol: Symbol, in module: Module) {
         precondition(symbol.api is Type)
-        self.module = module
         self.symbol = symbol
-        self.baseURL = baseURL
+        self.module = module
     }
 
     // MARK: - Page
@@ -20,19 +18,23 @@ struct TypePage: Page {
     var title: String {
         return symbol.id.description
     }
+}
 
-    var document: CommonMark.Document {
+extension TypePage: CommonMarkRenderable {
+    func render(with generator: CommonMarkGenerator) throws -> Document {
         return CommonMark.Document {
             Heading { symbol.id.description }
 
-            Documentation(for: symbol, in: module, baseURL: baseURL)
-            Relationships(of: symbol, in: module, baseURL: baseURL)
-            Members(of: symbol, in: module, baseURL: baseURL)
-            Requirements(of: symbol, in: module, baseURL: baseURL)
+            Documentation(for: symbol, in: module)
+//            Relationships(of: symbol, in: module
+//            Members(of: symbol, in: module)
+//            Requirements(of: symbol, in: module)
         }
     }
+}
 
-    var html: HypertextLiteral.HTML {
+extension TypePage: HTMLRenderable {
+    func render(with generator: HTMLGenerator) throws -> HTML {
         let typeName = String(describing: type(of: symbol.api))
 
         return #"""
@@ -42,10 +44,12 @@ struct TypePage: Page {
             <code class="name">\#(softbreak(symbol.id.description))</code>
         </h1>
 
-        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
-        \#(Relationships(of: symbol, in: module, baseURL: baseURL).html)
-        \#(Members(of: symbol, in: module, baseURL: baseURL).html)
-        \#(Requirements(of: symbol, in: module, baseURL: baseURL).html)
         """#
+//
+//        \#(Documentation(for: symbol, in: module).html)
+//        \#(Relationships(of: symbol, in: module).html)
+//        \#(Members(of: symbol, in: module).html)
+//        \#(Requirements(of: symbol, in: module).html)
+//        """#
     }
 }

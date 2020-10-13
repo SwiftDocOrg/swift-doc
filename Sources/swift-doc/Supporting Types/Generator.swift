@@ -1,5 +1,6 @@
 import SwiftDoc
 
 protocol Generator {
-    static func generate(for module: Module, with options: SwiftDoc.Generate.Options) throws
+    var options: SwiftDocCommand.Generate.Options { get }
+    func generate(for module: Module) throws
 }

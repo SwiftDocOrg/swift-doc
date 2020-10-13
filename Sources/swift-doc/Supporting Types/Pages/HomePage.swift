@@ -5,7 +5,6 @@ import HypertextLiteral
 
 struct HomePage: Page {
     var module: Module
-    let baseURL: String
 
     var classes: [Symbol] = []
     var enumerations: [Symbol] = []
@@ -16,9 +15,8 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module, baseURL: String) {
+    init(module: Module) {
         self.module = module
-        self.baseURL = baseURL
 
         for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
             switch symbol.api {
@@ -51,9 +49,12 @@ struct HomePage: Page {
     var title: String {
         return module.name
     }
+}
 
-    var document: CommonMark.Document {
-        return Document {
+
+extension HomePage: CommonMarkRenderable {
+    func render(with generator: CommonMarkGenerator) throws -> Document {
+        Document {
             ForEach(in: [
                 ("Types", classes + enumerations + structures),
                 ("Protocols", protocols),
@@ -66,35 +67,39 @@ struct HomePage: Page {
                     Heading { heading }
 
                     List(of: symbols.sorted()) { symbol in
-                        Abstract(for: symbol, baseURL: baseURL).fragment
+                        Abstract(for: symbol, with: generator.router).fragment
                     }
                 }
             }
         }
     }
+}
 
-    var html: HypertextLiteral.HTML {
-        return #"""
-        \#([
-            ("Classes", classes),
-            ("Structures", structures),
-            ("Enumerations", enumerations),
-            ("Protocols", protocols),
-            ("Typealiases", globalTypealiases),
-            ("Functions", globalFunctions),
-            ("Variables", globalVariables)
-        ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
-            guard !symbols.isEmpty else { return nil }
 
-            return #"""
-            <section id=\#(heading.lowercased())>
-                <h2>\#(heading)</h2>
-                <dl>
-                    \#(symbols.sorted().map { Abstract(for: $0, baseURL: baseURL).html })
-                </dl>
-            </section>
-        """#
-        })
-        """#
+extension HomePage: HTMLRenderable {
+    func render(with generator: HTMLGenerator) throws -> HTML {
+        return ""
+//        #"""
+//        \#([
+//            ("Classes", classes),
+//            ("Structures", structures),
+//            ("Enumerations", enumerations),
+//            ("Protocols", protocols),
+//            ("Typealiases", globalTypealiases),
+//            ("Functions", globalFunctions),
+//            ("Variables", globalVariables)
+//        ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
+//            guard !symbols.isEmpty else { return nil }
+//
+//            return #"""
+//            <section id=\#(heading.lowercased())>
+//                <h2>\#(heading)</h2>
+//                <dl>
+//                    \#(symbols.sorted().map { Abstract(for: $0).html })
+//                </dl>
+//            </section>
+//        """#
+//        })
+//        """#
     }
 }

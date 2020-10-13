@@ -19,7 +19,7 @@ let fileAttributes: [FileAttributeKey : Any] = [.posixPermissions: 0o744]
 var standardOutput = FileHandle.standardOutput
 var standardError = FileHandle.standardError
 
-struct SwiftDoc: ParsableCommand {
+struct SwiftDocCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "swift doc",
         abstract: "A utility for generating documentation for Swift code.",
@@ -28,4 +28,4 @@ struct SwiftDoc: ParsableCommand {
     )
 }
 
-SwiftDoc.main()
+SwiftDocCommand.main()

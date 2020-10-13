@@ -36,7 +36,7 @@ extension Symbol {
         return node
     }
 
-    func graph(in module: Module, baseURL: String) -> Graph {
+    func graph(in module: Module) -> Graph {
         var graph = Graph(directed: true)
 
         let relationships = module.interface.relationships.filter {
@@ -47,7 +47,7 @@ extension Symbol {
         var symbolNode = self.node
 
         if !(api is Unknown) {
-            symbolNode.href = path(for: self, with: baseURL)
+//            symbolNode.href = path(for: self)
         }
 
         symbolNode.strokeWidth = 3.0

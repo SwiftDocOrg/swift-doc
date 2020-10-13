@@ -2,8 +2,8 @@ import SwiftDoc
 import HypertextLiteral
 import Foundation
 
-func layout(_ page: Page) -> HTML {
-    let html = page.html
+func layout(_ page: Page & HTMLRenderable, with generator: HTMLGenerator) throws -> HTML {
+    let html = try page.render(with: generator)
 
     return #"""
     <!DOCTYPE html>
@@ -11,14 +11,16 @@ func layout(_ page: Page) -> HTML {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>\#(page.module.name) - \#(page.title)</title>
-        <link rel="stylesheet" type="text/css" href="\#(path(for: "all.css", with: page.baseURL))" media="all" />
+        <title>\#(generator.options.moduleName) - \#(page.title)</title>
+        \#(generator.options.inlineCSS ? "" :
+    #"<link rel="stylesheet" type="text/css" href="\#(generator.options.baseURL.appendingPathComponent("all.css"))" media="all" />"#
+        )
     </head>
     <body>
         <header>
-            <a href="\#(page.baseURL)">
+            <a href="\#(generator.options.baseURL)">
                 <strong>
-                    \#(page.module.name)
+                    \#(generator.options.moduleName)
                 </strong>
                 <span>Documentation</span>
             </a>
@@ -45,7 +47,7 @@ func layout(_ page: Page) -> HTML {
         </main>
 
         <footer>
-            \#(FooterPage(baseURL: page.baseURL).html)
+            \#(FooterPage().render(with: generator))
         </footer>
     </body>
     </html>

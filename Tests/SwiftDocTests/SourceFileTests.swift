@@ -7,7 +7,7 @@ import SwiftSyntax
 
 final class SourceFileTests: XCTestCase {
     func testSourceFile() throws {
-        let source = #"""
+        let sourceFile: SourceFile = #"""
         import Foundation
 
         /// Protocol
@@ -49,9 +49,6 @@ final class SourceFileTests: XCTestCase {
         /// Subclass
         public final class SC: C {}
         """#
-
-        let url = try temporaryFile(contents: source)
-        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
 
         XCTAssertEqual(sourceFile.imports.count, 1)
         XCTAssertEqual(sourceFile.imports.first?.pathComponents, ["Foundation"])

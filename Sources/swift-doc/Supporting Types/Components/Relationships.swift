@@ -28,18 +28,16 @@ extension StringBuilder {
 struct Relationships: Component {
     var module: Module
     var symbol: Symbol
-    let baseURL: String
     var inheritedTypes: [Symbol]
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module) {
         self.module = module
         self.symbol = symbol
         self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
-        self.baseURL = baseURL
     }
 
     var graphHTML: HypertextLiteral.HTML? {
-        var graph = symbol.graph(in: module, baseURL: baseURL)
+        var graph = symbol.graph(in: module)
         guard !graph.edges.isEmpty else { return nil }
 
         graph.aspectRatio = 0.125
@@ -82,7 +80,7 @@ struct Relationships: Component {
                         if type.api is Unknown {
                             return "`\(type.id)`"
                         } else {
-                    return "[`\(type.id)`](\(path(for: type, with: baseURL)))"
+                    return "[`\(type.id)`](\(""/* TODO: path(for: type, with: baseURL))*/)"
                         }
                     }.joined(separator: ", "))
                     """#
@@ -120,7 +118,7 @@ struct Relationships: Component {
                                 """#
                             } else {
                                 return #"""
-                                <dt class="\#(descriptor)"><code><a href="\#(path(for: symbol, with: baseURL))">\#(symbol.id)</a></code></dt>
+                                <dt class="\#(descriptor)"><code><a href="\#(""/* TODO path(for: symbol, with: baseURL) */)">\#(symbol.id)</a></code></dt>
                                 <dd>\#(commonmark: symbol.documentation?.summary ?? "")</dd>
                                 """#
                             }

@@ -18,31 +18,29 @@ fileprivate let timestampDateFormatter: DateFormatter = {
 fileprivate let href = "https://github.com/SwiftDocOrg/swift-doc"
 
 struct FooterPage: Page {
-    let baseURL: String
+    let title: String = "Footer"
+}
 
-    init(baseURL: String) {
-        self.baseURL = baseURL
-    }
-
-    // MARK: - Page
-
-    var document: CommonMark.Document {
+extension FooterPage: CommonMarkRenderable {
+    func render(with generator: CommonMarkGenerator) throws -> Document {
         let timestamp = timestampDateFormatter.string(from: Date())
 
         return Document {
             Fragment {
-                "Generated at \(timestamp) using [swift-doc](\(href)) \(SwiftDoc.configuration.version)."
+                "Generated at \(timestamp) using [swift-doc](\(href)) \(SwiftDocCommand.configuration.version)."
             }
         }
     }
+}
 
-    var html: HypertextLiteral.HTML {
+extension FooterPage {
+    func render(with generator: HTMLGenerator) -> HypertextLiteral.HTML {
         let timestamp = timestampDateFormatter.string(from: Date())
         let dateString = dateFormatter.string(from: Date())
 
         return #"""
         <p>
-            Generated on <time datetime=\#(timestamp)>\#(dateString)</time> using <a href=\#(href)>swift-doc</a> <span class="version">\#(SwiftDoc.configuration.version)</span>.
+            Generated on <time datetime=\#(timestamp)>\#(dateString)</time> using <a href=\#(href)>swift-doc</a> <span class="version">\#(SwiftDocCommand.configuration.version)</span>.
         </p>
         """#
     }

@@ -10,7 +10,7 @@ import SQLite
 import FoundationNetworking
 #endif
 
-extension SwiftDoc {
+extension SwiftDocCommand {
     struct Generate: ParsableCommand {
         enum Format: String, ExpressibleByArgument {
             case commonmark
@@ -37,9 +37,13 @@ extension SwiftDoc {
             var format: Format
 
             @Option(name: .customLong("base-url"),
-                    default: "/",
-                    help: "The base URL used for all relative URLs in generated documents.")
-            var baseURL: String
+                    default: URL(fileURLWithPath: "/"), parsing: .next, help: "The base URL used for all relative URLs in generated documents.", transform: { string in
+                return URL(fileURLWithPath: string)
+            })
+            var baseURL: URL
+
+            @Flag(default: false, inversion: .prefixedNo)
+            var inlineCSS: Bool
         }
 
         static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -53,11 +57,11 @@ extension SwiftDoc {
 
                 switch options.format {
                 case .commonmark:
-                    try CommonMarkGenerator.generate(for: module, with: options)
+                    try CommonMarkGenerator(with: options).generate(for: module)
                 case .html:
-                    try HTMLGenerator.generate(for: module, with: options)
+                    try HTMLGenerator(with: options).generate(for: module)
                 case .docset:
-                    try DocSetGenerator.generate(for: module, with: options)
+                    try DocSetGenerator(with: options).generate(for: module)
                 }
             } catch {
                 logger.error("\(error)")

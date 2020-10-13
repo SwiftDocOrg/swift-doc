@@ -7,7 +7,7 @@ import SwiftSyntax
 
 final class NestedTypesTests: XCTestCase {
     func testNestedTypes() throws {
-        let source = #"""
+        let sourceFile: SourceFile = #"""
         public class C { }
 
         extension C {
@@ -21,8 +21,6 @@ final class NestedTypesTests: XCTestCase {
         }
         """#
 
-        let url = try temporaryFile(contents: source)
-        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
         XCTAssertEqual(sourceFile.symbols.count, 4)
@@ -66,18 +64,16 @@ final class NestedTypesTests: XCTestCase {
         )
     }
 
-    #if false // Disabling tests for `swift-doc` code, executable targers are not testable.
+    #if false // Disabling tests for `swift-doc` code, executable targets are not testable.
 
     func testRelationshipsSectionWithNestedTypes() throws {
-        let source = #"""
+        let sourceFile: SourceFile = #"""
         public class C {
             public enum E {
             }
         }
         """#
 
-        let url = try temporaryFile(contents: source)
-        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
         // `class C`
@@ -96,7 +92,7 @@ final class NestedTypesTests: XCTestCase {
     }
 
     func testNoRelationshipsSection() throws {
-        let source = #"""
+        let sourceFile: SourceFile = #"""
         public class C {
         }
 
@@ -104,8 +100,6 @@ final class NestedTypesTests: XCTestCase {
         }
         """#
 
-        let url = try temporaryFile(contents: source)
-        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
         // `class C`

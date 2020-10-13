@@ -10,12 +10,10 @@ import Xcode
 struct Documentation: Component {
     var symbol: Symbol
     var module: Module
-    let baseURL: String
 
-    init(for symbol: Symbol, in module: Module, baseURL: String) {
+    init(for symbol: Symbol, in module: Module) {
         self.symbol = symbol
         self.module = module
-        self.baseURL = baseURL
     }
 
     // MARK: - Component
@@ -39,10 +37,10 @@ struct Documentation: Component {
                 Fragment { "\(documentation.summary!)" }
             }
 
-            Declaration(of: symbol, in: module, baseURL: baseURL)
+            Declaration(of: symbol, in: module)
 
             ForEach(in: documentation.discussionParts) { part in
-                DiscussionPart(part, for: symbol, in: module, baseURL: baseURL)
+                DiscussionPart(part, for: symbol, in: module)
             }
 
             if !documentation.parameters.isEmpty {
@@ -85,7 +83,7 @@ struct Documentation: Component {
 
         var fragments: [HypertextLiteralConvertible] = []
 
-        fragments.append(Declaration(of: symbol, in: module, baseURL: baseURL))
+        fragments.append(Declaration(of: symbol, in: module))
 
         if let summary = documentation.summary {
             fragments.append(#"""
@@ -99,7 +97,7 @@ struct Documentation: Component {
             fragments.append(#"""
             <div class="discussion">
                 \#(documentation.discussionParts.compactMap { part -> HTML? in
-                    DiscussionPart(part, for: symbol, in: module, baseURL: baseURL).html
+                    DiscussionPart(part, for: symbol, in: module).html
                 })
             </div>
             """# as HypertextLiteral.HTML)
@@ -180,13 +178,11 @@ extension Documentation {
         var symbol: Symbol
         var module: Module
         var part: SwiftMarkup.DiscussionPart
-        let baseURL: String
 
-        init(_ part: SwiftMarkup.DiscussionPart, for symbol: Symbol, in module: Module, baseURL: String) {
+        init(_ part: SwiftMarkup.DiscussionPart, for symbol: Symbol, in module: Module) {
             self.part = part
             self.symbol = symbol
             self.module = module
-            self.baseURL = baseURL
         }
 
         // MARK: - Component
@@ -242,11 +238,11 @@ extension Documentation {
                     let source = codeBlock.literal
                 {
                     var html = try! SwiftSyntaxHighlighter.highlight(source: source, using: Xcode.self)
-                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
+//                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
                     return HTML(html)
                 } else {
                     var html = codeBlock.render(format: .html, options: [.unsafe])
-                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
+//                    html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
                     return HTML(html)
                 }
             case .heading(let heading):

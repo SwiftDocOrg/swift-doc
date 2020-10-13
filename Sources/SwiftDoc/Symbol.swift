@@ -1,6 +1,7 @@
 import SwiftMarkup
 import SwiftSyntax
 import SwiftSemantics
+import HTMLEntities
 
 public final class Symbol {
     public typealias ID = Identifier
@@ -23,14 +24,10 @@ public final class Symbol {
     }
 
     public var name: String {
-        return api.name
+        id.name
     }
 
-    public private(set) lazy var id: ID = {
-        Identifier(pathComponents: context.compactMap {
-            ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType
-        }, name: name)
-    }()
+    public private(set) lazy var id: ID = { Identifier(symbol: self) }()
 
     public var isPublic: Bool {
         if api.modifiers.contains(where: { $0.name == "public" || $0.name == "open" }) {

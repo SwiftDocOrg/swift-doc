@@ -5,7 +5,7 @@ import SwiftSemantics
 import GraphViz
 import DOT
 
-extension SwiftDoc {
+extension SwiftDocCommand {
     struct Diagram: ParsableCommand {
         struct Options: ParsableArguments {
             @Argument(help: "One or more paths to Swift files")

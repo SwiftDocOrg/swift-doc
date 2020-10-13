@@ -8,9 +8,16 @@ import SQLite
 
 fileprivate typealias XML = HTML
 
-enum DocSetGenerator: Generator {
-    static func generate(for module: Module, with options: SwiftDoc.Generate.Options) throws {
+final class DocSetGenerator: Generator {
+    var options: SwiftDocCommand.Generate.Options
+
+    init(with options: SwiftDocCommand.Generate.Options) {
+        self.options = options
+    }
+
+    func generate(for module: Module) throws {
         assert(options.format == .docset)
+
 
         let outputDirectoryURL = URL(fileURLWithPath: options.output)
         try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
@@ -20,10 +27,31 @@ enum DocSetGenerator: Generator {
         let docsetDocumentsDirectoryURL = docsetURL.appendingPathComponent("Contents/Resources/Documents/")
         try fileManager.createDirectory(at: docsetDocumentsDirectoryURL, withIntermediateDirectories: true, attributes: fileAttributes)
 
-        var options = options
+        var options = self.options
         options.format = .html
         options.output = docsetDocumentsDirectoryURL.path
-        try HTMLGenerator.generate(for: module, with: options)
+//        options.inlineCSS = true
+
+
+        let generator = HTMLGenerator(with: options)
+
+        let apple_refRouter: Router = { symbol in
+            "//apple_ref/swift/\(symbol.entryType)/\(symbol.id.checksum)"
+        }
+
+        generator.router = apple_refRouter
+        let pages = try generator.pages(for: module)
+//        try generator.generate(for: module)
+
+//        for page in pages.values {
+//            guard let symbol = page.symbol,
+//                let page = page as? HTMLRenderable
+//            else { continue }
+//
+//            try page.render(with: generator).description
+//
+//        }
+        
 
         let info: [String: Any] = [
             "CFBundleIdentifier": module.name.lowercased(),
@@ -59,12 +87,20 @@ enum DocSetGenerator: Generator {
             })
         }
 
+
+
+
+//            FlatRouter(suffix: "/index.html")
+
+//        router
+
         try db.transaction {
             for symbol in module.interface.symbols {
+                print(apple_refRouter(symbol))
                 try db.run(searchIndex.insert(or: .ignore,
                     name <- symbol.id.description,
                     type <- symbol.entryType,
-                    path <- symbol.route(with: options.baseURL)
+                    path <- apple_refRouter(symbol)
                 ))
             }
         }
@@ -80,7 +116,6 @@ enum DocSetGenerator: Generator {
         try tokens.description.write(to: tokensURL, atomically: true, encoding: .utf8)
     }
 }
-
 
 fileprivate extension Symbol {
     // https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/HeaderDoc/anchors/anchors.html#//apple_ref/doc/uid/TP40001215-CH347
@@ -173,13 +208,5 @@ fileprivate extension Symbol {
            </TokenIdentifier>
         </Token>
         """#
-    }
-
-    func route(with baseURL: String) -> String {
-        if let parent = context.compactMap({ $0 as? Symbol }).last {
-            return path(for: parent, with: baseURL) + "/index.html" + "#\(id.description.lowercased().replacingOccurrences(of: " ", with: "-"))"
-        } else {
-            return path(for: self, with: baseURL) + "/index.html"
-        }
     }
 }

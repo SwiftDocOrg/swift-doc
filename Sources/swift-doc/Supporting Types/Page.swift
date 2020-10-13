@@ -6,17 +6,12 @@ import struct SwiftSemantics.Protocol
 import CommonMark
 import HypertextLiteral
 
-protocol Page: HypertextLiteralConvertible {
-    var module: Module { get }
-    var baseURL: String { get }
+protocol Page {
+//    var module: Module { get }
+//    var generator: Generator { get }
     var title: String { get }
-    var document: CommonMark.Document { get }
-    var html: HypertextLiteral.HTML { get }
-}
-
-extension Page {
-    var module: Module { fatalError("unimplemented") }
-    var title: String { fatalError("unimplemented") }
+//    var document: CommonMark.Document { get }
+//    var html: HypertextLiteral.HTML { get }
 }
 
 func writeFile(_ data: Data, to url: URL) throws {
@@ -25,4 +20,9 @@ func writeFile(_ data: Data, to url: URL) throws {
 
     try data.write(to: url)
     try fileManager.setAttributes([.posixPermissions: 0o744], ofItemAtPath: url.path)
+}
+
+
+extension Page {
+    var symbol: Symbol? { nil }
 }

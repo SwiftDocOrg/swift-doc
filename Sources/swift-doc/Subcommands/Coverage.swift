@@ -3,7 +3,7 @@ import Foundation
 import DCOV
 import SwiftDoc
 
-extension SwiftDoc {
+extension SwiftDocCommand {
     struct Coverage: ParsableCommand {
         struct Options: ParsableArguments {
             @Argument(help: "One or more paths to Swift files")

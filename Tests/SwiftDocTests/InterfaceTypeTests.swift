@@ -8,7 +8,7 @@ import SwiftSyntax
 final class InterfaceTypeTests: XCTestCase {
 
     func testPrivateInheritance() throws {
-        let source = #"""
+        let sourceFile: SourceFile = #"""
         public class A { }
 
         class B : A { }
@@ -16,8 +16,6 @@ final class InterfaceTypeTests: XCTestCase {
         public class C : A { }
         """#
 
-        let url = try temporaryFile(contents: source)
-        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
    
         // `class A`
