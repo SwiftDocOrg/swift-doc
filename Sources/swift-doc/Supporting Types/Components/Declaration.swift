@@ -3,7 +3,7 @@ import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
 import HypertextLiteral
-import SwiftSyntaxHighlighter
+import Highlighter
 import Xcode
 
 struct Declaration: Component {
@@ -22,14 +22,18 @@ struct Declaration: Component {
     var fragment: Fragment {
         Fragment {
             CodeBlock("swift") {
-                symbol.declaration.trimmingCharacters(in: .whitespacesAndNewlines)
+                symbol.declaration.map { $0.text }.joined()
             }
         }
     }
 
     var html: HypertextLiteral.HTML {
-        var html = try! SwiftSyntaxHighlighter.highlight(source: symbol.declaration, using: Xcode.self)
-        html = linkCodeElements(of: html, for: symbol, in: module, with: baseURL)
-        return HTML(html)
+        let code = symbol.declaration.map { $0.html }.joined()
+
+        return #"""
+        <div class="declaration">
+        <pre class="highlight"><code>\#(unsafeUnescaped: code)</code></pre>
+        </div>
+        """#
     }
 }

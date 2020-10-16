@@ -1,23 +1,24 @@
 import SwiftMarkup
 import SwiftSyntax
 import SwiftSemantics
+import struct Highlighter.Token
 
 public final class Symbol {
     public typealias ID = Identifier
 
     public let api: API
     public let context: [Contextual]
-    public let declaration: String
+    public let declaration: [Token]
     public let documentation: Documentation?
     public let sourceLocation: SourceLocation?
 
     public private(set) lazy var `extension`: Extension? = context.compactMap { $0 as? Extension }.first
     public private(set) lazy var conditions: [CompilationCondition] = context.compactMap { $0 as? CompilationCondition }
 
-    init(api: API, context: [Contextual], declaration: String?, documentation: Documentation?, sourceLocation: SourceLocation?) {
+    init(api: API, context: [Contextual], declaration: [Token], documentation: Documentation?, sourceLocation: SourceLocation?) {
         self.api = api
         self.context = context
-        self.declaration = declaration ?? "\(api)"
+        self.declaration = declaration
         self.documentation = documentation
         self.sourceLocation = sourceLocation
     }
@@ -241,11 +242,11 @@ extension Symbol: Codable {
             throw DecodingError.dataCorrupted(context)
         }
 
-        let declaration = try container.decodeIfPresent(String.self, forKey: .declaration)
+        let declaration = try container.decodeIfPresent([Token].self, forKey: .declaration)
         let documentation = try container.decodeIfPresent(Documentation.self, forKey: .documentation)
         let sourceLocation = try container.decodeIfPresent(SourceLocation.self, forKey: .sourceLocation)
 
-        self.init(api: api, context: [] /* TODO */, declaration: declaration, documentation: documentation, sourceLocation: sourceLocation)
+        self.init(api: api, context: [] /* TODO */, declaration: declaration ?? [], documentation: documentation, sourceLocation: sourceLocation)
     }
 
     public func encode(to encoder: Encoder) throws {
