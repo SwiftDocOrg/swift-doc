@@ -25,19 +25,16 @@ extension SwiftDoc {
       var moduleName: String
 
       @Option(name: .shortAndLong,
-              default: ".build/documentation",
               help: "The path for generated output")
-      var output: String
+      var output: String = ".build/documentation"
 
       @Option(name: .shortAndLong,
-              default: .commonmark,
               help: "The output format")
-      var format: Format
+      var format: Format = .commonmark
 
       @Option(name: .customLong("base-url"),
-              default: "/",
               help: "The base URL used for all relative URLs in generated documents.")
-      var baseURL: String
+      var baseURL: String = "/"
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")

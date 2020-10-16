@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
         "state": {
           "branch": null,
-          "revision": "223d62adc52d51669ae2ee19bdb8b7d9fd6fcd9c",
-          "version": "0.0.6"
+          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
+          "version": "0.3.1"
         }
       },
       {
@@ -104,8 +104,8 @@
         "package": "SwiftSyntaxHighlighter",
         "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
         "state": {
-          "branch": "1.1.1",
-          "revision": "76bd23ae4b23f028a8e45f906c2bf98312fb9d33",
+          "branch": "1.1.3",
+          "revision": "b086ef5066b6f799f9c7d6d7fc1553581b55ef1e",
           "version": null
         }
       }
