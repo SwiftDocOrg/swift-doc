@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed public extensions exposing nested code of all access levels.
   #195 by @Tunous.
 
+### Changed
+
+- Changed display of code declarations in HTML.
+  #204 by @mattt.
+
 ## [1.0.0-beta.5] - 2020-09-29
 
 ### Added
