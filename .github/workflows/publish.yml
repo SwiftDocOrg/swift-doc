@@ -16,7 +16,7 @@ jobs:
           tap: SwiftDocOrg/homebrew-formulae
           formula: Formula/swift-doc.rb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
   bottle:
     name: Build and distribute Homebrew bottle for macOS Catalina
