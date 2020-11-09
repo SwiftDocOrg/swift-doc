@@ -16,7 +16,7 @@ jobs:
           tap: SwiftDocOrg/homebrew-formulae
           formula: Formula/swift-doc.rb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
   bottle_macos_catalina:
     name: Build and distribute Homebrew bottle for macOS Catalina
@@ -47,7 +47,7 @@ jobs:
               Add bottle for swift-doc ${{ github.event.release.tag_name }}
               on macOS 10.15 (Catalina)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
   bottle_macos_big_sur:
     name: Build and distribute Homebrew bottle for macOS Big Sur
@@ -78,7 +78,7 @@ jobs:
               Add bottle for swift-doc ${{ github.event.release.tag_name }}
               on macOS 11.0 (Big Sur)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
   docker:
     name: Build and push Docker container
