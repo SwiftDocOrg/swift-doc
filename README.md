@@ -44,6 +44,15 @@ $ cd swift-doc
 $ make install
 ```
 
+If you're on Ubuntu Linux,
+you may need to first install the prerequisites
+by running the following command:
+
+```terminal
+$ apt-get update
+$ apt-get install -y libxml2-dev graphviz
+```
+
 ### Usage
 
     OVERVIEW: A utility for generating documentation for Swift code.
@@ -357,4 +366,5 @@ Mattt ([@mattt](https://twitter.com/mattt))
 [pcre]: https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions
 [dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
 [graphviz]: https://www.graphviz.org
+[libxml2]: https://en.wikipedia.org/wiki/Libxml2
 [semver]: https://semver.org
