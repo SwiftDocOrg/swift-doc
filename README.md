@@ -34,6 +34,16 @@ Run the following command to install using [Homebrew](https://brew.sh/):
 $ brew install swiftdocorg/formulae/swift-doc
 ```
 
+#### Docker
+
+You can run `swift-doc` from the latest [Docker][docker] image
+with the following commands:
+
+```terminal
+$ docker pull swiftdoc/swift-doc:latest
+$ docker run -it swiftdoc/swift-doc
+```
+
 #### Manually
 
 Run the following commands to build and install manually:
@@ -367,4 +377,5 @@ Mattt ([@mattt](https://twitter.com/mattt))
 [dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
 [graphviz]: https://www.graphviz.org
 [libxml2]: https://en.wikipedia.org/wiki/Libxml2
+[docker]: https://www.docker.com
 [semver]: https://semver.org
