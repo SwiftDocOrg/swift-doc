@@ -16,7 +16,8 @@ as well as top-level type aliases, functions, and variables.
 
 ## Requirements
 
-- Swift 5.2
+- Swift 5.3
+- [libxml2][libxml2]
 - [GraphViz][graphviz] _(optional)_
 
 ## Command-Line Utility
