@@ -20,6 +20,8 @@ inputs:
     description: "The path for generated output"
     required: true
     default: "./.build/documentation"
+  excluded-symbols:
+    description: "File containing a list of symbols to exclude from the generated documenttion"
 
 runs:
   using: "docker"
@@ -36,6 +38,8 @@ runs:
       "${{ inputs.module-name }}",
       --output,
       "${{ inputs.output }}",
+      --excluded-symbols,
+      "${{ inputs.excluded-symbols }}",
     ]
 
 branding:

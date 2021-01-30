@@ -7,16 +7,16 @@ public final class Module {
     public let sourceFiles: [SourceFile]
     public let interface: Interface
 
-    public required init(name: String = "Anonymous", sourceFiles: [SourceFile]) {
+    public required init(name: String = "Anonymous", sourceFiles: [SourceFile], exclusions: [String] = []) {
         self.name = name
         self.sourceFiles = sourceFiles
 
         let imports = sourceFiles.flatMap { $0.imports }
-        let symbols = sourceFiles.flatMap { $0.symbols }
+        let symbols = sourceFiles.flatMap { $0.symbols }.filter({ !exclusions.contains($0.name) })
         self.interface = Interface(imports: imports, symbols: symbols)
     }
 
-    public convenience init(name: String = "Anonymous", paths: [String]) throws {
+    public convenience init(name: String = "Anonymous", paths: [String], exclusionsFilePath: String? = nil) throws {
         var sources: [(file: URL, directory: URL)] = []
 
         let fileManager = FileManager.default
@@ -34,8 +34,12 @@ public final class Module {
             }
         }
 
+        var excludedSymbols = [String]()
+        if let exclusionsFilePath = exclusionsFilePath {
+          excludedSymbols = try String(contentsOfFile: exclusionsFilePath).components(separatedBy: "\n").filter { !$0.isEmpty }
+        }
         let sourceFiles = try sources.parallelMap { try SourceFile(file: $0.file, relativeTo: $0.directory) }
 
-        self.init(name: name, sourceFiles: sourceFiles)
+        self.init(name: name, sourceFiles: sourceFiles, exclusions: excludedSymbols)
     }
 }

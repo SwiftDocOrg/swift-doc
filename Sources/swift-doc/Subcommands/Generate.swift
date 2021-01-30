@@ -34,7 +34,13 @@ extension SwiftDoc {
 
       @Option(name: .customLong("base-url"),
               help: "The base URL used for all relative URLs in generated documents.")
+      
       var baseURL: String = "/"
+
+      @Option(name: .customLong("excluded-symbols"),
+              default: nil,
+              help: "A file containing a line separated list of symbols to be excluded from the generated documentation")
+      var exclusionsFilePath: String?
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -43,7 +49,7 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
-      let module = try Module(name: options.moduleName, paths: options.inputs)
+      let module = try Module(name: options.moduleName, paths: options.inputs, exclusionsFilePath: options.exclusionsFilePath)
       let baseURL = options.baseURL
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
