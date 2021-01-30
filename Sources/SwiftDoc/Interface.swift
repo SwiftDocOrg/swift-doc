@@ -15,10 +15,12 @@ public final class Interface {
         self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.pathComponents.isEmpty }
 
         self.relationships = {
+            let symbols = symbols.filter { $0.isPublic }
             let extensionsByExtendedType: [String: [Extension]] = Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }, by: { $0.extendedType })
 
             var relationships: Set<Relationship> = []
             for symbol in symbols {
+
                 let lastDeclarationScope = symbol.context.last(where: { $0 is Extension || $0 is Symbol })
                 
                 if let container = lastDeclarationScope as? Symbol {
@@ -67,7 +69,7 @@ public final class Interface {
                     for name in inheritedTypeNames {
                         let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
                         if inheritedTypes.isEmpty {
-                            let inherited = Symbol(api: Unknown(name: name), context: [], declaration: nil, documentation: nil, sourceLocation: nil)
+                            let inherited = Symbol(api: Unknown(name: name), context: [], declaration: [], documentation: nil, sourceLocation: nil)
                             relationships.insert(Relationship(subject: symbol, predicate: .conformsTo, object: inherited))
                         } else {
                             for inherited in inheritedTypes {

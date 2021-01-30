@@ -14,7 +14,6 @@ LoggingSystem.bootstrap { label in
 let logger = Logger(label: "org.swiftdoc.swift-doc")
 
 let fileManager = FileManager.default
-let fileAttributes: [FileAttributeKey : Any] = [.posixPermissions: 0o744]
 
 var standardOutput = FileHandle.standardOutput
 var standardError = FileHandle.standardError
@@ -23,7 +22,7 @@ struct SwiftDoc: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "swift doc",
         abstract: "A utility for generating documentation for Swift code.",
-        version: "1.0.0-beta.3",
+        version: "1.0.0-beta.5",
         subcommands: [Generate.self, Coverage.self, Diagram.self]
     )
 }

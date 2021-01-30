@@ -3,6 +3,9 @@ import SwiftMarkup
 import SwiftSyntax
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
+import class SwiftSyntaxHighlighter.SwiftSyntaxHighlighter
+import struct Highlighter.Token
+import enum Xcode.Xcode
 
 public protocol Contextual {}
 extension Symbol: Contextual {}
@@ -45,21 +48,28 @@ public struct SourceFile: Hashable, Codable {
             sourceLocationConverter = SourceLocationConverter(file: url.path(relativeTo: directory), tree: tree)
             super.init()
 
-            _ = walk(tree)
+            walk(tree)
 
             assert(context.isEmpty)
         }
 
-        func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol? where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax {
+        func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol? where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax, Node: SymbolDeclProtocol {
             guard let api = Declaration(node) else { return nil }
-            return symbol(node, api: api)
-        }
-
-        func symbol<Node: SyntaxProtocol>(_ node: Node, api: API) -> Symbol? {
             guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
             let sourceLocation = sourceLocationConverter.location(for: node.position)
+            return Symbol(api: api, context: context, declaration: declaration(for: node), documentation: documentation, sourceLocation: sourceLocation)
+        }
 
-            return Symbol(api: api, context: context, declaration: "\(api)", documentation: documentation, sourceLocation: sourceLocation)
+        func symbol<Node: SymbolDeclProtocol>(_ node: Node, api: API) -> Symbol? {
+            guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
+            let sourceLocation = sourceLocationConverter.location(for: node.position)
+            return Symbol(api: api, context: context, declaration: declaration(for: node), documentation: documentation, sourceLocation: sourceLocation)
+        }
+
+        func declaration<Node: SymbolDeclProtocol>(for node: Node) -> [Token] {
+            let highlighter = SwiftSyntaxHighlighter(using: Xcode.self)
+            _ = highlighter.visitAny(Syntax(node.declaration))
+            return highlighter.tokens
         }
 
         func push(_ symbol: Symbol?) {
@@ -184,10 +194,7 @@ public struct SourceFile: Hashable, Codable {
         }
 
         override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
-            let variables = node.bindings.compactMap { binding in
-                Variable(binding.withInitializer(nil))
-            }
-
+            let variables = node.bindings.compactMap { Variable($0) }
             for variable in variables {
                 push(symbol(node, api: variable))
             }

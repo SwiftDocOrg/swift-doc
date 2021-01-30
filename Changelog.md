@@ -7,10 +7,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added end-to-end tests for command-line interface.
+  #199 by @MaxDesiatov and @mattt.
+
+### Fixed
+
+- Fixed public extensions exposing nested code of all access levels.
+  #195 by @Tunous.
+
+### Changed
+
+- Changed display of code declarations in HTML.
+  #204 by @mattt.
+
+## [1.0.0-beta.5] - 2020-09-29
+
+### Added
+
+- Added support for Swift 5.3.
+  #183 by @MaxDesiatov and @mattt.
+
+### Fixed
+
+- Fixed missing GraphViz dependency in Dockerfile.
+  #180 by @MaxDesiatov.
+- Fixed listing of function parameters, when generating CommonMark documentation.
+  #170 by @domcorvasce.
+- Fixed version number for swift-doc command.
+  #159 by @mattt.
+- Fixed relationship diagram to prevent linking to unknown symbols.
+  #178 by @MattKiazyk.
+- Fixed problems in CommonMark output related to escaping emoji shortcode. 
+  #167 by @mattt.
+
+### Changed
+
+- Changed GitHub Action to use prebuilt Docker image.
+  #185 by @mattt and @MaxDesiatov.
+
+## [1.0.0-beta.4] - 2020-07-31
+
+### Added
+
+- Added icon for associated type symbols.
+  #145 by @mattt.
+
+### Changed
+
+- Changed HTML output to show scrollbars only when necessary.
+  #132 by @andrewchang-bird.
+
 ### Fixed
 
 - Fixed runtime error related to networking and processes on Ubuntu Linux.
   #140 by @JaapWijnen.
+- Fixed whitespace of code listings.
+  #144 by @mbrandonw.
+- Fixed crash when attempting to generate paths with no base URL specified.
+  #127 by @mattpolzin, @kareman, and @mattt.
+- Fixed display of sidebar icons.
+  #145 by @mattt.
+- Fixed inclusion of non-public subclasses of public superclasses.
+  #131 by @MattKiazyk. #116 by @ApolloZhu.
+- Fixed display of bullet list items in documentation discussion parts.
+  #130 by @mattt.
+- Fixed file and directory unexpected permissions.
+  #146 by @niw.
+- Fixed declarations for properties without explicit type annotations.
+  #150 by @mattt.
+- Fixed visual regression for adjacent linked tokens in code block.
+  #152 by @mattt.
+- Fixed regression that caused nodes in relationships graph
+  to not have links to their corresponding symbol documentation.
+  #153 by @mattt.
+- Fixed markup for parameter descriptions in HTML output.
+  #156 by @mattt.
 
 ## [1.0.0-beta.3] - 2020-05-19
 
@@ -209,7 +282,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.3...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.5...master
+[1.0.0-beta.5]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.5
+[1.0.0-beta.4]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.4
 [1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3
 [1.0.0-beta.2]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.1

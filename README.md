@@ -16,7 +16,8 @@ as well as top-level type aliases, functions, and variables.
 
 ## Requirements
 
-- Swift 5.2
+- Swift 5.3
+- [libxml2][libxml2]
 - [GraphViz][graphviz] _(optional)_
 
 ## Command-Line Utility
@@ -33,6 +34,16 @@ Run the following command to install using [Homebrew](https://brew.sh/):
 $ brew install swiftdocorg/formulae/swift-doc
 ```
 
+#### Docker
+
+You can run `swift-doc` from the latest [Docker][docker] image
+with the following commands:
+
+```terminal
+$ docker pull swiftdoc/swift-doc:latest
+$ docker run -it swiftdoc/swift-doc
+```
+
 #### Manually
 
 Run the following commands to build and install manually:
@@ -41,6 +52,15 @@ Run the following commands to build and install manually:
 $ git clone https://github.com/SwiftDocOrg/swift-doc
 $ cd swift-doc
 $ make install
+```
+
+If you're on Ubuntu Linux,
+you may need to first install the prerequisites
+by running the following command:
+
+```terminal
+$ apt-get update
+$ apt-get install -y libxml2-dev graphviz
 ```
 
 ### Usage
@@ -178,8 +198,8 @@ generates a graph of APIs in [DOT format][dot]
 that can be rendered by [GraphViz][graphviz] into a diagram.
 
 ```terminal
-$ swift run swift-doc diagram Alamofire/Source > graph.dot
-$ head graph.dot
+$ swift run swift-doc diagram Alamofire/Source > Alamofire.gv
+$ head Alamofire.gv
 digraph Anonymous {
   "Session" [shape=box];
   "NetworkReachabilityManager" [shape=box];
@@ -191,7 +211,7 @@ digraph Anonymous {
     "DataRequest" [shape=box];
     "Request" [shape=box];
 
-$ dot -T svg graph.dot > graph.svg
+$ dot -T svg Alamofire.gv > Alamofire.svg
 ```
 
 Here's an excerpt of the graph generated for Alamofire:
@@ -222,6 +242,9 @@ or bundle them into a release artifact.
   (Default: `"commonmark"`)
 - `module-name`:
   The name of the module.
+- `base-url`:
+  The base URL for all relative URLs generated in documents.
+  (Default: `"/"`)
 - `output`:
   The path for generated output.
   (Default: `"./.build/documentation"`)
@@ -298,6 +321,27 @@ $ git add Assets Resources
 $ git commit
 ```
 
+## Release Process
+
+> The following information is primarily for the benefit of project maintainers.
+> That said, if you have any suggestions for how to improve this process,
+> please let us know by [opening an issue][open an issue].
+
+Follow these steps to release a new version of `swift-doc`:
+
+- [x] Verify that the latest commit
+      [passed all CI checks](https://github.com/SwiftDocOrg/swift-doc/actions?query=workflow%3ACI).
+- [x] Update the Changelog by creating a new heading for the release
+      and modifying the last path component for the `unreleased` link reference.
+- [x] Update the [`version` constant](https://github.com/SwiftDocOrg/swift-doc/blob/master/Sources/swift-doc/main.swift#L25)
+      in the command-line executable.
+- [x] Create a new commit with the message "Bump version to `$VERSION`",
+      where `$VERSION` is a [SemVer]-compatible version number.
+- [x] Tag that commit with the tag name "`$VERSION`"
+- [x] Run the command `git push origin master --tags`
+- [x] Create a new [release](https://github.com/SwiftDocOrg/swift-doc/releases)
+      that corresponds to the new tag.
+
 ## License
 
 MIT
@@ -333,3 +377,6 @@ Mattt ([@mattt](https://twitter.com/mattt))
 [pcre]: https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions
 [dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
 [graphviz]: https://www.graphviz.org
+[libxml2]: https://en.wikipedia.org/wiki/Libxml2
+[docker]: https://www.docker.com
+[semver]: https://semver.org

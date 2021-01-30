@@ -28,9 +28,9 @@ extension SwiftDoc {
                 let data = try encoder.encode(report)
                 try data.write(to: URL(fileURLWithPath: output))
             } else {
-                print(["Total".rightPadded(to: 60), format(report.totals.percentage)].joined(separator: "\t"))
+                print(["Total".rightPadded(to: 60), format(percentage: report.totals.percentage)].joined(separator: "\t"))
                 for (file, ratio) in report.coverageBySourceFile.sorted(by: { $0.0 < $1.0 }) {
-                    print(["  - \(file)".rightPadded(to: 60), format(ratio.percentage)].joined(separator: "\t"))
+                    print(["  - \(file)".rightPadded(to: 60), format(percentage: ratio.percentage)].joined(separator: "\t"))
                 }
 
                 print("")
@@ -46,18 +46,6 @@ extension SwiftDoc {
 
 // MARK: -
 
-fileprivate extension String {
-    func leftPadded(to length: Int) -> String {
-        guard count < length else { return self }
-        return String(repeating: " ", count: length - count) + self
-    }
-
-    func rightPadded(to length: Int) -> String {
-        guard count < length else { return self }
-        return self + String(repeating: " ", count: length - count)
-    }
-}
-
-fileprivate func format(_ percentage: Double) -> String {
+fileprivate func format(percentage: Double) -> String {
     return String(format: "%0.2f %%", percentage).leftPadded(to: 8)
 }

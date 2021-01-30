@@ -19,13 +19,11 @@ struct Abstract: Component {
         if let summary = symbol.documentation?.summary {
             return Fragment {
                 List.Item {
-                    Paragraph {
-                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description)
-                        Text { ":" }
-                    }
-
                     Fragment {
-                        summary
+                        #"""
+                        [\#(symbol.id.description.escapingEmojiShortcodes)](\#(path(for: symbol, with: baseURL))):
+                        \#(summary)
+                        """#
                     }
                 }
             }
@@ -33,7 +31,7 @@ struct Abstract: Component {
             return Fragment {
                 List.Item {
                     Paragraph {
-                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description)
+                        Link(urlString: path(for: symbol, with: baseURL), text: symbol.id.description.escapingEmojiShortcodes)
                     }
                 }
             }

@@ -31,9 +31,11 @@ struct Requirements: Component {
             ForEach(in: sections) { section -> BlockConvertible in
                 Section {
                     Heading { section.title }
-                    ForEach(in: section.requirements) { requirement in
-                        Heading { requirement.name }
-                        Documentation(for: requirement, in: module, baseURL: baseURL)
+                    Section {
+                        ForEach(in: section.requirements) { requirement in
+                            Heading { requirement.name.escapingEmojiShortcodes }
+                            Documentation(for: requirement, in: module, baseURL: baseURL)
+                        }
                     }
                 }
             }
@@ -48,7 +50,7 @@ struct Requirements: Component {
                     <h2>\#(section.title)</h2>
 
                     \#(section.requirements.map { member -> HypertextLiteral.HTML in
-                        let descriptor = String(describing: type(of: symbol.api)).lowercased()
+                        let descriptor = String(describing: type(of: member.api)).lowercased()
 
                         return #"""
                         <div role="article" class="\#(descriptor)" id=\#(member.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>

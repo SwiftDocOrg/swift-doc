@@ -1,0 +1,111 @@
+name: Publish
+
+on:
+  release:
+    types: [created, published]
+
+jobs:
+  formula:
+    name: Update Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update the Homebrew formula with latest release
+        uses: NSHipster/update-homebrew-formula-action@main
+        with:
+          repository: SwiftDocOrg/swift-doc
+          tap: SwiftDocOrg/homebrew-formulae
+          formula: Formula/swift-doc.rb
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+  bottle_macos_catalina:
+    name: Build and distribute Homebrew bottle for macOS Catalina
+    runs-on: macos-10.15
+    needs: [formula]
+    steps:
+      - name: Build a bottle using Homebrew
+        run: |
+          brew tap swiftdocorg/formulae
+          brew install --build-bottle --verbose swift-doc
+          brew bottle swift-doc
+      - name: Upload the bottle to the GitHub release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
+          asset_content_type: application/gzip
+      - name: Update the Homebrew formula again with bottle
+        uses: NSHipster/update-homebrew-formula-action@main
+        with:
+          repository: SwiftDocOrg/swift-doc
+          tap: SwiftDocOrg/homebrew-formulae
+          formula: Formula/swift-doc.rb
+          message: |
+              Add bottle for swift-doc ${{ github.event.release.tag_name }}
+              on macOS 10.15 (Catalina)
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+  bottle_macos_big_sur:
+    name: Build and distribute Homebrew bottle for macOS Big Sur
+    runs-on: macos-11.0
+    needs: [formula]
+    steps:
+      - name: Build a bottle using Homebrew
+        run: |
+          brew tap swiftdocorg/formulae
+          brew install --build-bottle --verbose swift-doc
+          brew bottle swift-doc
+      - name: Upload the bottle to the GitHub release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
+          asset_content_type: application/gzip
+      - name: Update the Homebrew formula again with bottle
+        uses: NSHipster/update-homebrew-formula-action@main
+        with:
+          repository: SwiftDocOrg/swift-doc
+          tap: SwiftDocOrg/homebrew-formulae
+          formula: Formula/swift-doc.rb
+          message: |
+              Add bottle for swift-doc ${{ github.event.release.tag_name }}
+              on macOS 11.0 (Big Sur)
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+  docker:
+    name: Build and push Docker container
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            swiftdoc/swift-doc:latest
+            swiftdoc/swift-doc:${{ github.event.release.tag_name }}
