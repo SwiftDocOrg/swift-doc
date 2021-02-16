@@ -7,12 +7,14 @@ struct TypePage: Page {
     let module: Module
     let symbol: Symbol
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(module: Module, symbol: Symbol, baseURL: String) {
+    init(module: Module, symbol: Symbol, baseURL: String, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
         precondition(symbol.api is Type)
         self.module = module
         self.symbol = symbol
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Page
@@ -27,7 +29,7 @@ struct TypePage: Page {
 
             Documentation(for: symbol, in: module, baseURL: baseURL)
             Relationships(of: symbol, in: module, baseURL: baseURL)
-            Members(of: symbol, in: module, baseURL: baseURL)
+            Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter)
             Requirements(of: symbol, in: module, baseURL: baseURL)
         }
     }
@@ -41,7 +43,7 @@ struct TypePage: Page {
 
         \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
         \#(Relationships(of: symbol, in: module, baseURL: baseURL).html)
-        \#(Members(of: symbol, in: module, baseURL: baseURL).html)
+        \#(Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter).html)
         \#(Requirements(of: symbol, in: module, baseURL: baseURL).html)
         """#
     }

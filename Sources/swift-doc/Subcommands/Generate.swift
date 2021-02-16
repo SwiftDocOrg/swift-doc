@@ -16,6 +16,20 @@ extension SwiftDoc {
       case html
     }
 
+    enum AccessLevel: String, ExpressibleByArgument {
+      case `public`
+      case `internal`
+
+      func includes(symbol: Symbol) -> Bool {
+        switch self {
+        case .public:
+          return symbol.isPublic
+        case .internal:
+          return symbol.isPublic || symbol.isInternal
+        }
+      }
+    }
+
     struct Options: ParsableArguments {
       @Argument(help: "One or more paths to Swift files")
       var inputs: [String]
@@ -35,6 +49,10 @@ extension SwiftDoc {
       @Option(name: .customLong("base-url"),
               help: "The base URL used for all relative URLs in generated documents.")
       var baseURL: String = "/"
+
+      @Option(name: .shortAndLong,
+              help: "The minimum access level of the symbols which should be included.")
+      var minimumAccessLevel: AccessLevel = .public
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -55,10 +73,11 @@ extension SwiftDoc {
         var pages: [String: Page] = [:]
 
         var globals: [String: [Symbol]] = [:]
-        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
+        let symbolFilter = options.minimumAccessLevel.includes(symbol:)
+        for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
-            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL)
+            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
           case let function as Function where !function.isOperator:
@@ -93,11 +112,11 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL)
-            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL)
+            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
             pages["_Footer"] = FooterPage(baseURL: baseURL)
           case .html:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL)
+            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
           }
 
           try pages.map { $0 }.parallelForEach {

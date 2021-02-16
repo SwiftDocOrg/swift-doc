@@ -66,6 +66,44 @@ public final class Symbol {
         return false
     }
 
+    public var isPrivate: Bool {
+        // We always assume that `Unknown` is public.
+        guard api is Unknown == false else {
+            return false
+        }
+
+        if api.modifiers.contains(where: { $0.detail == nil && ($0.name == "private" || $0.name == "fileprivate") }) {
+            return true
+        }
+
+        if let `extension` = `extension`,
+           `extension`.modifiers.contains(where: { $0.name == "private" || $0.name == "fileprivate" }) {
+
+            return api.modifiers.allSatisfy { modifier in
+                modifier.detail != nil || (modifier.name != "internal" && modifier.name != "public" && modifier.name != "open")
+            }
+        }
+
+        if let symbol = context.compactMap({ $0 as? Symbol }).last,
+           symbol.api.modifiers.contains(where: { $0.name == "private" || $0.name == "fileprivate" })
+        {
+            switch symbol.api {
+            case is Enumeration:
+                return api is Enumeration.Case
+            case is Protocol:
+                return api is Function || api is Variable
+            default:
+                break
+            }
+        }
+
+        return false
+    }
+
+    public var isInternal: Bool {
+        !isPublic && !isPrivate
+    }
+
     public var isDocumented: Bool {
         return documentation?.isEmpty == false
     }
