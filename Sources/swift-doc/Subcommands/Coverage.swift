@@ -12,6 +12,10 @@ extension SwiftDoc {
             @Option(name: .shortAndLong,
                     help: "The path for generated report")
             var output: String?
+
+            @Option(name: .shortAndLong,
+                    help: "The minimum access level of the symbols which should be included.")
+            var minimumAccessLevel: AccessLevel = .public
         }
 
         static var configuration = CommandConfiguration(abstract: "Generates documentation coverage statistics for Swift files")
@@ -21,7 +25,7 @@ extension SwiftDoc {
 
         func run() throws {
             let module = try Module(paths: options.inputs)
-            let report = Report(module: module)
+            let report = Report(module: module, symbolFilter: options.minimumAccessLevel.includes(symbol:))
 
             if let output = options.output {
                 let encoder = JSONEncoder()

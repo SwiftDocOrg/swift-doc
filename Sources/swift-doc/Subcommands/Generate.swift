@@ -16,20 +16,6 @@ extension SwiftDoc {
       case html
     }
 
-    enum AccessLevel: String, ExpressibleByArgument {
-      case `public`
-      case `internal`
-
-      func includes(symbol: Symbol) -> Bool {
-        switch self {
-        case .public:
-          return symbol.isPublic
-        case .internal:
-          return symbol.isPublic || symbol.isInternal
-        }
-      }
-    }
-
     struct Options: ParsableArguments {
       @Argument(help: "One or more paths to Swift files")
       var inputs: [String]
