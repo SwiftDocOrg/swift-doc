@@ -81,6 +81,9 @@ extension SwiftDoc {
 
         guard !pages.isEmpty else {
             logger.warning("No public API symbols were found at the specified path. No output was written.")
+            if options.minimumAccessLevel == .public {
+              logger.warning("By default, swift-doc only includes public declarations. Maybe you want to use --minimum-access-level to include non-public declarations?")
+            }
             return
         }
 
