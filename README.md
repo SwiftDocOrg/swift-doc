@@ -135,11 +135,10 @@ $ Documentation/
 ```
 
 By default,
-swift doc only includes symbols which are `public` or `open`
+`swift-doc` includes only symbols declared as `public` or `open`
 in the generated documentation.
-To include declarations with a lower access level,
-you can use the `--minimum-access-level` flag
-to also include internal or private symbols.
+To include `internal` or `private` declarations,
+pass the `--minimum-access-level` flag with the specified access level.
 
 #### swift-doc coverage
 
