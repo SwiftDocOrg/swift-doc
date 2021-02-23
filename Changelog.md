@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added end-to-end tests for command-line interface.
   #199 by @MaxDesiatov and @mattt.
+- Added `--minimum-access-level` option to `generate` and `coverage` commands.
+  #219 by @Lukas-Stuehrk.
 
 ### Fixed
 
