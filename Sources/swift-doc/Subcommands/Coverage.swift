@@ -14,7 +14,7 @@ extension SwiftDoc {
             var output: String?
 
             @Option(name: .long,
-                    help: "The minimum access level of the symbols which should be included.")
+                    help: "The minimum access level of the symbols considered for coverage statistics.")
             var minimumAccessLevel: AccessLevel = .public
         }
 

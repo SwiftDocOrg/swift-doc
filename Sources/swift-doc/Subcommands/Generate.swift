@@ -37,7 +37,7 @@ extension SwiftDoc {
       var baseURL: String = "/"
 
       @Option(name: .long,
-              help: "The minimum access level of the symbols which should be included.")
+              help: "The minimum access level of the symbols included in generated documentation.")
       var minimumAccessLevel: AccessLevel = .public
     }
 
