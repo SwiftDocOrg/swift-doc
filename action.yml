@@ -21,7 +21,7 @@ inputs:
     required: true
     default: "./.build/documentation"
   minimum-access-level:
-    description: "The minimum access level of the symbols which should be included (public, internal or private)"
+    description: "The minimum access level of the symbols which should be included (public, internal, or private)"
     required: false
     default: "public"
 
