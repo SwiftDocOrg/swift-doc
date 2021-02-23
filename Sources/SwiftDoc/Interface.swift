@@ -8,14 +8,13 @@ public final class Interface {
 
     public required init(imports: [Import], symbols: [Symbol]) {
         self.imports = imports
-        self.symbols = symbols.filter { $0.isPublic }
+        self.symbols = symbols
 
         self.symbolsGroupedByIdentifier = Dictionary(grouping: symbols, by: { $0.id })
         self.symbolsGroupedByQualifiedName = Dictionary(grouping: symbols, by: { $0.id.description })
         self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.pathComponents.isEmpty }
 
         self.relationships = {
-            let symbols = symbols.filter { $0.isPublic }
             let extensionsByExtendedType: [String: [Extension]] = Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }, by: { $0.extendedType })
 
             var relationships: Set<Relationship> = []

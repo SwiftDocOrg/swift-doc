@@ -18,10 +18,10 @@ extension Entry {
 // MARK: -
 
 extension Report {
-    public init(module: Module) {
+    public init(module: Module, symbolFilter: (Symbol) -> Bool) {
         let entries = module.sourceFiles
                             .flatMap { $0.symbols }
-                            .filter { $0.isPublic }
+                            .filter(symbolFilter)
                             .map { Entry($0) }
 
         self.init(entries: entries)

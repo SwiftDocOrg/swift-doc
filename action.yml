@@ -20,6 +20,10 @@ inputs:
     description: "The path for generated output"
     required: true
     default: "./.build/documentation"
+  minimum-access-level:
+    description: "The minimum access level of the symbols which should be included (public, internal, or private)"
+    required: false
+    default: "public"
 
 runs:
   using: "docker"
@@ -36,6 +40,8 @@ runs:
       "${{ inputs.module-name }}",
       --output,
       "${{ inputs.output }}",
+      --minimum-access-level,
+      "${{ inputs.minimum-access-level }}"
     ]
 
 branding:

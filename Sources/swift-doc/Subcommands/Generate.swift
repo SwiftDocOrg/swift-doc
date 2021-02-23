@@ -35,6 +35,10 @@ extension SwiftDoc {
       @Option(name: .customLong("base-url"),
               help: "The base URL used for all relative URLs in generated documents.")
       var baseURL: String = "/"
+
+      @Option(name: .long,
+              help: "The minimum access level of the symbols included in generated documentation.")
+      var minimumAccessLevel: AccessLevel = .public
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -55,10 +59,11 @@ extension SwiftDoc {
         var pages: [String: Page] = [:]
 
         var globals: [String: [Symbol]] = [:]
-        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
+        let symbolFilter = options.minimumAccessLevel.includes(symbol:)
+        for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
-            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL)
+            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
           case let function as Function where !function.isOperator:
@@ -76,6 +81,9 @@ extension SwiftDoc {
 
         guard !pages.isEmpty else {
             logger.warning("No public API symbols were found at the specified path. No output was written.")
+            if options.minimumAccessLevel == .public {
+              logger.warning("By default, swift-doc only includes public declarations. Maybe you want to use --minimum-access-level to include non-public declarations?")
+            }
             return
         }
 
@@ -93,11 +101,11 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL)
-            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL)
+            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
             pages["_Footer"] = FooterPage(baseURL: baseURL)
           case .html:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL)
+            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
           }
 
           try pages.map { $0 }.parallelForEach {

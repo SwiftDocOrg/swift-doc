@@ -11,23 +11,27 @@ extension SwiftDoc {
         struct Options: ParsableArguments {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
+
+            @Option(name: .long,
+                    help: "The minimum access level of the symbols included in the generated diagram.")
+            var minimumAccessLevel: AccessLevel = .public
         }
         
         static var configuration = CommandConfiguration(abstract: "Generates diagram of Swift symbol relationships")
         
         @OptionGroup()
         var options: Options
-        
+
         func run() throws {
             let module = try Module(paths: options.inputs)
-            print(diagram(of: module), to: &standardOutput)
+            print(diagram(of: module, including: options.minimumAccessLevel.includes(symbol:)), to: &standardOutput)
         }
     }
 }
 
 // MARK: -
 
-fileprivate func diagram(of module: Module) -> String {
+fileprivate func diagram(of module: Module, including symbolFilter: (Symbol) -> Bool) -> String {
     var graph = Graph(directed: true)
     
     for (baseClass, subclasses) in module.interface.classHierarchies {
@@ -61,7 +65,7 @@ fileprivate func diagram(of module: Module) -> String {
     }
     
 
-    for symbol in (module.interface.symbols.filter { $0.isPublic && $0.api is Type }) {
+    for symbol in (module.interface.symbols.filter { $0.api is Type }).filter(symbolFilter) {
         let symbolNode = Node("\(symbol.id)")
         graph.append(symbolNode)
 

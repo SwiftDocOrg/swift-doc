@@ -102,6 +102,9 @@ $ apt-get install -y libxml2-dev graphviz
       -f, --format <format>   The output format (default: commonmark)
       --base-url <base-url>   The base URL used for all relative URLs in generated
                               documents. (default: /)
+      --minimum-access-level <minimum-access-level>
+                              The minimum access level of the symbols which should
+                              be included. (default: public)
       -h, --help              Show help information.
 
 The `generate` subcommand 
@@ -131,6 +134,12 @@ $ Documentation/
 └── index.html
 ```
 
+By default,
+`swift-doc` includes only symbols declared as `public` or `open`
+in the generated documentation.
+To include `internal` or `private` declarations,
+pass the `--minimum-access-level` flag with the specified access level.
+
 #### swift-doc coverage
 
     OVERVIEW: Generates documentation coverage statistics for Swift files
@@ -142,6 +151,9 @@ $ Documentation/
 
     OPTIONS:
       -o, --output <output>   The path for generated report 
+      --minimum-access-level <minimum-access-level>
+                              The minimum access level of the symbols which should
+                              be included. (default: public)
       -h, --help              Show help information.
 
 The `coverage` subcommand
@@ -190,6 +202,9 @@ please reach out by [opening an Issue][open an issue]!
       <inputs>                One or more paths to Swift files 
 
     OPTIONS:
+      --minimum-access-level <minimum-access-level>
+                              The minimum access level of the symbols which should
+                              be included. (default: public)
       -h, --help              Show help information.
 
 The `diagram` subcommand

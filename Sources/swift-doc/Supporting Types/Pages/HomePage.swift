@@ -16,11 +16,11 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module, baseURL: String) {
+    init(module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
 
-        for symbol in module.interface.topLevelSymbols.filter({ $0.isPublic }) {
+        for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
             switch symbol.api {
             case is Class:
                 classes.append(symbol)

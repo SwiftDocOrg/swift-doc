@@ -18,14 +18,14 @@ struct Members: Component {
     var methods: [Symbol]
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
 
         self.members = module.interface.members(of: symbol)
             .filter { $0.extension?.genericRequirements.isEmpty != false }
-            .filter { $0.isPublic }
+            .filter(symbolFilter)
 
         self.typealiases = members.filter { $0.api is Typealias }
         self.initializers = members.filter { $0.api is Initializer }
