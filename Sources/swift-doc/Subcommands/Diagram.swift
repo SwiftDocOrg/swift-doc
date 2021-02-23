@@ -12,7 +12,7 @@ extension SwiftDoc {
             @Argument(help: "One or more paths to Swift files")
             var inputs: [String]
 
-            @Option(name: .shortAndLong,
+            @Option(name: .long,
                     help: "The minimum access level of the symbols which should be included.")
             var minimumAccessLevel: AccessLevel = .public
         }

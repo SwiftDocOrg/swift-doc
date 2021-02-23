@@ -102,7 +102,7 @@ $ apt-get install -y libxml2-dev graphviz
       -f, --format <format>   The output format (default: commonmark)
       --base-url <base-url>   The base URL used for all relative URLs in generated
                               documents. (default: /)
-      -m, --minimum-access-level <minimum-access-level>
+      --minimum-access-level <minimum-access-level>
                               The minimum access level of the symbols which should
                               be included. (default: public)
       -h, --help              Show help information.
@@ -151,7 +151,7 @@ pass the `--minimum-access-level` flag with the specified access level.
 
     OPTIONS:
       -o, --output <output>   The path for generated report 
-      -m, --minimum-access-level <minimum-access-level>
+      --minimum-access-level <minimum-access-level>
                               The minimum access level of the symbols which should
                               be included. (default: public)
       -h, --help              Show help information.
@@ -202,7 +202,7 @@ please reach out by [opening an Issue][open an issue]!
       <inputs>                One or more paths to Swift files 
 
     OPTIONS:
-      -m, --minimum-access-level <minimum-access-level>
+      --minimum-access-level <minimum-access-level>
                               The minimum access level of the symbols which should
                               be included. (default: public)
       -h, --help              Show help information.

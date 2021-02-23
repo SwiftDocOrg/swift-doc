@@ -36,7 +36,7 @@ extension SwiftDoc {
               help: "The base URL used for all relative URLs in generated documents.")
       var baseURL: String = "/"
 
-      @Option(name: .shortAndLong,
+      @Option(name: .long,
               help: "The minimum access level of the symbols which should be included.")
       var minimumAccessLevel: AccessLevel = .public
     }

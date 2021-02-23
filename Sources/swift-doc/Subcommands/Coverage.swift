@@ -13,7 +13,7 @@ extension SwiftDoc {
                     help: "The path for generated report")
             var output: String?
 
-            @Option(name: .shortAndLong,
+            @Option(name: .long,
                     help: "The minimum access level of the symbols which should be included.")
             var minimumAccessLevel: AccessLevel = .public
         }
