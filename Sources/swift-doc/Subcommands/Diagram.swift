@@ -13,7 +13,7 @@ extension SwiftDoc {
             var inputs: [String]
 
             @Option(name: .long,
-                    help: "The minimum access level of the symbols which should be included.")
+                    help: "The minimum access level of the symbols included in the generated diagram.")
             var minimumAccessLevel: AccessLevel = .public
         }
         
