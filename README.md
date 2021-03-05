@@ -63,6 +63,12 @@ $ apt-get update
 $ apt-get install -y libxml2-dev graphviz
 ```
 
+### [Mint](https://github.com/yonaskolb/Mint)
+
+````terminal
+mint install SwiftDocOrg/swift-doc
+````
+
 ### Usage
 
     OVERVIEW: A utility for generating documentation for Swift code.
