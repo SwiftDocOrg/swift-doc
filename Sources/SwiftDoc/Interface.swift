@@ -155,4 +155,8 @@ public final class Interface {
     public func conditionalCounterparts(of symbol: Symbol) -> [Symbol] {
         return symbolsGroupedByIdentifier[symbol.id]?.filter { $0 != symbol }.sorted() ?? []
     }
+
+    public func defaultImplementations(of symbol: Symbol) -> [Symbol] {
+        return relationshipsByObject[symbol.id]?.filter { $0.predicate == .defaultImplementationOf }.map { $0.subject }.sorted() ?? []
+    }
 }

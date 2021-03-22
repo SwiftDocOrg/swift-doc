@@ -17,6 +17,7 @@ struct Members: Component {
     var properties: [Symbol]
     var methods: [Symbol]
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
+    let defaultImplementations: [Symbol]
 
     init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.symbol = symbol
@@ -33,6 +34,7 @@ struct Members: Component {
         self.properties = members.filter { $0.api is Variable }
         self.methods = members.filter { $0.api is Function }
         self.genericallyConstrainedMembers = Dictionary(grouping: members) { $0.`extension`?.genericRequirements ?? [] }.filter { !$0.key.isEmpty }
+        self.defaultImplementations = module.interface.defaultImplementations(of: symbol).filter(symbolFilter)
     }
 
     var sections: [(title: String, members: [Symbol])] {
@@ -41,14 +43,15 @@ struct Members: Component {
             ("Initializers", initializers),
             ("Enumeration Cases", cases),
             ("Properties", properties),
-            ("Methods", methods)
+            ("Methods", methods),
+            ("Default Implementations", defaultImplementations),
         ].filter { !$0.members.isEmpty }
     }
 
     // MARK: - Component
 
     var fragment: Fragment {
-        guard !members.isEmpty else { return Fragment { "" } }
+        guard !members.isEmpty || !defaultImplementations.isEmpty else { return Fragment { "" } }
 
         return Fragment {
             ForEach(in: sections) { section -> BlockConvertible in

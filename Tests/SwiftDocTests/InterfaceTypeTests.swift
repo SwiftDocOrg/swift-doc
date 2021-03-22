@@ -240,4 +240,30 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(module.interface.symbols[6].name, "InternalProperties")
         XCTAssertEqual(module.interface.symbols[7].name, "internal_prop")
     }
+
+    func testDefaultImplementationsOfProtocols() throws {
+        let source = #"""
+        public protocol SomeProtocol {
+            func someMethod()
+        }
+                     
+        public extension SomeProtocol {
+            func someMethod() { }
+                     
+            func someOtherMethod() { }
+        }
+        """#
+
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        let protocolSymbol = module.interface.symbols[0]
+        XCTAssertEqual(protocolSymbol.name, "SomeProtocol")
+        let defaultImplementations = module.interface.defaultImplementations(of: protocolSymbol)
+        XCTAssertEqual(defaultImplementations.count, 2)
+        XCTAssertEqual(defaultImplementations[0].name, "someMethod()")
+        XCTAssertEqual(defaultImplementations[1].name, "someOtherMethod()")
+    }
 }
