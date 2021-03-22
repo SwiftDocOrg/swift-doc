@@ -18,6 +18,7 @@ struct Members: Component {
     var methods: [Symbol]
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
     let defaultImplementations: [Symbol]
+    let operators: [Symbol]
 
     init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.symbol = symbol
@@ -32,9 +33,10 @@ struct Members: Component {
         self.initializers = members.filter { $0.api is Initializer }
         self.cases = members.filter { $0.api is Enumeration.Case }
         self.properties = members.filter { $0.api is Variable }
-        self.methods = members.filter { $0.api is Function }
+        self.methods = members.filter { ($0.api as? Function)?.isOperator == false }
         self.genericallyConstrainedMembers = Dictionary(grouping: members) { $0.`extension`?.genericRequirements ?? [] }.filter { !$0.key.isEmpty }
         self.defaultImplementations = module.interface.defaultImplementations(of: symbol).filter(symbolFilter)
+        self.operators = members.filter { ($0.api as? Function)?.isOperator == true }
     }
 
     var sections: [(title: String, members: [Symbol])] {
@@ -45,6 +47,7 @@ struct Members: Component {
             ("Properties", properties),
             ("Methods", methods),
             ("Default Implementations", defaultImplementations),
+            ("Operators", operators),
         ].filter { !$0.members.isEmpty }
     }
 
