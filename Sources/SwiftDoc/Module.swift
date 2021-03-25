@@ -27,10 +27,22 @@ public final class Module {
                 var isDirectory: ObjCBool = false
                 guard url.pathExtension == "swift",
                     fileManager.isReadableFile(atPath: url.path),
-                    fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-                    isDirectory.boolValue == false
-                else { continue }
-                sources.append((url, directory))
+                    fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
+                else {
+                    // Skip top-level Tests directory
+                    if isDirectory.boolValue == true,
+                       url.lastPathComponent == "Tests",
+                       directory.appendingPathComponent("Tests").path == url.path
+                    {
+                        directoryEnumerator.skipDescendents()
+                    }
+
+                    continue
+                }
+
+                if isDirectory.boolValue == false {
+                    sources.append((url, directory))
+                }
             }
         }
 
