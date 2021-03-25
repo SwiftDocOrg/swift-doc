@@ -22,7 +22,7 @@ public final class Module {
         let fileManager = FileManager.default
         for path in paths {
             let directory = URL(fileURLWithPath: path)
-            guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: nil) else { continue }
+            guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) else { continue }
             for case let url as URL in directoryEnumerator {
                 var isDirectory: ObjCBool = false
                 guard url.pathExtension == "swift",
