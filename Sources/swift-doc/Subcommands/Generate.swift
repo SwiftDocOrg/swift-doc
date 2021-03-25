@@ -4,6 +4,8 @@ import SwiftDoc
 import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
+import GitConfig
+import Logging
 
 #if os(Linux)
 import FoundationNetworking
@@ -39,6 +41,9 @@ extension SwiftDoc {
       @Option(name: .long,
               help: "The minimum access level of the symbols included in generated documentation.")
       var minimumAccessLevel: AccessLevel = .public
+
+        @Flag()
+        var verbose: Bool = false
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -47,8 +52,38 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
+        if options.verbose {
+            logger.logLevel = .debug
+        }
+
       let module = try Module(name: options.moduleName, paths: options.inputs)
       let baseURL = options.baseURL
+
+      let environment = Environment()
+        for path in options.inputs {
+            guard let repository = GitRepository.discover(at: path) else { continue }
+            logger.debug("Found Git repository at \(path)")
+            guard let configuration = repository.configuration else { break }
+
+            let remotes = configuration["remote \"origin\""].flatMap { [$0] } ?? configuration.sections.filter({ $0.name.hasPrefix("remote") })
+            for section in remotes {
+                guard case .string(let value) = section["url"],
+                      let url = URL(string: value)?.canonicalized
+                else { continue }
+
+                environment.origin = url
+
+                logger.debug("Using \(url) as URL for source code")
+                break
+            }
+
+            if let head = repository.showRef() {
+                environment.commit = head
+                logger.debug("Using \(head) as commit reference")
+            }
+
+            break
+        }
 
       let outputDirectoryURL = URL(fileURLWithPath: options.output)
       try fileManager.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true)
@@ -61,6 +96,9 @@ extension SwiftDoc {
         var globals: [String: [Symbol]] = [:]
         let symbolFilter = options.minimumAccessLevel.includes(symbol:)
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
+            print("!! ", environment.sourceURL(for: symbol)?.absoluteString ?? "")
+
+
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
             pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)

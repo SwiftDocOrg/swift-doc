@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "GitConfig",
+        "repositoryURL": "https://github.com/SwiftDocOrg/GitConfig.git",
+        "state": {
+          "branch": null,
+          "revision": "8eb1fa56247b91a21e8adf75f5b397fefce593ee",
+          "version": "0.0.1"
+        }
+      },
+      {
         "package": "GraphViz",
         "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
         "state": {

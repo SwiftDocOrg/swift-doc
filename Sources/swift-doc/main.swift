@@ -11,7 +11,7 @@ LoggingSystem.bootstrap { label in
     }
 }
 
-let logger = Logger(label: "org.swiftdoc.swift-doc")
+var logger = Logger(label: "org.swiftdoc.swift-doc")
 
 let fileManager = FileManager.default
 
