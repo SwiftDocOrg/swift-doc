@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed public extensions exposing nested code of all access levels.
   #195 by @Tunous.
+- Fixed broken links in the relationship graph.
+  #226 by @Lukas-Stuehrk.
 
 ### Changed
 
