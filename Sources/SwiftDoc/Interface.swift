@@ -68,7 +68,7 @@ public final class Interface {
                     for name in inheritedTypeNames {
                         let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
                         if inheritedTypes.isEmpty {
-                            let inherited = Symbol(api: Unknown(name: name), context: [], declaration: [], documentation: nil, sourceLocation: nil)
+                            let inherited = Symbol(api: Unknown(name: name), context: [], declaration: [], documentation: nil, sourceRange: nil)
                             relationships.insert(Relationship(subject: symbol, predicate: .conformsTo, object: inherited))
                         } else {
                             for inherited in inheritedTypes {
