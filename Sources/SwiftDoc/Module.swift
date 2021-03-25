@@ -34,7 +34,7 @@ public final class Module {
                        url.lastPathComponent == "Tests",
                        directory.appendingPathComponent("Tests").path == url.path
                     {
-                        directoryEnumerator.skipDescendents()
+                        directoryEnumerator.skipDescendants()
                     }
 
                     continue
