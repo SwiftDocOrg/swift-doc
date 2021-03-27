@@ -329,3 +329,9 @@ extension Symbol: Codable {
         try container.encode(sourceRange, forKey: .sourceRange)
     }
 }
+
+extension Symbol: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "\(self.declaration.map { $0.text }.joined())"
+    }
+}

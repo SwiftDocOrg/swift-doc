@@ -16,9 +16,13 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    let externalTypes: [String]
+
+    init(module: Module, externalTypes: [String], baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
+
+        self.externalTypes = externalTypes
 
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
             switch symbol.api {
@@ -70,6 +74,18 @@ struct HomePage: Page {
                     }
                 }
             }
+
+            if !externalTypes.isEmpty {
+                Heading { "Extensions"}
+
+                List(of: externalTypes.sorted()) { typeName in
+                    List.Item {
+                        Paragraph {
+                            Link(urlString: path(for: route(for: typeName), with: baseURL), text: typeName)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -95,6 +111,20 @@ struct HomePage: Page {
             </section>
         """#
         })
+        \#((externalTypes.isEmpty ? "" :
+            #"""
+            <section id="extensions">
+                <h2>Extensions</h2>
+                <ul>
+                \#(externalTypes.sorted().map {
+                    #"""
+                    <li><a href="\#(path(for: route(for: $0), with: baseURL))">\#($0)</a></li>
+                    """# as HypertextLiteral.HTML
+                })
+                </ul>
+            <section>
+            """#
+        ) as HypertextLiteral.HTML)
         """#
     }
 }
