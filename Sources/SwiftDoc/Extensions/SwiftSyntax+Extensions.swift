@@ -46,6 +46,12 @@ protocol SymbolDeclProtocol: SyntaxProtocol {
     var declaration: Syntax { get }
 }
 
+extension SymbolDeclProtocol {
+    func sourceRange(using converter: SourceLocationConverter) -> SourceRange {
+        return SourceRange(start: startLocation(converter: converter), end: endLocation(converter: converter))
+    }
+}
+
 extension AssociatedtypeDeclSyntax: SymbolDeclProtocol {}
 extension ClassDeclSyntax: SymbolDeclProtocol {}
 extension EnumDeclSyntax: SymbolDeclProtocol {}

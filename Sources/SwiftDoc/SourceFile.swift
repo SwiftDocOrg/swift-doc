@@ -56,13 +56,13 @@ public struct SourceFile: Hashable, Codable {
         func symbol<Node, Declaration>(_ type: Declaration.Type, _ node: Node) -> Symbol? where Declaration: API & ExpressibleBySyntax, Node == Declaration.Syntax, Node: SymbolDeclProtocol {
             guard let api = Declaration(node) else { return nil }
             guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
-            let sourceRange = SourceRange(start: node.startLocation(converter: sourceLocationConverter), end: node.endLocation(converter: sourceLocationConverter))
+            let sourceRange = node.sourceRange(using: sourceLocationConverter)
             return Symbol(api: api, context: context, declaration: declaration(for: node), documentation: documentation, sourceRange: sourceRange)
         }
 
         func symbol<Node: SymbolDeclProtocol>(_ node: Node, api: API) -> Symbol? {
             guard let documentation = try? Documentation.parse(node.documentation) else { return nil }
-            let sourceRange = SourceRange(start: node.startLocation(converter: sourceLocationConverter), end: node.endLocation(converter: sourceLocationConverter))
+            let sourceRange = node.sourceRange(using: sourceLocationConverter)
             return Symbol(api: api, context: context, declaration: declaration(for: node), documentation: documentation, sourceRange: sourceRange)
         }
 
