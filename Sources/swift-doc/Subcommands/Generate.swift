@@ -65,10 +65,10 @@ extension SwiftDoc {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
             pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
-            declaredTypeNames.append(symbol.name)
+            declaredTypeNames.append(symbol.id.description)
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
-            declaredTypeNames.append(symbol.name)
+            declaredTypeNames.append(symbol.id.description)
           case let function as Function where !function.isOperator:
             globals[function.name, default: []] += [symbol]
           case let variable as Variable:
