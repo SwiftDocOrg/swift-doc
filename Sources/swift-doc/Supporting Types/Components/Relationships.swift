@@ -41,7 +41,7 @@ struct Relationships: Component {
     }
 
     var graphHTML: HypertextLiteral.HTML? {
-        var graph = symbol.graph(in: module, baseURL: baseURL, includingChildren symbolFilter: symbolFilter)
+        var graph = symbol.graph(in: module, baseURL: baseURL, includingChildren: symbolFilter)
         guard !graph.edges.isEmpty else { return nil }
 
         graph.aspectRatio = 0.125
