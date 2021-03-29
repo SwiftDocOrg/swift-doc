@@ -21,6 +21,27 @@ extension SourceLocation: Hashable {
 
 // MARK: -
 
+extension SourceRange: Equatable {
+    public static func == (lhs: SourceRange, rhs: SourceRange) -> Bool {
+        return lhs.start == rhs.start && lhs.end == rhs.end
+    }
+}
+
+extension SourceRange: Comparable {
+    public static func < (lhs: SourceRange, rhs: SourceRange) -> Bool {
+        return lhs.start < rhs.start
+    }
+}
+
+extension SourceRange: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(start)
+        hasher.combine(end)
+    }
+}
+
+// MARK: -
+
 protocol SymbolDeclProtocol: SyntaxProtocol {
     var declaration: Syntax { get }
 }

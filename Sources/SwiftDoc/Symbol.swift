@@ -116,9 +116,8 @@ public final class Symbol {
 extension Symbol: Equatable {
     public static func == (lhs: Symbol, rhs: Symbol) -> Bool {
         guard lhs.documentation == rhs.documentation,
-              lhs.sourceRange?.start == rhs.sourceRange?.start,
-              rhs.sourceRange?.end == rhs.sourceRange?.end
-            else { return false }
+              lhs.sourceRange == rhs.sourceRange
+        else { return false }
 
         guard lhs.context.count == rhs.context.count else { return false}
         for (lc, rc) in zip(lhs.context, rhs.context) {
@@ -173,8 +172,8 @@ extension Symbol: Equatable {
 
 extension Symbol: Comparable {
     public static func < (lhs: Symbol, rhs: Symbol) -> Bool {
-        if let lsl = lhs.sourceRange?.start, let rsl = rhs.sourceRange?.start {
-            return lsl < rsl
+        if let lsr = lhs.sourceRange, let rsr = rhs.sourceRange {
+            return lsr < rsr
         } else {
             return lhs.name < rhs.name
         }
@@ -186,8 +185,7 @@ extension Symbol: Comparable {
 extension Symbol: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(documentation)
-        hasher.combine(sourceRange?.start)
-        hasher.combine(sourceRange?.end)
+        hasher.combine(sourceRange)
         switch api {
         case let api as AssociatedType:
             hasher.combine(api)
