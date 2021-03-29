@@ -5,7 +5,8 @@ import SwiftSemantics
 import Foundation
 import HypertextLiteral
 import GraphViz
-import DOT
+
+fileprivate typealias SVG = HypertextLiteral.HTML
 
 extension StringBuilder {
     // MARK: buildIf
@@ -51,7 +52,8 @@ struct Relationships: Component {
         let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
 
         do {
-            return try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
+            let data = try _await { graph.render(using: algorithm, to: .svg, completion: $0) }
+            return SVG(String(data: data, encoding: .utf8) ?? "")
         } catch {
             logger.warning("Failed to generate relationship graph for \(symbol.id). Please ensure that GraphViz binaries are accessible from your PATH. (\(error))")
             return nil
