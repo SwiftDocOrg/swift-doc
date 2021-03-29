@@ -12,6 +12,7 @@ public final class Symbol {
     public let documentation: Documentation?
     public let sourceRange: SourceRange?
 
+    @available(swift, deprecated: 0.0.1, message: "Use sourceRange instead")
     public var sourceLocation: SourceLocation? { sourceRange?.start }
 
     public private(set) lazy var `extension`: Extension? = context.compactMap { $0 as? Extension }.first
