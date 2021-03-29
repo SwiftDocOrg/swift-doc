@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed display of code declarations in HTML.
   #204 by @mattt.
+- Changed the `generate` command to skip hidden files
+  and top-level `Tests` directories.
+  #229 by @mattt.
 
 ## [1.0.0-beta.5] - 2020-09-29
 

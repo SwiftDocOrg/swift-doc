@@ -22,15 +22,27 @@ public final class Module {
         let fileManager = FileManager.default
         for path in paths {
             let directory = URL(fileURLWithPath: path)
-            guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: nil) else { continue }
+            guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) else { continue }
             for case let url as URL in directoryEnumerator {
                 var isDirectory: ObjCBool = false
                 guard url.pathExtension == "swift",
                     fileManager.isReadableFile(atPath: url.path),
-                    fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-                    isDirectory.boolValue == false
-                else { continue }
-                sources.append((url, directory))
+                    fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
+                else {
+                    // Skip top-level Tests directory
+                    if isDirectory.boolValue == true,
+                       url.lastPathComponent == "Tests",
+                       directory.appendingPathComponent("Tests").path == url.path
+                    {
+                        directoryEnumerator.skipDescendants()
+                    }
+
+                    continue
+                }
+
+                if isDirectory.boolValue == false {
+                    sources.append((url, directory))
+                }
             }
         }
 
