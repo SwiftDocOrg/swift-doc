@@ -92,3 +92,36 @@ jobs:
           apt-get install -y libxml2-dev graphviz
       - name: Build and Test
         run: swift test -c release --enable-test-discovery
+
+  validate-assets:
+    runs-on: ubuntu-latest
+
+    name: "Validate Assets"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('.node/**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install node dependencies
+        run: |
+          cd .node
+          npm install
+      - name: Test assets
+        run: |
+          cd .node
+          OLD=`cksum ../Resources/all.min.css`
+          npm run build
+          NEW=`cksum ../Resources/all.min.css`
+          if [[ "$OLD" != "$NEW" ]]; then
+            echo "Regenerated assets differ from committed version"
+            exit -1
+          fi
