@@ -36,7 +36,7 @@ extension Symbol {
         return node
     }
 
-    func graph(in module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) -> Graph {
+    func graph(in module: Module, baseURL: String, includingChildren symbolFilter: (Symbol) -> Bool) -> Graph {
         var graph = Graph(directed: true)
 
         do {

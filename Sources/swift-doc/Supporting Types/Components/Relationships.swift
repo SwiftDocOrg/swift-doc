@@ -32,7 +32,7 @@ struct Relationships: Component {
     var inheritedTypes: [Symbol]
     let symbolFilter: (Symbol) -> Bool
 
-    init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: @escaping (Symbol) -> Bool) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
         self.module = module
         self.symbol = symbol
         self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
@@ -41,7 +41,7 @@ struct Relationships: Component {
     }
 
     var graphHTML: HypertextLiteral.HTML? {
-        var graph = symbol.graph(in: module, baseURL: baseURL, symbolFilter: symbolFilter)
+        var graph = symbol.graph(in: module, baseURL: baseURL, includingChildren symbolFilter: symbolFilter)
         guard !graph.edges.isEmpty else { return nil }
 
         graph.aspectRatio = 0.125

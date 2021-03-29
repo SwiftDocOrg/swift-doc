@@ -28,7 +28,7 @@ struct TypePage: Page {
             Heading { symbol.id.description }
 
             Documentation(for: symbol, in: module, baseURL: baseURL)
-            Relationships(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            Relationships(of: symbol, in: module, baseURL: baseURL, includingChildren: symbolFilter)
             Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter)
             Requirements(of: symbol, in: module, baseURL: baseURL)
         }
@@ -42,7 +42,7 @@ struct TypePage: Page {
         </h1>
 
         \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
-        \#(Relationships(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter).html)
+        \#(Relationships(of: symbol, in: module, baseURL: baseURL, includingChildren: symbolFilter).html)
         \#(Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter).html)
         \#(Requirements(of: symbol, in: module, baseURL: baseURL).html)
         """#
