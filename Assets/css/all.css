@@ -998,16 +998,6 @@ nav li[class] {
   padding-left: 2.5em;
 }
 
-#extensions {
-  & ul {
-    margin-left: 0;
-  }
-
-  & li {
-    list-style-type: none;
-  }
-}
-
 .associatedtype {
   --background-image: var(--icon-associatedtype);
   --link: var(--system-pink);

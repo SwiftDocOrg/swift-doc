@@ -115,13 +115,16 @@ struct HomePage: Page {
             #"""
             <section id="extensions">
                 <h2>Extensions</h2>
-                <ul>
+                <dl>
                 \#(externalTypes.sorted().map {
                     #"""
-                    <li><a href="\#(path(for: route(for: $0), with: baseURL))">\#($0)</a></li>
+                    <dt class="extension">
+                        <a href="\#(path(for: route(for: $0), with: baseURL))">\#($0)</a>
+                    </dt>
+                    <dd></dd>
                     """# as HypertextLiteral.HTML
                 })
-                </ul>
+                </dl>
             <section>
             """#
         ) as HypertextLiteral.HTML)
