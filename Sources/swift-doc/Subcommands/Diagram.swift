@@ -3,8 +3,6 @@ import Foundation
 import SwiftDoc
 import SwiftSemantics
 import GraphViz
-import DOT
-
 
 extension SwiftDoc {
     struct Diagram: ParsableCommand {

@@ -14,7 +14,7 @@ let package = Package(
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .upToNextMinor(from: "0.1.0")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .upToNextMinor(from: "0.4.0")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.2.1")),
-        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.1.2")),
+        .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/NSHipster/HypertextLiteral.git", .upToNextMinor(from: "0.0.2")),
         .package(url: "https://github.com/SwiftDocOrg/Markup.git", .upToNextMinor(from: "0.0.3")),
         .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("1.0.2")),

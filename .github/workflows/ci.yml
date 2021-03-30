@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
       - name: Install System Dependencies
         run: |
-          brew install graphviz
+          brew bundle
       - name: Build and Test
         run: |
           swift test -c release
@@ -58,7 +58,7 @@ jobs:
             ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
       - name: Install System Dependencies
         run: |
-          brew install graphviz
+          brew bundle
       - name: Build and Test
         run: |
           swift test -c release
@@ -89,7 +89,7 @@ jobs:
       - name: Install System Dependencies
         run: |
           apt-get update
-          apt-get install -y libxml2-dev graphviz
+          apt-get install -y libxml2-dev graphviz-dev
       - name: Build and Test
         run: swift test -c release --enable-test-discovery
 

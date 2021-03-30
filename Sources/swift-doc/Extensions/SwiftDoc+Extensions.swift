@@ -1,7 +1,6 @@
 import SwiftDoc
 import SwiftSemantics
 import GraphViz
-import DOT
 import struct Foundation.URL
 
 extension Symbol {
