@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #219 by @Lukas-Stuehrk.
 - Added support for documenting default implementations.
   #221 by @Lukas-Stuehrk.
+- Added `sourceRange` property to `Symbol`.
+  #237 by @mattt.
 
 ### Fixed
 
@@ -27,6 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed display of code declarations in HTML.
   #204 by @mattt.
+- Changed serialization of `Symbol` to encode and decode `sourceRange` key
+  instead of `sourceLocation` key.
+  #237 by @mattt.
+
+### Deprecated
+
+- Deprecated `Symbol.sourceLocation` property.
+  Use `Symbol.sourceRange.start` instead.
+  #237 by @mattt.
 - Changed the `generate` command to skip hidden files
   and top-level `Tests` directories.
   #229 by @mattt.

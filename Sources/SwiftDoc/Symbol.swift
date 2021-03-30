@@ -10,17 +10,20 @@ public final class Symbol {
     public let context: [Contextual]
     public let declaration: [Token]
     public let documentation: Documentation?
-    public let sourceLocation: SourceLocation?
+    public let sourceRange: SourceRange?
+
+    @available(swift, deprecated: 0.0.1, message: "Use sourceRange instead")
+    public var sourceLocation: SourceLocation? { sourceRange?.start }
 
     public private(set) lazy var `extension`: Extension? = context.compactMap { $0 as? Extension }.first
     public private(set) lazy var conditions: [CompilationCondition] = context.compactMap { $0 as? CompilationCondition }
 
-    init(api: API, context: [Contextual], declaration: [Token], documentation: Documentation?, sourceLocation: SourceLocation?) {
+    init(api: API, context: [Contextual], declaration: [Token], documentation: Documentation?, sourceRange: SourceRange?) {
         self.api = api
         self.context = context
         self.declaration = declaration
         self.documentation = documentation
-        self.sourceLocation = sourceLocation
+        self.sourceRange = sourceRange
     }
 
     public var name: String {
@@ -114,8 +117,8 @@ public final class Symbol {
 extension Symbol: Equatable {
     public static func == (lhs: Symbol, rhs: Symbol) -> Bool {
         guard lhs.documentation == rhs.documentation,
-            lhs.sourceLocation == rhs.sourceLocation
-            else { return false }
+              lhs.sourceRange == rhs.sourceRange
+        else { return false }
 
         guard lhs.context.count == rhs.context.count else { return false}
         for (lc, rc) in zip(lhs.context, rhs.context) {
@@ -170,8 +173,8 @@ extension Symbol: Equatable {
 
 extension Symbol: Comparable {
     public static func < (lhs: Symbol, rhs: Symbol) -> Bool {
-        if let lsl = lhs.sourceLocation, let rsl = rhs.sourceLocation {
-            return lsl < rsl
+        if let lsr = lhs.sourceRange, let rsr = rhs.sourceRange {
+            return lsr < rsr
         } else {
             return lhs.name < rhs.name
         }
@@ -183,7 +186,7 @@ extension Symbol: Comparable {
 extension Symbol: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(documentation)
-        hasher.combine(sourceLocation)
+        hasher.combine(sourceRange)
         switch api {
         case let api as AssociatedType:
             hasher.combine(api)
@@ -225,7 +228,7 @@ extension Symbol: Codable {
     private enum CodingKeys: String, CodingKey {
         case declaration
         case documentation
-        case sourceLocation
+        case sourceRange
 
         case associatedType
         case `case`
@@ -282,9 +285,9 @@ extension Symbol: Codable {
 
         let declaration = try container.decodeIfPresent([Token].self, forKey: .declaration)
         let documentation = try container.decodeIfPresent(Documentation.self, forKey: .documentation)
-        let sourceLocation = try container.decodeIfPresent(SourceLocation.self, forKey: .sourceLocation)
+        let sourceRange = try container.decodeIfPresent(SourceRange.self, forKey: .sourceRange)
 
-        self.init(api: api, context: [] /* TODO */, declaration: declaration ?? [], documentation: documentation, sourceLocation: sourceLocation)
+        self.init(api: api, context: [] /* TODO */, declaration: declaration ?? [], documentation: documentation, sourceRange: sourceRange)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -323,6 +326,6 @@ extension Symbol: Codable {
         }
 
         try container.encode(documentation, forKey: .documentation)
-        try container.encode(sourceLocation, forKey: .sourceLocation)
+        try container.encode(sourceRange, forKey: .sourceRange)
     }
 }

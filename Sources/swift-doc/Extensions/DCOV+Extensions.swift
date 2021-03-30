@@ -7,9 +7,9 @@ extension Entry {
         let name = symbol.id.description
         let type = String(describing: Swift.type(of: symbol.api))
         let documented = symbol.isDocumented
-        let file = symbol.sourceLocation?.file
-        let line = symbol.sourceLocation?.line
-        let column = symbol.sourceLocation?.column
+        let file = symbol.sourceRange?.start.file
+        let line = symbol.sourceRange?.start.line
+        let column = symbol.sourceRange?.start.column
 
         self.init(name: name, type: type, documented: documented, file: file, line: line, column: column)
     }
