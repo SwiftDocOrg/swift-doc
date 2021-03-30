@@ -58,17 +58,14 @@ extension SwiftDoc {
 
         var pages: [String: Page] = [:]
 
-        var declaredTypeNames: [String] = []
         var globals: [String: [Symbol]] = [:]
         let symbolFilter = options.minimumAccessLevel.includes(symbol:)
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
             pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
-            declaredTypeNames.append(symbol.id.description)
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
-            declaredTypeNames.append(symbol.id.description)
           case let function as Function where !function.isOperator:
             globals[function.name, default: []] += [symbol]
           case let variable as Variable:
@@ -81,9 +78,9 @@ extension SwiftDoc {
         // Extensions on external types.
         var symbolsByExternalType: [String: [Symbol]] = [:]
         for symbol in module.interface.symbols.filter(symbolFilter) {
-          guard let ext = symbol.context.first as? Extension, symbol.context.count == 1 else { continue }
-          guard !declaredTypeNames.contains(ext.extendedType) else { continue }
-          symbolsByExternalType[ext.extendedType, default: []] += [symbol]
+          guard let extensionDeclaration = symbol.context.first as? Extension, symbol.context.count == 1 else { continue }
+          guard module.interface.isExternalSymbol(named: extensionDeclaration.extendedType) else { continue }
+          symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
         }
         for (typeName, symbols) in symbolsByExternalType {
           pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL)

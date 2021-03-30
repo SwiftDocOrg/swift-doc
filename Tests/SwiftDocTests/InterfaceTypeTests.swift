@@ -266,4 +266,40 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(defaultImplementations[0].name, "someMethod()")
         XCTAssertEqual(defaultImplementations[1].name, "someOtherMethod()")
     }
+
+    func testExternalSymbols() throws {
+        let source = #"""
+         import UIKit 
+                     
+         public class SomeClass {
+             public struct InnerObject { }
+            
+             typealias ActuallyExternal = UIView
+                     
+             typealias ActuallyInternal = InnerStruct 
+             
+             struct InnerStruct {}        
+         }
+                      
+         public typealias MyClass = SomeClass
+                     
+         public typealias ExternalClass = UIGestureRecognizer
+         """#
+
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass"))
+        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass.InnerObject"))
+        XCTAssertFalse(module.interface.isExternalSymbol(named: "MyClass"))
+        XCTAssertFalse(module.interface.isExternalSymbol(named: "MyClass.InnerObject"))
+        XCTAssertTrue(module.interface.isExternalSymbol(named: "UIGestureRecognizer"))
+        XCTAssertTrue(module.interface.isExternalSymbol(named: "UIGestureRecognizer.State"))
+        XCTAssertTrue(module.interface.isExternalSymbol(named: "ExternalClass"))
+        XCTAssertTrue(module.interface.isExternalSymbol(named: "ExternalClass.State"))
+        XCTAssertTrue(module.interface.isExternalSymbol(named: "SomeClass.ActuallyExternal"))
+        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass.ActuallyInternal"))
+    }
 }
