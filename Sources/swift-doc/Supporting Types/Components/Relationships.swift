@@ -5,7 +5,8 @@ import SwiftSemantics
 import Foundation
 import HypertextLiteral
 import GraphViz
-import DOT
+
+fileprivate typealias SVG = HypertextLiteral.HTML
 
 extension StringBuilder {
     // MARK: buildIf
@@ -30,16 +31,18 @@ struct Relationships: Component {
     var symbol: Symbol
     let baseURL: String
     var inheritedTypes: [Symbol]
+    let symbolFilter: (Symbol) -> Bool
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
         self.module = module
         self.symbol = symbol
         self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     var graphHTML: HypertextLiteral.HTML? {
-        var graph = symbol.graph(in: module, baseURL: baseURL)
+        var graph = symbol.graph(in: module, baseURL: baseURL, includingChildren: symbolFilter)
         guard !graph.edges.isEmpty else { return nil }
 
         graph.aspectRatio = 0.125
@@ -49,7 +52,8 @@ struct Relationships: Component {
         let algorithm: LayoutAlgorithm = graph.nodes.count > 3 ? .neato : .dot
 
         do {
-            return try HypertextLiteral.HTML(String(data: graph.render(using: algorithm, to: .svg), encoding: .utf8) ?? "")
+            let data = try _await { graph.render(using: algorithm, to: .svg, completion: $0) }
+            return SVG(String(data: data, encoding: .utf8) ?? "")
         } catch {
             logger.warning("Failed to generate relationship graph for \(symbol.id). Please ensure that GraphViz binaries are accessible from your PATH. (\(error))")
             return nil

@@ -5,11 +5,15 @@
     "not dead"
   ],
   "scripts": {
-    "watch": "postcss -w ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js"
+    "watch": "postcss -w ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js",
+    "build": "postcss ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js"
   },
   "dependencies": {
     "cssnano": "^4.1.10",
     "postcss-cli": "^7.1.0",
     "postcss-preset-env": "^6.7.0"
+  },
+  "devDependencies": {
+    "is-svg": ">=4.2.2"
   }
 }

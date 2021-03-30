@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed public extensions exposing nested code of all access levels.
   #195 by @Tunous.
+- Fixed broken links in the relationship graph.
+  #226 by @Lukas-Stuehrk.
 
 ### Changed
 
@@ -36,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated `Symbol.sourceLocation` property.
   Use `Symbol.sourceRange.start` instead.
   #237 by @mattt.
+- Changed the `generate` command to skip hidden files
+  and top-level `Tests` directories.
+  #229 by @mattt.
 
 ## [1.0.0-beta.5] - 2020-09-29
 

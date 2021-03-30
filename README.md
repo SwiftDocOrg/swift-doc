@@ -107,13 +107,16 @@ $ apt-get install -y libxml2-dev graphviz
                               be included. (default: public)
       -h, --help              Show help information.
 
-The `generate` subcommand 
+The `generate` subcommand
 takes one or more paths and enumerates them recursively,
 collecting all Swift files into a single "module"
 and generating documentation accordingly.
+Any hidden directories are skipped,
+including `.git` and other directories with paths starting with a dot (`.`).
+Top-level `Tests` directories are skipped as well.
 
 ```terminal
-$ swift doc generate path/to/SwiftProject/Sources --module-name SwiftProject
+$ swift doc generate path/to/SwiftProject --module-name SwiftProject
 $ tree .build/documentation
 $ documentation/
 ├── Home

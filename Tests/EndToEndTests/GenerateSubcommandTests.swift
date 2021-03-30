@@ -13,7 +13,7 @@ final class GenerateSubcommandTests: XCTestCase {
                             "--module-name", "SwiftDoc",
                             "--format", "commonmark",
                             "--output", outputDirectory.path,
-                            "Sources"
+                            "."
                         ]
         ) { result in
             XCTAssertEqual(result.terminationStatus, EXIT_SUCCESS)
@@ -54,7 +54,7 @@ final class GenerateSubcommandTests: XCTestCase {
                             "--module-name", "SwiftDoc",
                             "--format", "html",
                             "--output", outputDirectory.path,
-                            "Sources"
+                            "."
                         ]
         ) { result in
             XCTAssertEqual(result.terminationStatus, EXIT_SUCCESS)

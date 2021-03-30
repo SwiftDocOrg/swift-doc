@@ -1,7 +1,6 @@
 import SwiftDoc
 import SwiftSemantics
 import GraphViz
-import DOT
 import struct Foundation.URL
 
 extension Symbol {
@@ -36,13 +35,13 @@ extension Symbol {
         return node
     }
 
-    func graph(in module: Module, baseURL: String) -> Graph {
+    func graph(in module: Module, baseURL: String, includingChildren symbolFilter: (Symbol) -> Bool) -> Graph {
         var graph = Graph(directed: true)
 
         do {
             var node = self.node
 
-            if !(api is Unknown) {
+            if !(api is Unknown) && symbolFilter(self) {
                 node.href = path(for: self, with: baseURL)
             }
 
@@ -61,7 +60,7 @@ extension Symbol {
             guard self != symbol else { continue }
             var node = symbol.node
 
-            if !(symbol.api is Unknown) {
+            if !(symbol.api is Unknown) && symbolFilter(symbol) {
                 node.href = path(for: symbol, with: baseURL)
             }
             graph.append(node)
