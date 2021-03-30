@@ -29,12 +29,22 @@ public final class Module {
                     fileManager.isReadableFile(atPath: url.path),
                     fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
                 else {
-                    // Skip top-level Tests directory
-                    if isDirectory.boolValue == true,
-                       url.lastPathComponent == "Tests",
-                       directory.appendingPathComponent("Tests").path == url.path
-                    {
-                        directoryEnumerator.skipDescendants()
+                    if isDirectory.boolValue == true {
+                        let ignoredTopLevelDirectories: [String] = [
+                            "node_modules",
+                            "Packages",
+                            "Pods",
+                            "Resources",
+                            "Tests"
+                        ]
+
+                        for topLevelDirectory in ignoredTopLevelDirectories {
+                            if url.lastPathComponent == topLevelDirectory,
+                               directory.appendingPathComponent(topLevelDirectory).path == url.path
+                            {
+                                directoryEnumerator.skipDescendants()
+                            }
+                        }
                     }
 
                     continue
