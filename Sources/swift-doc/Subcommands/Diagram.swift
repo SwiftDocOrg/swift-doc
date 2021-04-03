@@ -7,7 +7,7 @@ import GraphViz
 extension SwiftDoc {
     struct Diagram: ParsableCommand {
         struct Options: ParsableArguments {
-            @Argument(help: "One or more paths to Swift files")
+            @Argument(help: "One or more paths to a directory containing Swift files.")
             var inputs: [String]
 
             @Option(name: .long,
