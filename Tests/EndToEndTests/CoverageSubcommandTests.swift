@@ -2,7 +2,7 @@ import XCTest
 
 final class CoverageSubcommandTests: XCTestCase {
     func testStandardOutput() throws {
-        let command = Bundle.productsDirectory.appendingPathComponent("swift-doc")
+        let command = getSwiftDocCommand()
 
         let outputDirectory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
@@ -20,7 +20,7 @@ final class CoverageSubcommandTests: XCTestCase {
     }
 
     func testFileOutput() throws {
-        let command = Bundle.productsDirectory.appendingPathComponent("swift-doc")
+        let command = getSwiftDocCommand()
         
         let outputDirectory = try temporaryDirectory()
         let outputFile = outputDirectory.appendingPathComponent("report.json")
