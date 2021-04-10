@@ -74,92 +74,89 @@
   }
 }
 
-/*
-@media (prefers-color-scheme: dark) {
-    :root {
-        --system-red: rgb(255, 69, 58);
-        --system-orange: rgb(255, 159, 10);
-        --system-yellow: rgb(255, 214, 10);
-        --system-green: rgb(48, 209, 88);
-        --system-teal: rgb(100, 210, 255);
-        --system-blue: rgb(10, 132, 255);
-        --system-indigo: rgb(94, 92, 230);
-        --system-purple: rgb(191, 90, 242);
-        --system-pink: rgb(255, 55, 95);
-        --system-gray: rgb(142, 142, 147);
-        --system-gray2: rgb(99, 99, 102);
-        --system-gray3: rgb(72, 72, 74);
-        --system-gray4: rgb(58, 58, 60);
-        --system-gray5: rgb(44, 44, 46);
-        --system-gray6: rgb(28, 28, 30);
+.dark-theme {
+  --system-red: rgb(255, 69, 58);
+  --system-orange: rgb(255, 159, 10);
+  --system-yellow: rgb(255, 214, 10);
+  --system-green: rgb(48, 209, 88);
+  --system-teal: rgb(100, 210, 255);
+  --system-blue: rgb(10, 132, 255);
+  --system-indigo: rgb(94, 92, 230);
+  --system-purple: rgb(191, 90, 242);
+  --system-pink: rgb(255, 55, 95);
+  --system-gray: rgb(142, 142, 147);
+  --system-gray2: rgb(99, 99, 102);
+  --system-gray3: rgb(72, 72, 74);
+  --system-gray4: rgb(58, 58, 60);
+  --system-gray5: rgb(44, 44, 46);
+  --system-gray6: rgb(28, 28, 30);
 
-        --label: rgb(255, 255, 255);
-        --secondary-label: rgb(235, 235, 245);
-        --tertiary-label: rgb(235, 235, 245);
-        --quaternary-label: rgb(235, 235, 245);
-        --placeholder-text: rgb(235, 235, 245);
-        --link: rgb(9, 132, 255);
-        --separator: rgb(44, 44, 46);
-        --opaque-separator: rgb(56, 56, 58);
-        --system-fill: rgb(120, 120, 128);
-        --secondary-system-fill: rgb(120, 120, 128);
-        --tertiary-system-fill: rgb(118, 118, 128);
-        --quaternary-system-fill: rgb(118, 118, 128);
-        --system-background: rgb(0, 0, 0);
-        --secondary-system-background: rgb(28, 28, 30);
-        --tertiary-system-background: rgb(44, 44, 46);
-        --system-grouped-background: rgb(0, 0, 0);
-        --secondary-system-grouped-background: rgb(28, 28, 30);
-        --tertiary-system-grouped-background: rgb(44, 44, 46);
-    }
+  --label: rgb(255, 255, 255);
+  --secondary-label: rgb(235, 235, 245);
+  --tertiary-label: rgb(235, 235, 245);
+  --quaternary-label: rgb(235, 235, 245);
+  --placeholder-text: rgb(235, 235, 245);
+  --link: rgb(9, 132, 255);
+  --separator: rgb(44, 44, 46);
+  --opaque-separator: rgb(56, 56, 58);
+  --system-fill: rgb(120, 120, 128);
+  --secondary-system-fill: rgb(120, 120, 128);
+  --tertiary-system-fill: rgb(118, 118, 128);
+  --quaternary-system-fill: rgb(118, 118, 128);
+  --system-background: rgb(0, 0, 0);
+  --secondary-system-background: rgb(28, 28, 30);
+  --tertiary-system-background: rgb(44, 44, 46);
+  --system-grouped-background: rgb(0, 0, 0);
+  --secondary-system-grouped-background: rgb(28, 28, 30);
+  --tertiary-system-grouped-background: rgb(44, 44, 46);
+}
 
-    @supports (color: color(display-p3 1 1 1)) {
-        :root {
-            --system-red: color(display-p3 1 0.4118 0.3804);
-            --system-orange: color(display-p3 1 0.702 0.251);
-            --system-yellow: color(display-p3 1 0.8314 0.149);
-            --system-green: color(display-p3 0.1882 0.8588 0.3569);
-            --system-teal: color(display-p3 0.4392 0.8431 1);
-            --system-blue: color(display-p3 0.251 0.6118 1);
-            --system-indigo: color(display-p3 0.4902 0.4784 1);
-            --system-purple: color(display-p3 0.8549 0.5608 1);
-            --system-pink: color(display-p3 1 0.3922 0.5098);
-            --system-gray: color(display-p3 0.6824 0.6824 0.698);
-            --system-gray2: color(display-p3 0.4863 0.4863 0.502);
-            --system-gray3: color(display-p3 0.3294 0.3294 0.3373);
-            --system-gray4: color(display-p3 0.2667 0.2667 0.2745);
-            --system-gray5: color(display-p3 0.2118 0.2118 0.2196);
-            --system-gray6: color(display-p3 0.1412 0.1412 0.149);
+@supports (color: color(display-p3 1 1 1)) {
+  .dark-theme {
+    --system-red: color(display-p3 1 0.4118 0.3804);
+    --system-orange: color(display-p3 1 0.702 0.251);
+    --system-yellow: color(display-p3 1 0.8314 0.149);
+    --system-green: color(display-p3 0.1882 0.8588 0.3569);
+    --system-teal: color(display-p3 0.4392 0.8431 1);
+    --system-blue: color(display-p3 0.251 0.6118 1);
+    --system-indigo: color(display-p3 0.4902 0.4784 1);
+    --system-purple: color(display-p3 0.8549 0.5608 1);
+    --system-pink: color(display-p3 1 0.3922 0.5098);
+    --system-gray: color(display-p3 0.6824 0.6824 0.698);
+    --system-gray2: color(display-p3 0.4863 0.4863 0.502);
+    --system-gray3: color(display-p3 0.3294 0.3294 0.3373);
+    --system-gray4: color(display-p3 0.2667 0.2667 0.2745);
+    --system-gray5: color(display-p3 0.2118 0.2118 0.2196);
+    --system-gray6: color(display-p3 0.1412 0.1412 0.149);
 
-            --label: color(display-p3 1 1 1);
-            --secondary-label: color(display-p3 0.9216 0.9216 0.9608);
-            --tertiary-label: color(display-p3 0.9216 0.9216 0.9608);
-            --quaternary-label: color(display-p3 0.9216 0.9216 0.9608);
-            --placeholder-text: color(display-p3 0.9216 0.9216 0.9608);
-            --link: color(display-p3 0.03529 0.5176 1);
-            --separator: color(display-p3 0.2118 0.2118 0.2196);
-            --opaque-separator: color(display-p3 0.2196 0.2196 0.2275);
-            --system-fill: color(display-p3 0.4706 0.4706 0.502);
-            --secondary-system-fill: color(display-p3 0.4706 0.4706 0.502);
-            --tertiary-system-fill: color(display-p3 0.4627 0.4627 0.502);
-            --quaternary-system-fill: color(display-p3 0.4627 0.4627 0.502);
-            --system-background: color(display-p3 0 0 0);
-            --secondary-system-background: color(
-                display-p3 0.1412 0.1412 0.149
-            );
-            --tertiary-system-background: color(
-                display-p3 0.2118 0.2118 0.2196
-            );
-            --system-grouped-background: color(display-p3 0 0 0);
-            --secondary-system-grouped-background: color(
-                display-p3 0.1412 0.1412 0.149
-            );
-            --tertiary-system-grouped-background: color(
-                display-p3 0.2118 0.2118 0.2196
-            );
-        }
-    }
-} */
+    --label: color(display-p3 1 1 1);
+    --secondary-label: color(display-p3 0.9216 0.9216 0.9608);
+    --tertiary-label: color(display-p3 0.9216 0.9216 0.9608);
+    --quaternary-label: color(display-p3 0.9216 0.9216 0.9608);
+    --placeholder-text: color(display-p3 0.9216 0.9216 0.9608);
+    --link: color(display-p3 0.03529 0.5176 1);
+    --separator: color(display-p3 0.2118 0.2118 0.2196);
+    --opaque-separator: color(display-p3 0.2196 0.2196 0.2275);
+    --system-fill: color(display-p3 0.4706 0.4706 0.502);
+    --secondary-system-fill: color(display-p3 0.4706 0.4706 0.502);
+    --tertiary-system-fill: color(display-p3 0.4627 0.4627 0.502);
+    --quaternary-system-fill: color(display-p3 0.4627 0.4627 0.502);
+    --system-background: color(display-p3 0 0 0);
+    --secondary-system-background: color(
+        display-p3 0.1412 0.1412 0.149
+    );
+    --tertiary-system-background: color(
+        display-p3 0.2118 0.2118 0.2196
+    );
+    --system-grouped-background: color(display-p3 0 0 0);
+    --secondary-system-grouped-background: color(
+        display-p3 0.1412 0.1412 0.149
+    );
+    --tertiary-system-grouped-background: color(
+        display-p3 0.2118 0.2118 0.2196
+    );
+  }
+}
 
 :root {
   --large-title: 600 32pt / 39pt sans-serif;
@@ -474,6 +471,10 @@ select {
     outline: 0;
     z-index: 9;
   }
+
+  & option {
+    color: #3c3c43;
+  }
 }
 
 input[type="file"] {
@@ -674,6 +675,8 @@ body {
   & > header {
     font: var(--title-1);
     padding: 0.5em 0;
+    display: flex;
+    align-items: center;
 
     & a {
       color: var(--label);
@@ -690,6 +693,31 @@ body {
       color: var(--secondary-label);
       letter-spacing: 0.1ch;
     }
+    & label {
+      padding-bottom: 4px;
+      font: var(--caption-1);
+    }
+    & .theme-select-container {
+      display: flex;
+      flex-direction: column;
+    }
+    & select {
+      color: var(--secondary-label);
+      font: var(--caption-1);
+      width: auto;
+      border: 1px solid var(--label);
+
+      /* Simple down-pointing rectangle positioned on the right side of the input */
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238a8a8a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat, repeat;
+      background-position: right .7em top 50%, 0 0;
+      background-size: .65em auto, 100%;
+      padding-right: 1.8em;
+    }
+    & .spacer {
+      flex-grow: 1;
+    }
+
   }
 
   & > footer {

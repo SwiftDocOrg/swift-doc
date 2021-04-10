@@ -13,16 +13,28 @@ func layout(_ page: Page) -> HTML {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>\#(page.module.name) - \#(page.title)</title>
         <link rel="stylesheet" type="text/css" href="\#(path(for: "all.css", with: page.baseURL))" media="all" />
+        <script src="\#(path(for: "all.js", with: page.baseURL))"></script>
     </head>
     <body>
         <header>
-            <a href="\#(page.baseURL)">
-                <strong>
-                    \#(page.module.name)
-                </strong>
-                <span>Documentation</span>
-            </a>
-            <sup>Beta</sup>
+            <div class="title-container">
+                <a href="\#(page.baseURL)">
+                    <strong>
+                        \#(page.module.name)
+                    </strong>
+                    <span>Documentation</span>
+                </a>
+                <sup>Beta</sup>
+            </div>
+            <span class="spacer"></span>
+            <div class="theme-select-container">
+                <label for="theme-switcher">Theme:</label>
+                <select name="theme" id="theme-switcher">
+                    <option id="theme-option-auto" value="auto">Auto (light)</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
         </header>
 
         <!--

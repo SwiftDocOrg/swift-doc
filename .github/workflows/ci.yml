@@ -118,9 +118,9 @@ jobs:
       - name: Test assets
         run: |
           cd .node
-          OLD=`cksum ../Resources/all.min.css`
+          OLD=`cksum ../Sources/swift-doc/Resources/all.min.css`
           npm run build
-          NEW=`cksum ../Resources/all.min.css`
+          NEW=`cksum ../Sources/swift-doc/Resources/all.min.css`
           if [[ "$OLD" != "$NEW" ]]; then
             echo "Regenerated assets differ from committed version"
             exit -1

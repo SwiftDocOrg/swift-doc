@@ -126,8 +126,11 @@ extension SwiftDoc {
 
         if case .html = format {
           let cssData = try fetchRemoteCSS()
+          let jsData = try fetchRemoteJS()
           let cssURL = outputDirectoryURL.appendingPathComponent("all.css")
           try writeFile(cssData, to: cssURL)
+          let jsURL = outputDirectoryURL.appendingPathComponent("all.js")
+          try writeFile(jsData, to: jsURL)
         }
 
       } catch {
@@ -138,6 +141,29 @@ extension SwiftDoc {
 }
 
 func fetchRemoteCSS() throws -> Data {
+  #if swift(>=5.3)
+  let cssURL = Bundle.module.url(forResource: "all.min", withExtension: "css")!
+  return try Data(contentsOf: cssURL)
+  #else
   let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
   return try Data(contentsOf: url)
+  #endif
+}
+
+func fetchRemoteJS() throws -> Data {
+  #if swift(>=5.3)
+  let jsURL = Bundle.module.url(forResource: "all", withExtension: "js")!
+  return try Data(contentsOf: jsURL)
+  #else
+  // When using Swift Package Manager versions that don't support bundled resources, just hide the theme select drop-down.
+  let fallbackJS = """
+  var hideThemeSelect = function() {
+    document.querySelector(".theme-select-container").style.display = "none";
+  }
+  // hiding the element in `requestAnimationFrame` causes the function to be called after the element exists, 
+  // but fast enough that the element does not flash on the screen.
+  window.requestAnimationFrame(hideThemeSelect)
+  """
+  return Data(fallbackJS.utf8)
+  #endif
 }
