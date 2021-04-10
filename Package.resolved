@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
         "state": {
           "branch": null,
-          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
-          "version": "0.28.3+20200110.2a76603"
+          "revision": "1168665f6b36be747ffe6b7b90bc54cfc17f42b7",
+          "version": "0.28.3+20200207.1168665"
         }
       },
       {

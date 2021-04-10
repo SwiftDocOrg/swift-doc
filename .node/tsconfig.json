@@ -1,0 +1,6 @@
+{
+    "files": ["../Assets/ts/theme-switching.ts"],
+    "compilerOptions": {
+        "outFile": "../Sources/swift-doc/Resources/all.js"
+    }
+}

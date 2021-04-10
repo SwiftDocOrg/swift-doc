@@ -5,15 +5,15 @@
     "not dead"
   ],
   "scripts": {
-    "watch": "postcss -w ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js",
-    "build": "postcss ../Assets/**/*.css -o ../Resources/all.min.css --config ./postcss.config.js"
-  },
-  "dependencies": {
-    "cssnano": "^4.1.10",
-    "postcss-cli": "^7.1.0",
-    "postcss-preset-env": "^6.7.0"
+    "watch": "concurrently \"postcss -w ../Assets/**/*.css -o ../Sources/swift-doc/Resources/all.min.css --config ./postcss.config.js\" \"tsc -w\"",
+    "build": "tsc && postcss ../Assets/**/*.css -o ../Sources/swift-doc/Resources/all.min.css --config ./postcss.config.js"
   },
   "devDependencies": {
+    "concurrently": "^5.2.0",
+    "cssnano": "^4.1.10",
+    "postcss-cli": "^7.1.0",
+    "postcss-preset-env": "^6.7.0",
+    "typescript": "~3.9.7",
     "is-svg": ">=4.2.2"
   }
 }
