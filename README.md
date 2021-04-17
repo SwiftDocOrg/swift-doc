@@ -92,7 +92,7 @@ $ apt-get install -y libxml2-dev graphviz
     USAGE: swift doc generate [<inputs> ...] --module-name <module-name> [--output <output>] [--format <format>] [--base-url <base-url>]
 
     ARGUMENTS:
-      <inputs>                One or more paths to Swift files 
+      <inputs>                One or more paths to a directory containing Swift files. 
 
     OPTIONS:
       -n, --module-name <module-name>
@@ -150,7 +150,7 @@ pass the `--minimum-access-level` flag with the specified access level.
     USAGE: swift doc coverage [<inputs> ...] [--output <output>]
 
     ARGUMENTS:
-      <inputs>                One or more paths to Swift files 
+      <inputs>                One or more paths to a directory containing Swift files.
 
     OPTIONS:
       -o, --output <output>   The path for generated report 
@@ -202,7 +202,7 @@ please reach out by [opening an Issue][open an issue]!
     USAGE: swift doc diagram [<inputs> ...]
 
     ARGUMENTS:
-      <inputs>                One or more paths to Swift files 
+      <inputs>                One or more paths to a directory containing Swift files.
 
     OPTIONS:
       --minimum-access-level <minimum-access-level>

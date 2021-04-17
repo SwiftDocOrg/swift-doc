@@ -17,7 +17,7 @@ extension SwiftDoc {
     }
 
     struct Options: ParsableArguments {
-      @Argument(help: "One or more paths to Swift files")
+      @Argument(help: "One or more paths to a directory containing Swift files.")
       var inputs: [String]
 
       @Option(name: [.long, .customShort("n")],
@@ -47,6 +47,15 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
+      for directory in options.inputs {
+        var isDirectory: ObjCBool = false
+        if !FileManager.default.fileExists(atPath: directory, isDirectory: &isDirectory) {
+          logger.warning("Input path \(directory) does not exist.")
+        } else if !isDirectory.boolValue {
+          logger.warning("Input path \(directory) is not a directory.")
+        }
+      }
+
       let module = try Module(name: options.moduleName, paths: options.inputs)
       let baseURL = options.baseURL
 

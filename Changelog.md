@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed serialization of `Symbol` to encode and decode `sourceRange` key
   instead of `sourceLocation` key.
   #237 by @mattt.
+- Changed commands to warn when invalid paths are passed.
+  #242 by @Lukas-Stuehrk.
 
 ### Deprecated
 
