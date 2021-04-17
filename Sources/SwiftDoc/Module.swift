@@ -22,37 +22,31 @@ public final class Module {
         let fileManager = FileManager.default
         for path in paths {
             let directory = URL(fileURLWithPath: path)
-            guard let directoryEnumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) else { continue }
-            for case let url as URL in directoryEnumerator {
-                var isDirectory: ObjCBool = false
-                guard url.pathExtension == "swift",
-                    fileManager.isReadableFile(atPath: url.path),
-                    fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
-                else {
-                    if isDirectory.boolValue == true {
-                        let ignoredTopLevelDirectories: [String] = [
-                            "node_modules",
-                            "Packages",
-                            "Pods",
-                            "Resources",
-                            "Tests"
-                        ]
+            guard let directoryEnumerator = fileManager.enumerator(at: directory,
+                                                                   includingPropertiesForKeys: [.isDirectoryKey],
+                                                                   options: [.skipsHiddenFiles, .skipsPackageDescendants])
+            else { continue }
 
-                        for topLevelDirectory in ignoredTopLevelDirectories {
-                            if url.lastPathComponent == topLevelDirectory,
-                               directory.appendingPathComponent(topLevelDirectory).path == url.path
-                            {
-                                directoryEnumerator.skipDescendants()
-                            }
-                        }
+            let ignoredDirectories: Set<URL> = Set([
+                "node_modules",
+                "Packages",
+                "Pods",
+                "Resources",
+                "Tests"
+            ].map { directory.appendingPathComponent($0) })
+
+            for case let url as URL in directoryEnumerator {
+                guard url.pathExtension == "swift",
+                      fileManager.isReadableFile(atPath: url.path)
+                else {
+                    if ignoredDirectories.contains(url) {
+                        directoryEnumerator.skipDescendants()
                     }
 
                     continue
                 }
 
-                if isDirectory.boolValue == false {
-                    sources.append((url, directory))
-                }
+                sources.append((url, directory))
             }
         }
 
