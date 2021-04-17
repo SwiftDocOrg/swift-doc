@@ -1,4 +1,4 @@
-name: homebrew CI
+name: Homebrew CI
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   homebrew-bottle:
     runs-on: macos-10.15
-    name: homebrew from bottle
+    name: Test Homebrew installation from bottle
 
     steps:
       - name: Checkout
@@ -29,7 +29,7 @@ jobs:
   homebrew-sources:
     runs-on: macos-11.0
 
-    name: homebrew from source
+    name: Test Homebrew installation from sources
     steps:
       - name: Checkout
         uses: actions/checkout@v1
