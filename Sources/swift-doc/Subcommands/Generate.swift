@@ -50,7 +50,7 @@ extension SwiftDoc {
       for directory in options.inputs {
         var isDirectory: ObjCBool = false
         if !FileManager.default.fileExists(atPath: directory, isDirectory: &isDirectory) {
-          logger.warning("Input directory \(directory) does not exist.")
+          logger.warning("Input path \(directory) does not exist.")
         } else if !isDirectory.boolValue {
           logger.warning("Input path \(directory) is not a directory.")
         }
