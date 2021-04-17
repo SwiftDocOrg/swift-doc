@@ -2,12 +2,10 @@ import XCTest
 
 final class CoverageSubcommandTests: XCTestCase {
     func testStandardOutput() throws {
-        let command = getSwiftDocCommand()
-
         let outputDirectory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
 
-        try Process.run(command: command,
+        try Process.run(command: swiftDocCommand,
                         arguments: [
                             "coverage",
                             "Sources"
@@ -20,13 +18,11 @@ final class CoverageSubcommandTests: XCTestCase {
     }
 
     func testFileOutput() throws {
-        let command = getSwiftDocCommand()
-        
         let outputDirectory = try temporaryDirectory()
         let outputFile = outputDirectory.appendingPathComponent("report.json")
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
 
-        try Process.run(command: command,
+        try Process.run(command: swiftDocCommand,
                         arguments: [
                             "coverage",
                             "--output", outputFile.path,

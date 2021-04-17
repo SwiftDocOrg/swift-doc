@@ -1,7 +1,8 @@
 import XCTest
+import Foundation
 
 extension XCTestCase {
-    func getSwiftDocCommand() -> URL {
+    var swiftDocCommand: URL {
         #if USE_HOMEBREW
         return URL(fileURLWithPath: "/usr/local/bin/swift-doc")
         #else
