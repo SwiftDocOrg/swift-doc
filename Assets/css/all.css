@@ -725,7 +725,8 @@ body {
   }
 
   section > [role="article"][class] pre {
-    margin-left: -2.5em;
+    margin-left: -1em;
+    margin-right: -1em;
   }
 
   section > [role="article"][class] div {
