@@ -15,7 +15,17 @@ public final class Interface {
 
         self.symbolsGroupedByIdentifier = symbolsGroupedByIdentifier
         self.symbolsGroupedByQualifiedName = symbolsGroupedByQualifiedName
-        self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.context.isEmpty }
+        self.topLevelSymbols = symbols.filter { symbol in
+            if symbol.api is Type || symbol.api is Operator {
+                return true
+            }
+
+            if let function = symbol.api as? Function, function.isOperator {
+                return false
+            }
+
+            return symbol.id.pathComponents.isEmpty
+        }
 
         self.relationships = {
             let extensionsByExtendedType: [String: [Extension]] = Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }, by: { $0.extendedType })
@@ -90,6 +100,20 @@ public final class Interface {
             return Array(relationships)
         }()
 
+        self.functionsByOperator = {
+            var functionsByOperator: [Symbol: Set<Symbol>] = [:]
+
+            let functionsGroupedByName = Dictionary(grouping: symbols.filter { $0.api is Function},
+                                                    by: { $0.api.name })
+
+            for `operator` in symbols.filter({ $0.api is Operator }) {
+                let functions = functionsGroupedByName[`operator`.name] ?? []
+                functionsByOperator[`operator`] = Set(functions)
+            }
+
+            return functionsByOperator
+        }()
+
         self.relationshipsBySubject = Dictionary(grouping: relationships, by: { $0.subject.id })
         self.relationshipsByObject = Dictionary(grouping: relationships, by: { $0.object.id })
     }
@@ -99,6 +123,7 @@ public final class Interface {
     public let symbolsGroupedByIdentifier: [Symbol.ID: [Symbol]]
     public let symbolsGroupedByQualifiedName: [String: [Symbol]]
     public let topLevelSymbols: [Symbol]
+    public var functionsByOperator: [Symbol: Set<Symbol>]
     public var baseClasses: [Symbol] {
         symbols.filter { $0.api is Class && typesInherited(by: $0).isEmpty }
     }

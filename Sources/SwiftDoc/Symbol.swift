@@ -34,8 +34,21 @@ public final class Symbol {
         return api.name
     }
 
+    public var kind: String {
+        switch api {
+        case let function as Function where function.isOperator:
+            return "Operator"
+        default:
+            return String(describing: type(of: api))
+        }
+    }
+
     public var isPublic: Bool {
         if api is Unknown {
+            return true
+        }
+
+        if api is Operator {
             return true
         }
 
