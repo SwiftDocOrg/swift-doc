@@ -79,7 +79,7 @@ extension SwiftDoc {
         var symbolsByExternalType: [String: [Symbol]] = [:]
         for symbol in module.interface.symbols.filter(symbolFilter) {
           guard let extensionDeclaration = symbol.context.first as? Extension, symbol.context.count == 1 else { continue }
-          guard module.interface.isExternalSymbol(named: extensionDeclaration.extendedType) else { continue }
+          guard module.interface.symbols(named: extensionDeclaration.extendedType, resolvingTypealiases: true).isEmpty else { continue }
           symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
         }
         for (typeName, symbols) in symbolsByExternalType {

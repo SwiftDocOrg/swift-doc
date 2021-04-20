@@ -291,15 +291,34 @@ final class InterfaceTypeTests: XCTestCase {
         let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
-        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass"))
-        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass.InnerObject"))
-        XCTAssertFalse(module.interface.isExternalSymbol(named: "MyClass"))
-        XCTAssertFalse(module.interface.isExternalSymbol(named: "MyClass.InnerObject"))
-        XCTAssertTrue(module.interface.isExternalSymbol(named: "UIGestureRecognizer"))
-        XCTAssertTrue(module.interface.isExternalSymbol(named: "UIGestureRecognizer.State"))
-        XCTAssertTrue(module.interface.isExternalSymbol(named: "ExternalClass"))
-        XCTAssertTrue(module.interface.isExternalSymbol(named: "ExternalClass.State"))
-        XCTAssertTrue(module.interface.isExternalSymbol(named: "SomeClass.ActuallyExternal"))
-        XCTAssertFalse(module.interface.isExternalSymbol(named: "SomeClass.ActuallyInternal"))
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass", resolvingTypealiases: false).first?.name, "SomeClass")
+
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.InnerObject", resolvingTypealiases: true).first?.name, "InnerObject")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.InnerObject", resolvingTypealiases: false).first?.name, "InnerObject")
+
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.ActuallyInternal", resolvingTypealiases: true).first?.name, "InnerStruct")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.ActuallyInternal", resolvingTypealiases: false).first?.name, "ActuallyInternal")
+
+        XCTAssertEqual(module.interface.symbols(named: "MyClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertEqual(module.interface.symbols(named: "MyClass", resolvingTypealiases: false).first?.name, "MyClass")
+
+        XCTAssertEqual(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: true).first?.name, "InnerObject")
+        XCTAssertNil(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: true).first)
+        XCTAssertTrue(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass.State", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass.State", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "SomeClass.ActuallyExternal", resolvingTypealiases: true).first)
+        XCTAssertTrue(module.interface.symbols(named: "SomeClass.ActuallyExternal", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: false).first)
     }
 }

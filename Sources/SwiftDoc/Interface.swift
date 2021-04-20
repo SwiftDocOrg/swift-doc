@@ -162,35 +162,21 @@ public final class Interface {
 
     // MARK: -
 
-    /// Whether the symbol with the given qualified name is declared inside this module or not.
-    ///
-    /// Please note that this tool only operates on the syntax tree and does not have a semantic understanding of the
-    /// symbols, so this method might produce false positives.
-    ///
-    ///  - Parameter name: A qualified name of a symbol.
-    ///  - Returns: Whether or not the symbol is external, meaning that it is not declared in the module.
-    public func isExternalSymbol(named name: String) -> Bool {
-        var nameComponents: [String] = name.split(separator: ".").map(String.init).reversed()
-        var path: [String] = []
-        while let nextComponent = nameComponents.popLast() {
-            guard let symbol = findSymbol(named: nextComponent, path: path) else { return true }
-            path.append(symbol.name)
-        }
-        return false
-    }
+    public func symbols(named name: String, resolvingTypealiases: Bool) -> [Symbol] {
+        var pathComponents: [String] = []
+        for component in name.split(separator: ".", omittingEmptySubsequences: true) {
+            pathComponents.append("\(component)")
+            guard resolvingTypealiases else { continue }
 
-    private func findSymbol(named name: String, path immutablePath: [String]) -> Symbol? {
-        var path = immutablePath
-        repeat {
-            let fullPath = (path + CollectionOfOne(name)).joined(separator: ".")
-            if let symbol = symbolsGroupedByQualifiedName[fullPath]?.first {
-                guard let typealiasDeclaration = symbol.api as? Typealias, let initializedName = typealiasDeclaration.initializedType else { return symbol }
-                guard !symbol.context.isEmpty else {
-                   return findSymbol(named: initializedName, path: [])
-                }
-                return findSymbol(named: initializedName, path: symbol.context.compactMap { ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType })
+            if let symbols = symbolsGroupedByQualifiedName[pathComponents.joined(separator: ".")],
+               let symbol = symbols.first(where: { $0.api is Typealias }),
+               let `typealias` = symbol.api as? Typealias,
+               let initializedType = `typealias`.initializedType
+            {
+                pathComponents = (symbol.context.compactMap { ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType }) + [initializedType]
             }
-        } while path.popLast() != nil
-        return nil
+        }
+
+        return symbolsGroupedByQualifiedName[pathComponents.joined(separator: ".")] ?? []
     }
 }
