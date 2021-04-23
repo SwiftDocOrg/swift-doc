@@ -65,7 +65,7 @@ final class SourceFileTests: XCTestCase {
         do {
             let `protocol` = sourceFile.symbols[0]
             XCTAssert(`protocol`.api is Protocol)
-            XCTAssertEqual(`protocol`.documentation?.summary?.description, "Protocol")
+            XCTAssertEqual(`protocol`.documentation?.summary?.description, "Protocol\n")
 
             do {
                 let function = sourceFile.symbols[1]
@@ -76,7 +76,7 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(function.context.first is Symbol)
                 XCTAssertEqual(function.context.first as? Symbol, `protocol`)
 
-                XCTAssertEqual(function.documentation?.summary?.description, "Function requirement")
+                XCTAssertEqual(function.documentation?.summary?.description, "Function requirement\n")
             }
 
             do {
@@ -88,14 +88,14 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(property.context.first is Symbol)
                 XCTAssertEqual(property.context.first as? Symbol, `protocol`)
 
-                XCTAssertEqual(property.documentation?.summary?.description, "Property requirement")
+                XCTAssertEqual(property.documentation?.summary?.description, "Property requirement\n")
             }
         }
 
         do {
             let enumeration = sourceFile.symbols[3]
             XCTAssert(enumeration.api is Enumeration)
-            XCTAssertEqual(enumeration.documentation?.summary?.description, "Enumeration")
+            XCTAssertEqual(enumeration.documentation?.summary?.description, "Enumeration\n")
 
             do {
                 let `case` = sourceFile.symbols[4]
@@ -106,14 +106,14 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(`case`.context.first is Symbol)
                 XCTAssertEqual(`case`.context.first as? Symbol, enumeration)
 
-                XCTAssertEqual(`case`.documentation?.summary?.description, "Enumeration case")
+                XCTAssertEqual(`case`.documentation?.summary?.description, "Enumeration case\n")
             }
         }
 
         do {
             let structure = sourceFile.symbols[5]
             XCTAssert(structure.api is Structure)
-            XCTAssertEqual(structure.documentation?.summary?.description, "Structure")
+            XCTAssertEqual(structure.documentation?.summary?.description, "Structure\n")
         }
 
         do {
@@ -126,7 +126,7 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(function.context.first is Extension)
                 XCTAssertEqual((function.context.first as? Extension)?.extendedType, "S")
 
-                XCTAssertEqual(function.documentation?.summary?.description, "Function")
+                XCTAssertEqual(function.documentation?.summary?.description, "Function\n")
             }
 
             do {
@@ -138,14 +138,14 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(property.context.first is Extension)
                 XCTAssertEqual((property.context.first as? Extension)?.extendedType, "S")
 
-                XCTAssertEqual(property.documentation?.summary?.description, "Property")
+                XCTAssertEqual(property.documentation?.summary?.description, "Property\n")
             }
         }
 
         do {
             let `class` = sourceFile.symbols[8]
             XCTAssert(`class`.api is Class)
-            XCTAssertEqual(`class`.documentation?.summary?.description, "Class")
+            XCTAssertEqual(`class`.documentation?.summary?.description, "Class\n")
 
             do {
                 let function = sourceFile.symbols[9]
@@ -156,7 +156,7 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(function.context.first is Symbol)
                 XCTAssertEqual(function.context.first as? Symbol, `class`)
 
-                XCTAssertEqual(function.documentation?.summary?.description, "Function")
+                XCTAssertEqual(function.documentation?.summary?.description, "Function\n")
             }
 
             do {
@@ -168,7 +168,7 @@ final class SourceFileTests: XCTestCase {
                 XCTAssert(property.context.first is Symbol)
                 XCTAssertEqual(property.context.first as? Symbol, `class`)
 
-                XCTAssertEqual(property.documentation?.summary?.description, "Property")
+                XCTAssertEqual(property.documentation?.summary?.description, "Property\n")
             }
         }
 
@@ -176,7 +176,7 @@ final class SourceFileTests: XCTestCase {
             let `class` = sourceFile.symbols[11]
             XCTAssert(`class`.api is Class)
             XCTAssertEqual((`class`.api as? Class)?.inheritance, ["C"])
-            XCTAssertEqual(`class`.documentation?.summary?.description, "Subclass")
+            XCTAssertEqual(`class`.documentation?.summary?.description, "Subclass\n")
         }
     }
 }
