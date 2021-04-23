@@ -10,16 +10,18 @@ public final class Interface {
         self.imports = imports
         self.symbols = symbols
 
-        self.symbolsGroupedByIdentifier = Dictionary(grouping: symbols, by: { $0.id })
-        self.symbolsGroupedByQualifiedName = Dictionary(grouping: symbols, by: { $0.id.description })
-        self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.pathComponents.isEmpty }
+        let symbolsGroupedByIdentifier = Dictionary(grouping: symbols, by: { $0.id })
+        let symbolsGroupedByQualifiedName = Dictionary(grouping: symbols, by: { $0.id.description })
+
+        self.symbolsGroupedByIdentifier = symbolsGroupedByIdentifier
+        self.symbolsGroupedByQualifiedName = symbolsGroupedByQualifiedName
+        self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.context.isEmpty }
 
         self.relationships = {
             let extensionsByExtendedType: [String: [Extension]] = Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }, by: { $0.extendedType })
 
             var relationships: Set<Relationship> = []
             for symbol in symbols {
-
                 let lastDeclarationScope = symbol.context.last(where: { $0 is Extension || $0 is Symbol })
                 
                 if let container = lastDeclarationScope as? Symbol {
@@ -40,8 +42,7 @@ public final class Interface {
                 }
 
                 if let `extension` = lastDeclarationScope as? Extension {
-                    if let extended = symbols.first(where: { $0.api is Type &&  $0.id.matches(`extension`.extendedType) }) {
-
+                    for extended in symbolsGroupedByIdentifier.named(`extension`.extendedType, resolvingTypealiases: true) {
                         let predicate: Relationship.Predicate
                         switch extended.api {
                         case is Protocol:
@@ -66,7 +67,7 @@ public final class Interface {
                     inheritedTypeNames = Set(inheritedTypeNames.flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
 
                     for name in inheritedTypeNames {
-                        let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
+                        let inheritedTypes = symbolsGroupedByIdentifier.named(name, resolvingTypealiases: true).filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
                         if inheritedTypes.isEmpty {
                             let inherited = Symbol(api: Unknown(name: name), context: [], declaration: [], documentation: nil, sourceRange: nil)
                             relationships.insert(Relationship(subject: symbol, predicate: .conformsTo, object: inherited))
@@ -115,7 +116,6 @@ public final class Interface {
         }
 
         return classClusters
-
     }
 
     public let relationships: [Relationship]
