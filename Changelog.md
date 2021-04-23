@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for generating documentation for
+  extensions to external types.
+  #230 by @Lukas-Stuehrk and @mattt.
 - Added end-to-end tests for command-line interface.
   #199 by @MaxDesiatov and @mattt.
 - Added `--minimum-access-level` option to `generate` and `coverage` commands.
@@ -59,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #159 by @mattt.
 - Fixed relationship diagram to prevent linking to unknown symbols.
   #178 by @MattKiazyk.
-- Fixed problems in CommonMark output related to escaping emoji shortcode. 
+- Fixed problems in CommonMark output related to escaping emoji shortcode.
   #167 by @mattt.
 
 ### Changed
