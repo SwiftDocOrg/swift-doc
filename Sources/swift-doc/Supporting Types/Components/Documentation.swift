@@ -36,7 +36,7 @@ struct Documentation: Component {
             }
 
             if documentation.summary != nil {
-                Fragment { "\(documentation.summary!.escapingEmojiShortcodes)" }
+                Fragment { "\(documentation.summary!.description.escapingEmojiShortcodes)" }
             }
 
             Declaration(of: symbol, in: module, baseURL: baseURL)
@@ -49,7 +49,7 @@ struct Documentation: Component {
                 Section {
                     Heading { "Parameters" }
                     List(of:  documentation.parameters) { parameter in
-                        Fragment { "\(parameter.name): \(parameter.content)" }
+                        Fragment { "\(parameter.name): \(parameter.content.description)" }
                     }
                 }
             }
@@ -57,14 +57,14 @@ struct Documentation: Component {
             if documentation.throws != nil {
                 Section {
                     Heading { "Throws" }
-                    Fragment { documentation.throws!.escapingEmojiShortcodes }
+                    Fragment { documentation.throws!.description.escapingEmojiShortcodes }
                 }
             }
 
             if documentation.returns != nil {
                 Section {
                     Heading { "Returns" }
-                    Fragment { documentation.returns!.escapingEmojiShortcodes }
+                    Fragment { documentation.returns!.description.escapingEmojiShortcodes }
                 }
             }
 
@@ -90,7 +90,7 @@ struct Documentation: Component {
         if let summary = documentation.summary {
             fragments.append(#"""
             <div class="summary" role="doc-abstract">
-                \#(commonmark: summary)
+                \#(commonmark: summary.description)
             </div>
             """# as HypertextLiteral.HTML)
         }
@@ -119,7 +119,7 @@ struct Documentation: Component {
                     type = nil
                 }
 
-                return (entry.name, type, entry.content)
+                return (entry.name, type, entry.content.description)
             }
 
             fragments.append(#"""
@@ -158,14 +158,14 @@ struct Documentation: Component {
         if let `throws` = documentation.throws {
             fragments.append(#"""
               <h4>Throws</h4>
-              \#(commonmark: `throws`)
+              \#(commonmark: `throws`.description)
             """# as HypertextLiteral.HTML)
         }
 
         if let `returns` = documentation.returns {
             fragments.append(#"""
               <h4>Returns</h4>
-              \#(commonmark: `returns`)
+              \#(commonmark: `returns`.description)
             """# as HypertextLiteral.HTML)
         }
 
@@ -223,6 +223,10 @@ extension Documentation {
                 return Fragment {
                     paragraph.render(format: .commonmark)
                 }
+            case .thematicBreak(let thematicBreak):
+                return Fragment {
+                    thematicBreak.render(format: .commonmark)
+                }
             }
         }
 
@@ -257,6 +261,9 @@ extension Documentation {
                 return HTML(list.render(format: .html, options: [.unsafe]))
             case .paragraph(let paragraph):
                 return HTML(paragraph.render(format: .html, options: [.unsafe]))
+            case .thematicBreak(let thematicBreak):
+                return HTML(thematicBreak.render(format: .html, options: [.unsafe]))
+
             }
         }
     }
