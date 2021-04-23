@@ -951,6 +951,10 @@ h1 small {
   color: var(--quaternary-label);
 }
 
+h3 small {
+  color: var(--tertiary-label);
+}
+
 p code,
 dd code,
 li code {
@@ -1038,8 +1042,8 @@ nav li[class] {
 }
 
 .operator {
-    --background-image: var(--icon-operator);
-    --link: var(--system-green);
+  --background-image: var(--icon-operator);
+  --link: var(--system-green);
 }
 
 .property {

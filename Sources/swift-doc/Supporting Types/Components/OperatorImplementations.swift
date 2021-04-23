@@ -51,14 +51,14 @@ struct OperatorImplementations: Component {
                   return nil
                 }
 
-                heading = [lhs.type, function.name, rhs.type, function.genericWhereClause].compactMap { $0 }.joined(separator: " ")
+                heading = [lhs.type, function.name, rhs.type].compactMap { $0 }.joined(separator: " ")
             case .prefix:
                 guard function.signature.input.count == 2,
                       let operand = function.signature.input.first
                 else {
                   return nil
                 }
-                heading = [function.name, operand.type, function.genericWhereClause].compactMap { $0 }.joined(separator: " ")
+                heading = [function.name, operand.type].compactMap { $0 }.joined(separator: " ")
 
             case .postfix:
                 guard function.signature.input.count == 2,
@@ -66,14 +66,17 @@ struct OperatorImplementations: Component {
                 else {
                   return nil
                 }
-                heading = [operand.type, function.name, function.genericWhereClause].compactMap { $0 }.joined(separator: " ")
+                heading = [operand.type, function.name].compactMap { $0 }.joined(separator: " ")
             }
 
             return #"""
-                   <section>
-                   <h3>\#(heading)</h3>
-                   \#(Documentation(for: implementation, in: module, baseURL: baseURL).html)
-                   </section>
+                   <div role="article" class="function" id=\#(implementation.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>
+                       <h3>
+                         \#(heading)
+                         \#(unsafeUnescaped: function.genericWhereClause.map({ #"<small>\#($0.escaped)</small>"# }) ?? "")
+                       </h3>
+                       \#(Documentation(for: implementation, in: module, baseURL: baseURL).html)
+                   </div>
                    """#
         }
 
