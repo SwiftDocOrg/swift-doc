@@ -84,6 +84,17 @@ extension SwiftDoc {
           }
         }
 
+        // Extensions on external types.
+        var symbolsByExternalType: [String: [Symbol]] = [:]
+        for symbol in module.interface.symbols.filter(symbolFilter) {
+          guard let extensionDeclaration = symbol.context.first as? Extension, symbol.context.count == 1 else { continue }
+          guard module.interface.symbols(named: extensionDeclaration.extendedType, resolvingTypealiases: true).isEmpty else { continue }
+          symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
+        }
+        for (typeName, symbols) in symbolsByExternalType {
+          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL)
+        }
+
         for (name, symbols) in globals {
             pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL)
         }
@@ -110,11 +121,11 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
-            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["_Sidebar"] = SidebarPage(module: module, externalTypes: Set(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
             pages["_Footer"] = FooterPage(baseURL: baseURL)
           case .html:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
           }
 
           try pages.map { $0 }.parallelForEach {

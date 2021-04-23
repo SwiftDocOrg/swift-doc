@@ -10,16 +10,18 @@ public final class Interface {
         self.imports = imports
         self.symbols = symbols
 
-        self.symbolsGroupedByIdentifier = Dictionary(grouping: symbols, by: { $0.id })
-        self.symbolsGroupedByQualifiedName = Dictionary(grouping: symbols, by: { $0.id.description })
-        self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.pathComponents.isEmpty }
+        let symbolsGroupedByIdentifier = Dictionary(grouping: symbols, by: { $0.id })
+        let symbolsGroupedByQualifiedName = Dictionary(grouping: symbols, by: { $0.id.description })
+
+        self.symbolsGroupedByIdentifier = symbolsGroupedByIdentifier
+        self.symbolsGroupedByQualifiedName = symbolsGroupedByQualifiedName
+        self.topLevelSymbols = symbols.filter { $0.api is Type || $0.id.context.isEmpty }
 
         self.relationships = {
             let extensionsByExtendedType: [String: [Extension]] = Dictionary(grouping: symbols.flatMap { $0.context.compactMap { $0 as? Extension } }, by: { $0.extendedType })
 
             var relationships: Set<Relationship> = []
             for symbol in symbols {
-
                 let lastDeclarationScope = symbol.context.last(where: { $0 is Extension || $0 is Symbol })
                 
                 if let container = lastDeclarationScope as? Symbol {
@@ -40,8 +42,7 @@ public final class Interface {
                 }
 
                 if let `extension` = lastDeclarationScope as? Extension {
-                    if let extended = symbols.first(where: { $0.api is Type &&  $0.id.matches(`extension`.extendedType) }) {
-
+                    for extended in symbolsGroupedByIdentifier.named(`extension`.extendedType, resolvingTypealiases: true) {
                         let predicate: Relationship.Predicate
                         switch extended.api {
                         case is Protocol:
@@ -66,7 +67,7 @@ public final class Interface {
                     inheritedTypeNames = Set(inheritedTypeNames.flatMap { $0.split(separator: "&").map { $0.trimmingCharacters(in: .whitespaces) } })
 
                     for name in inheritedTypeNames {
-                        let inheritedTypes = symbols.filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
+                        let inheritedTypes = symbolsGroupedByIdentifier.named(name, resolvingTypealiases: true).filter({ ($0.api is Class || $0.api is Protocol) && $0.id.description == name })
                         if inheritedTypes.isEmpty {
                             let inherited = Symbol(api: Unknown(name: name), context: [], declaration: [], documentation: nil, sourceRange: nil)
                             relationships.insert(Relationship(subject: symbol, predicate: .conformsTo, object: inherited))
@@ -115,7 +116,6 @@ public final class Interface {
         }
 
         return classClusters
-
     }
 
     public let relationships: [Relationship]
@@ -158,5 +158,38 @@ public final class Interface {
 
     public func defaultImplementations(of symbol: Symbol) -> [Symbol] {
         return relationshipsByObject[symbol.id]?.filter { $0.predicate == .defaultImplementationOf }.map { $0.subject }.sorted() ?? []
+    }
+
+    // MARK: -
+
+    public func symbols(named name: String, resolvingTypealiases: Bool) -> [Symbol] {
+        symbolsGroupedByIdentifier.named(name, resolvingTypealiases: resolvingTypealiases)
+    }
+}
+
+fileprivate extension Dictionary where Key == Identifier, Value == [Symbol] {
+    func named(_ name: String, resolvingTypealiases: Bool) -> [Symbol] {
+        var pathComponents: [String] = []
+        for component in name.split(separator: ".") {
+            pathComponents.append("\(component)")
+            guard resolvingTypealiases else { continue }
+
+            if let symbols = first(where: { $0.key.pathComponents == pathComponents })?.value,
+               let symbol = symbols.first(where: { $0.api is Typealias }),
+               let `typealias` = symbol.api as? Typealias,
+               let initializedType = `typealias`.initializedType
+            {
+                let initializedTypePathComponents = initializedType.split(separator: ".")
+                let candidates = keys.filter { $0.matches(initializedTypePathComponents) }
+
+                if let id = candidates.max(by: { $0.pathComponents.count > $1.pathComponents.count }) {
+                    pathComponents = id.pathComponents
+                } else {
+                    return []
+                }
+            }
+        }
+
+        return first(where: { $0.key.pathComponents == pathComponents })?.value ?? []
     }
 }
