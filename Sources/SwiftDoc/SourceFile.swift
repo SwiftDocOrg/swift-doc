@@ -168,6 +168,11 @@ public struct SourceFile: Hashable, Codable {
             return .skipChildren
         }
 
+        override func visit(_ node: OperatorDeclSyntax) -> SyntaxVisitorContinueKind {
+            push(symbol(Operator.self, node))
+            return .skipChildren
+        }
+
         override func visit(_ node: PrecedenceGroupDeclSyntax) -> SyntaxVisitorContinueKind {
             push(symbol(PrecedenceGroup.self, node))
             return .skipChildren

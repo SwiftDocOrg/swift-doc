@@ -31,7 +31,11 @@ extension Enumeration.Case: API {}
 
 extension Function: API {
     public var name: String {
-        return "\(identifier)(\(signature.input.map { ($0.firstName ?? "_") + ":" }.joined()))"
+        if self.isOperator {
+            return identifier
+        } else {
+            return "\(identifier)(\(signature.input.map { ($0.firstName ?? "_") + ":" }.joined()))"
+        }
     }
 }
 

@@ -27,3 +27,18 @@ extension Structure: Type {}
 extension Unknown: Type {
     public var inheritance: [String] { return [] }
 }
+
+// MARK: -
+
+extension Operator.Kind: Comparable {
+    public static func < (lhs: Operator.Kind, rhs: Operator.Kind) -> Bool {
+        switch (lhs, rhs) {
+        case (_, .infix):
+            return true
+        case (.postfix, _):
+            return true
+        default:
+            return false
+        }
+    }
+}
