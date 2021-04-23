@@ -282,6 +282,10 @@ final class InterfaceTypeTests: XCTestCase {
          }
                       
          public typealias MyClass = SomeClass
+
+         public class AnotherClass {
+             typealias PublicClass = SomeClass
+         }
                      
          public typealias ExternalClass = UIGestureRecognizer
          """#
@@ -305,6 +309,12 @@ final class InterfaceTypeTests: XCTestCase {
 
         XCTAssertEqual(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: true).first?.name, "InnerObject")
         XCTAssertNil(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: false).first)
+
+        XCTAssertEqual(module.interface.symbols(named: "AnotherClass.PublicClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertTrue(module.interface.symbols(named: "AnotherClass.PublicClass", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertEqual(module.interface.symbols(named: "AnotherClass.PublicClass.ActuallyInternal", resolvingTypealiases: true).first?.name, "InnerStruct")
+        XCTAssertNil(module.interface.symbols(named: "AnotherClass.PublicClass.ActuallyInternal", resolvingTypealiases: false).first)
 
         XCTAssertNil(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: true).first)
         XCTAssertTrue(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: false).first?.api is Typealias)

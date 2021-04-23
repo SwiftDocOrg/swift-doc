@@ -1,9 +1,24 @@
 public struct Identifier: Hashable {
-    public let pathComponents: [String]
+    public let context: [String]
     public let name: String
+    public let pathComponents: [String]
+
+    public init(context: [String], name: String) {
+        self.context = context
+        self.name = name
+        self.pathComponents = context + CollectionOfOne(name)
+    }
 
     public func matches(_ string: String) -> Bool {
-        (pathComponents + CollectionOfOne(name)).reversed().starts(with: string.split(separator: ".").map { String($0) }.reversed())
+        return matches(string.split(separator: "."))
+    }
+
+    public func matches(_ pathComponents: [Substring]) -> Bool {
+        return matches(pathComponents.map(String.init))
+    }
+
+    public func matches(_ pathComponents: [String]) -> Bool {
+        return self.pathComponents.ends(with: pathComponents)
     }
 }
 
@@ -11,6 +26,16 @@ public struct Identifier: Hashable {
 
 extension Identifier: CustomStringConvertible {
     public var description: String {
-        (pathComponents + CollectionOfOne(name)).joined(separator: ".")
+        pathComponents.joined(separator: ".")
+    }
+}
+
+fileprivate extension Array {
+    func ends<PossibleSuffix>(with possibleSuffix: PossibleSuffix) -> Bool
+        where PossibleSuffix : Sequence,
+              Self.Element == PossibleSuffix.Element,
+              Self.Element: Equatable
+    {
+        reversed().starts(with: possibleSuffix)
     }
 }

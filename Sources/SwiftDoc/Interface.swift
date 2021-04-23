@@ -163,20 +163,33 @@ public final class Interface {
     // MARK: -
 
     public func symbols(named name: String, resolvingTypealiases: Bool) -> [Symbol] {
+        symbolsGroupedByIdentifier.named(name, resolvingTypealiases: resolvingTypealiases)
+    }
+}
+
+fileprivate extension Dictionary where Key == Identifier, Value == [Symbol] {
+    func named(_ name: String, resolvingTypealiases: Bool) -> [Symbol] {
         var pathComponents: [String] = []
         for component in name.split(separator: ".") {
             pathComponents.append("\(component)")
             guard resolvingTypealiases else { continue }
 
-            if let symbols = symbolsGroupedByQualifiedName[pathComponents.joined(separator: ".")],
+            if let symbols = first(where: { $0.key.pathComponents == pathComponents })?.value,
                let symbol = symbols.first(where: { $0.api is Typealias }),
                let `typealias` = symbol.api as? Typealias,
                let initializedType = `typealias`.initializedType
             {
-                pathComponents = (symbol.context.compactMap { ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType }) + [initializedType]
+                let initializedTypePathComponents = initializedType.split(separator: ".")
+                let candidates = keys.filter { $0.matches(initializedTypePathComponents) }
+
+                if let id = candidates.max(by: { $0.pathComponents.count > $1.pathComponents.count }) {
+                    pathComponents = id.pathComponents
+                } else {
+                    return []
+                }
             }
         }
 
-        return symbolsGroupedByQualifiedName[pathComponents.joined(separator: ".")] ?? []
+        return first(where: { $0.key.pathComponents == pathComponents })?.value ?? []
     }
 }
