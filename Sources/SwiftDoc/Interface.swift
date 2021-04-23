@@ -164,7 +164,7 @@ public final class Interface {
 
     public func symbols(named name: String, resolvingTypealiases: Bool) -> [Symbol] {
         var pathComponents: [String] = []
-        for component in name.split(separator: ".", omittingEmptySubsequences: true) {
+        for component in name.split(separator: ".") {
             pathComponents.append("\(component)")
             guard resolvingTypealiases else { continue }
 
