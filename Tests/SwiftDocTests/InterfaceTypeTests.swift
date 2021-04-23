@@ -331,4 +331,32 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: true).first)
         XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: false).first)
     }
+
+    public func testMembersOfTypealiasedSymbols() throws {
+        let source = #"""
+        public class SomeClass {
+            public func someMethod() { }
+        }
+                
+        public typealias OtherClass = SomeClass
+                
+        public extension OtherClass {
+            func someExtensionMethod() { }
+        }
+        """#
+
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(module.interface.symbols.count, 4)
+
+        let someClass = module.interface.symbols[0]
+        XCTAssertEqual(someClass.name, "SomeClass")
+        let members = module.interface.members(of: someClass)
+        XCTAssertEqual(2, members.count)
+        XCTAssertEqual(members[0].name, "someMethod()")
+        XCTAssertEqual(members[1].name, "someExtensionMethod()")
+    }
 }
