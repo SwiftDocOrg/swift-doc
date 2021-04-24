@@ -11,6 +11,7 @@ inputs:
     required: true
   format:
     description: "The output format (commonmark or html)"
+    required: false
     default: "commonmark"
   base-url:
     description: "The base URL for all relative URLs generated in documents"
