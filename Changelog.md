@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking Change**
+  Changed minimum Swift version requirements to 5.3 or later.
+  #252 by @mattt.
 - Changed display of code declarations in HTML.
   #204 by @mattt.
 - Changed serialization of `Symbol` to encode and decode `sourceRange` key
