@@ -6,15 +6,15 @@ import PackageDescription
 let package = Package(
     name: "swift-doc",
     platforms: [
-        .macOS(.v10_15)
+        .macOS(.v11)
     ],
     products: [
         .executable(name: "swift-doc", targets: ["swift-doc"]),
         .library(name: "SwiftDoc", targets: ["SwiftDoc"])
     ],
     dependencies: [
-        .package(name: "SwiftSyntax", url: "https://github.com/apple/swift-syntax.git", .revision("0.50300.0")),
-        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .upToNextMinor(from: "0.3.0")),
+        .package(name: "SwiftSyntax", url: "https://github.com/apple/swift-syntax.git", .revision("release/5.4")),
+        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .revision("0.3.0")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .upToNextMinor(from: "0.5.0")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.4.0")),

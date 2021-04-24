@@ -48,7 +48,7 @@ struct Abstract: Component {
             </a>
         </dt>
         <dd>
-            \#(commonmark: symbol.documentation?.summary ?? "")
+            \#(commonmark: symbol.documentation?.summary?.description ?? "")
         </dd>
         """#
     }

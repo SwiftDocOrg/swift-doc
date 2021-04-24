@@ -1,4 +1,4 @@
-FROM swift:5.2 as builder
+FROM swift:5.3 as builder
 WORKDIR /swiftdoc
 COPY . .
 RUN apt-get -qq update && apt-get install -y libxml2-dev && rm -r /var/lib/apt/lists/*
