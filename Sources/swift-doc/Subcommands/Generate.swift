@@ -5,7 +5,7 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-#if os(Linux)
+#if !(os(iOS) || os(macOS) || os(tvOS) || os(watchOS))
 import FoundationNetworking
 #endif
 
