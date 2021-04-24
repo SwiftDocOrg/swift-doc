@@ -37,17 +37,6 @@ jobs:
           asset_path: ./swift-doc--${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
           asset_name: swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
           asset_content_type: application/gzip
-      - name: Update the Homebrew formula again with bottle
-        uses: NSHipster/update-homebrew-formula-action@main
-        with:
-          repository: SwiftDocOrg/swift-doc
-          tap: SwiftDocOrg/homebrew-formulae
-          formula: Formula/swift-doc.rb
-          message: |
-              Add bottle for swift-doc ${{ github.event.release.tag_name }}
-              on macOS 10.15 (Catalina)
-        env:
-          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
   bottle_macos_big_sur:
     name: Build and distribute Homebrew bottle for macOS Big Sur
@@ -68,15 +57,22 @@ jobs:
           asset_path: ./swift-doc--${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
           asset_name: swift-doc-${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
           asset_content_type: application/gzip
-      - name: Update the Homebrew formula again with bottle
-        uses: NSHipster/update-homebrew-formula-action@main
+
+  update_formula_bottle:
+    name: Update the Homebrew formula again with bottle
+    runs-on: ubuntu-latest
+    needs:
+      - bottle_macos_catalina
+      - bottle_macos_big_sur
+    steps:
+      - uses: NSHipster/update-homebrew-formula-action@main
         with:
           repository: SwiftDocOrg/swift-doc
           tap: SwiftDocOrg/homebrew-formulae
           formula: Formula/swift-doc.rb
           message: |
-              Add bottle for swift-doc ${{ github.event.release.tag_name }}
-              on macOS 11.0 (Big Sur)
+            Add bottles for swift-doc ${{ github.event.release.tag_name }}
+            on macOS 10.15 (Catalina) and macOS 11.0 (Big Sur)
         env:
           GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
