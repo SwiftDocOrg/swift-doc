@@ -21,7 +21,7 @@ let package = Package(
         .package(url: "https://github.com/NSHipster/HypertextLiteral.git", .upToNextMinor(from: "0.0.2")),
         .package(url: "https://github.com/SwiftDocOrg/Markup.git", .upToNextMinor(from: "0.0.3")),
         .package(url: "https://github.com/NSHipster/SwiftSyntaxHighlighter.git", .revision("1.2.2")),
-        .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "0.3.1")),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/apple/swift-log.git", .upToNextMinor(from: "1.4.2")),
         .package(name: "LoggingGitHubActions", url: "https://github.com/NSHipster/swift-log-github-actions.git", .upToNextMinor(from: "0.0.1")),
     ],
