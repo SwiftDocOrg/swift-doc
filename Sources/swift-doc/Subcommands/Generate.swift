@@ -134,11 +134,11 @@ extension SwiftDoc {
             let filename: String
             switch format {
             case .commonmark:
-              filename = "\($0.key).md"
+              filename = "\(path(for: $0.key)).md"
             case .html where $0.key == "Home":
               filename = "index.html"
             case .html:
-              filename = "\($0.key)/index.html"
+              filename = "\(path(for: $0.key))/index.html"
             }
 
             let url = outputDirectoryURL.appendingPathComponent(filename)
