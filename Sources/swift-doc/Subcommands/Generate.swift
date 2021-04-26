@@ -76,7 +76,10 @@ extension SwiftDoc {
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
           case is Operator:
-            pages[route(for: symbol)] = OperatorPage(module: module, symbol: symbol, baseURL: baseURL, includingImplementations: symbolFilter)
+            let operatorPage = OperatorPage(module: module, symbol: symbol, baseURL: baseURL, includingImplementations: symbolFilter)
+            if !operatorPage.implementations.isEmpty {
+              pages[route(for: symbol)] = operatorPage
+            }
           case let function as Function where !function.isOperator:
             globals[function.name, default: []] += [symbol]
           case let variable as Variable:
