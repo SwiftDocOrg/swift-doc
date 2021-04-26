@@ -9,11 +9,11 @@ struct OperatorPage: Page {
     let implementations: [Symbol]
     let baseURL: String
 
-    init(module: Module, symbol: Symbol, baseURL: String) {
+    init(module: Module, symbol: Symbol, baseURL: String, includingImplementations symbolFilter: (Symbol) -> Bool) {
         precondition(symbol.api is Operator)
         self.module = module
         self.symbol = symbol
-        self.implementations = module.interface.functionsByOperator[symbol]?.sorted() ?? []
+        self.implementations = module.interface.functionsByOperator[symbol]?.filter(symbolFilter).sorted() ?? []
         self.baseURL = baseURL
     }
 
