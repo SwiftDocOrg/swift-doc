@@ -382,7 +382,6 @@ final class InterfaceTypeTests: XCTestCase {
         let module = Module(name: "Module", sourceFiles: [sourceFile])
 
         XCTAssertEqual(module.interface.topLevelSymbols.count, 4)
-        print(module.interface.topLevelSymbols)
 
         XCTAssertEqual(module.interface.topLevelSymbols[0].name, "SomeClass")
         XCTAssertEqual(module.interface.topLevelSymbols[1].name, "≠")
