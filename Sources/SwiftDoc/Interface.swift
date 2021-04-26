@@ -24,7 +24,7 @@ public final class Interface {
                 return false
             }
 
-            return symbol.id.pathComponents.isEmpty
+            return symbol.id.context.isEmpty
         }
 
         self.relationships = {

@@ -359,4 +359,33 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(members[0].name, "someMethod()")
         XCTAssertEqual(members[1].name, "someExtensionMethod()")
     }
+
+    public func testToplevelSymbols() throws {
+        let source = #"""
+        public class SomeClass {
+            public func someMethod() { }
+        }
+                     
+        public infix operator ≠
+                
+        public typealias OtherClass = SomeClass
+                     
+        public func someFunction() { }
+                
+        public extension OtherClass {
+            func someExtensionMethod() { }
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(module.interface.topLevelSymbols.count, 4)
+
+        XCTAssertEqual(module.interface.topLevelSymbols[0].name, "SomeClass")
+        XCTAssertEqual(module.interface.topLevelSymbols[1].name, "≠")
+        XCTAssertEqual(module.interface.topLevelSymbols[2].name, "OtherClass")
+        XCTAssertEqual(module.interface.topLevelSymbols[3].name, "someFunction()")
+    }
 }
