@@ -53,7 +53,7 @@ struct OperatorImplementations: Component {
 
                 heading = [lhs.type, function.name, rhs.type].compactMap { $0 }.joined(separator: " ")
             case .prefix:
-                guard function.signature.input.count == 2,
+                guard function.signature.input.count == 1,
                       let operand = function.signature.input.first
                 else {
                   return nil
@@ -61,7 +61,7 @@ struct OperatorImplementations: Component {
                 heading = [function.name, operand.type].compactMap { $0 }.joined(separator: " ")
 
             case .postfix:
-                guard function.signature.input.count == 2,
+                guard function.signature.input.count == 1,
                       let operand = function.signature.input.first
                 else {
                   return nil
