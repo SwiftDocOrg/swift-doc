@@ -5,7 +5,7 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-#if !(os(iOS) || os(macOS) || os(tvOS) || os(watchOS))
+#if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
