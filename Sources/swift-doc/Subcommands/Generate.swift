@@ -5,7 +5,7 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-#if os(Linux)
+#if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
