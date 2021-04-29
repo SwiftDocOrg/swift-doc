@@ -21,10 +21,12 @@ swift-doc: $(BUILDDIR)/release/swift-doc
 install: $(BUILDDIR)/release/swift-doc
 	@install -d "$(bindir)"
 	@install "$(BUILDDIR)/release/swift-doc" "$(bindir)"
+	@cp -R "$(BUILDDIR)/release/swift-doc_swift-doc.bundle" "$(bindir)"
 
 .PHONY: uninstall
 uninstall:
 	@rm -rf "$(bindir)/swift-doc"
+	@rm -rf "$(bindir)/swift-doc_swift-doc.bundle"
 
 .PHONY: clean
 distclean:

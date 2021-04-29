@@ -5,10 +5,6 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
-
 extension SwiftDoc {
   struct Generate: ParsableCommand {
     enum Format: String, ExpressibleByArgument {
@@ -147,9 +143,10 @@ extension SwiftDoc {
         }
 
         if case .html = format {
-          let cssData = try fetchRemoteCSS()
-          let cssURL = outputDirectoryURL.appendingPathComponent("all.css")
-          try writeFile(cssData, to: cssURL)
+          let cssSrcFile = Bundle.module.url(forResource: "Resources/all", withExtension: "min.css")!
+          let cssDst = outputDirectoryURL.appendingPathComponent("all.css")
+          try? FileManager.default.removeItem(at: cssDst)
+          try FileManager.default.copyItem(at: cssSrcFile, to: cssDst)
         }
 
       } catch {
@@ -157,9 +154,4 @@ extension SwiftDoc {
       }
     }
   }
-}
-
-func fetchRemoteCSS() throws -> Data {
-  let url = URL(string: "https://raw.githubusercontent.com/SwiftDocOrg/swift-doc/master/Resources/all.min.css")!
-  return try Data(contentsOf: url)
 }
