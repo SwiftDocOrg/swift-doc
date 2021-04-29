@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for generating documentation for
+  private symbols.
+  #266 by @Lukas-Stuehrk
+  
 ### Fixed
 
 - Fixed bug that caused prefix and postfix operators to be omitted
