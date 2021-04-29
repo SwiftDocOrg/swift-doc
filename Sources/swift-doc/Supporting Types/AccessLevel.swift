@@ -4,6 +4,7 @@ import SwiftDoc
 enum AccessLevel: String, ExpressibleByArgument {
     case `public`
     case `internal`
+    case `private`
 
     func includes(symbol: Symbol) -> Bool {
         switch self {
@@ -11,6 +12,8 @@ enum AccessLevel: String, ExpressibleByArgument {
             return symbol.isPublic
         case .internal:
             return symbol.isPublic || symbol.isInternal
+        case .private:
+            return true
         }
     }
 }
