@@ -109,13 +109,13 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://artprodeus21.artifacts.visualstudio.com/A8fd008a0-56bc-482c-ba46-67f9425510be/3133d6ab-80a8-4996-ac4f-03df25cd3224/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL2NvbXBuZXJkL3Byb2plY3RJZC8zMTMzZDZhYi04MGE4LTQ5OTYtYWM0Zi0wM2RmMjVjZDMyMjQvYnVpbGRJZC8zNTI5NS9hcnRpZmFjdE5hbWUveG1sMi13aW5kb3dzLXg2NA2/content?format=zip" -OutFile $env:Temp\xml-windows-x64.zip
           Expand-Archive -Path $env:Temp\xml-windows-x64.zip -DestinationPath $env:Temp -Force
-          Move-Item -Path $env:Temp\xml2-windows-x64\Library -Destination C:\ -Force
+          Move-Item -Path $env:Temp\xml2-windows-x64\Library\libxml2-development -Destination C:\Library\ -Force
       # TODO(compnerd) figure out how to build graphviz
       - name: Fetch graphviz
         run: |
           Invoke-WebRequest -Uri "https://artprodeus21.artifacts.visualstudio.com/A8fd008a0-56bc-482c-ba46-67f9425510be/3133d6ab-80a8-4996-ac4f-03df25cd3224/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL2NvbXBuZXJkL3Byb2plY3RJZC8zMTMzZDZhYi04MGE4LTQ5OTYtYWM0Zi0wM2RmMjVjZDMyMjQvYnVpbGRJZC81MDQ4NS9hcnRpZmFjdE5hbWUvZ3JhcGh2aXotd2luZG93cy14NjQ1/content?format=zip" -OutFile $env:Temp\graphviz-windows-x64.zip
           Expand-Archive -Path $env:Temp\graphviz-windows-x64.zip -Destination $env:Temp -Force
-          Move-Item -Path $env:Temp\graphviz-windows-x64\Library -Destination C:\ -Force
+          Move-Item -Path $env:Temp\graphviz-windows-x64\Library\graphviz-development -Destination C:\Library\ -Force
 
       - name: Install swift-5.4
         run: |
