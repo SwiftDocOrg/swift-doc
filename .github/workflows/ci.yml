@@ -117,9 +117,9 @@ jobs:
           Expand-Archive -Path $env:Temp\graphviz-windows-x64.zip -Destination $env:Temp -Force
           Move-Item -Path $env:Temp\graphviz-windows-x64\Library\graphviz-development -Destination C:\Library\ -Force
 
-      - name: Install swift-5.4
+      - name: Install swift-5.5
         run: |
-          Install-Binary -Url "https://swift.org/builds/swift-5.4-release/windows10/swift-5.4-RELEASE/swift-5.4-RELEASE-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
+          Install-Binary -Url "https://swift.org/builds/swift-5.5-branch/windows10/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
         run: |
           echo "SDKROOT=C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -140,7 +140,7 @@ jobs:
           echo "C:\Library\graphviz-development\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Build and Test
-        run: swift test -c release --enable-test-discovery -Xlinker -LC:\Library\graphviz-development\usr\lib -Xcc -DLIBXML_STATIC -Xcc -IC:\Library\libxml2-development\usr\include -Xcc -IC:\Library\libxml2-development\usr\include\libxml2 -Xlinker -LC:\Library\libxml2-development\usr\lib
+        run: swift test -c release --enable-test-discovery -Xlinker -LC:\Library\graphviz-development\usr\lib -Xcc -DLIBXML_STATIC -Xcc -IC:\Library\libxml2-development\usr\include -Xcc -IC:\Library\libxml2-development\usr\include\libxml2 -Xlinker -LC:\Library\libxml2-development\usr\lib -Xcc -IC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\include -Xlinker -LC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\lib
 
   validate-assets:
     runs-on: ubuntu-latest
