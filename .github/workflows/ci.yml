@@ -100,9 +100,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: .build
-          key: ${{ runner.os }}-spm-swift-5.4-${{ hashFiles('**/Package.resolved') }}
+          key: ${{ runner.os }}-spm-swift-5.5-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-swift-5.4-
+            ${{ runner.os }}-spm-swift-5.5-
       
       # TODO(compnerd) figure out how to build libxml2
       - name: Fetch libxml2
@@ -117,7 +117,7 @@ jobs:
           Expand-Archive -Path $env:Temp\graphviz-windows-x64.zip -Destination $env:Temp -Force
           Move-Item -Path $env:Temp\graphviz-windows-x64\Library\graphviz-development -Destination C:\Library\ -Force
 
-      - name: Install swift-5.5
+      - name: Install swift-5.5 (2021-04-19 SNAPSHOT)
         run: |
           Install-Binary -Url "https://swift.org/builds/swift-5.5-branch/windows10/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
