@@ -266,4 +266,126 @@ final class InterfaceTypeTests: XCTestCase {
         XCTAssertEqual(defaultImplementations[0].name, "someMethod()")
         XCTAssertEqual(defaultImplementations[1].name, "someOtherMethod()")
     }
+
+    func testExternalSymbols() throws {
+        let source = #"""
+         import UIKit 
+                     
+         public class SomeClass {
+             public struct InnerObject { }
+            
+             typealias ActuallyExternal = UIView
+                     
+             typealias ActuallyInternal = InnerStruct 
+             
+             struct InnerStruct {}        
+         }
+                      
+         public typealias MyClass = SomeClass
+
+         public class AnotherClass {
+             typealias PublicClass = SomeClass
+         }
+                     
+         public typealias ExternalClass = UIGestureRecognizer
+         """#
+
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass", resolvingTypealiases: false).first?.name, "SomeClass")
+
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.InnerObject", resolvingTypealiases: true).first?.name, "InnerObject")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.InnerObject", resolvingTypealiases: false).first?.name, "InnerObject")
+
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.ActuallyInternal", resolvingTypealiases: true).first?.name, "InnerStruct")
+        XCTAssertEqual(module.interface.symbols(named: "SomeClass.ActuallyInternal", resolvingTypealiases: false).first?.name, "ActuallyInternal")
+
+        XCTAssertEqual(module.interface.symbols(named: "MyClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertEqual(module.interface.symbols(named: "MyClass", resolvingTypealiases: false).first?.name, "MyClass")
+
+        XCTAssertEqual(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: true).first?.name, "InnerObject")
+        XCTAssertNil(module.interface.symbols(named: "MyClass.InnerObject", resolvingTypealiases: false).first)
+
+        XCTAssertEqual(module.interface.symbols(named: "AnotherClass.PublicClass", resolvingTypealiases: true).first?.name, "SomeClass")
+        XCTAssertTrue(module.interface.symbols(named: "AnotherClass.PublicClass", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertEqual(module.interface.symbols(named: "AnotherClass.PublicClass.ActuallyInternal", resolvingTypealiases: true).first?.name, "InnerStruct")
+        XCTAssertNil(module.interface.symbols(named: "AnotherClass.PublicClass.ActuallyInternal", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: true).first)
+        XCTAssertTrue(module.interface.symbols(named: "ExternalClass", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass.State", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "ExternalClass.State", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "SomeClass.ActuallyExternal", resolvingTypealiases: true).first)
+        XCTAssertTrue(module.interface.symbols(named: "SomeClass.ActuallyExternal", resolvingTypealiases: false).first?.api is Typealias)
+
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer", resolvingTypealiases: false).first)
+
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: true).first)
+        XCTAssertNil(module.interface.symbols(named: "UIGestureRecognizer.State", resolvingTypealiases: false).first)
+    }
+
+    public func testMembersOfTypealiasedSymbols() throws {
+        let source = #"""
+        public class SomeClass {
+            public func someMethod() { }
+        }
+                
+        public typealias OtherClass = SomeClass
+                
+        public extension OtherClass {
+            func someExtensionMethod() { }
+        }
+        """#
+
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(module.interface.symbols.count, 4)
+
+        let someClass = module.interface.symbols[0]
+        XCTAssertEqual(someClass.name, "SomeClass")
+        let members = module.interface.members(of: someClass)
+        XCTAssertEqual(2, members.count)
+        XCTAssertEqual(members[0].name, "someMethod()")
+        XCTAssertEqual(members[1].name, "someExtensionMethod()")
+    }
+
+    public func testToplevelSymbols() throws {
+        let source = #"""
+        public class SomeClass {
+            public func someMethod() { }
+        }
+                     
+        public infix operator ≠
+                
+        public typealias OtherClass = SomeClass
+                     
+        public func someFunction() { }
+                
+        public extension OtherClass {
+            func someExtensionMethod() { }
+        }
+        """#
+
+        let url = try temporaryFile(contents: source)
+        let sourceFile = try SourceFile(file: url, relativeTo: url.deletingLastPathComponent())
+        let module = Module(name: "Module", sourceFiles: [sourceFile])
+
+        XCTAssertEqual(module.interface.topLevelSymbols.count, 4)
+
+        XCTAssertEqual(module.interface.topLevelSymbols[0].name, "SomeClass")
+        XCTAssertEqual(module.interface.topLevelSymbols[1].name, "≠")
+        XCTAssertEqual(module.interface.topLevelSymbols[2].name, "OtherClass")
+        XCTAssertEqual(module.interface.topLevelSymbols[3].name, "someFunction()")
+    }
 }

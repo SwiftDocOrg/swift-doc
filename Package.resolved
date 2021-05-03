@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/CommonMark.git",
         "state": {
           "branch": null,
-          "revision": "62176a332884826997928ba578d9d322c16772fb",
-          "version": "0.4.0"
+          "revision": "1c8f3983c12b848e0d84b3a7a1d6f9a735e6661a",
+          "version": "0.5.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/GraphViz.git",
         "state": {
           "branch": null,
-          "revision": "cf52b27bf7086e9ca5665cef0de57d0481bbab41",
-          "version": "0.3.0"
+          "revision": "e9a73a30755c3c5b26ba7c73312b1f2ccb9a1a30",
+          "version": "0.4.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/Markup.git",
         "state": {
           "branch": null,
-          "revision": "029ad8c1115ab32b7c20ab52eb092fbc030deb17",
-          "version": "0.0.4"
+          "revision": "80ddbee0048192bcbb814b016dc8ced41110d44d",
+          "version": "0.1.2"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
         "state": {
           "branch": null,
-          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
-          "version": "0.3.1"
+          "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
+          "version": "0.3.2"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/swift-cmark.git",
         "state": {
           "branch": null,
-          "revision": "2a766030bee955b4806044fd7aca1b6884475138",
-          "version": "0.28.3+20200110.2a76603"
+          "revision": "9c8096a23f44794bde297452d87c455fc4f76d42",
+          "version": "0.29.0+20210102.9c8096a"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftMarkup.git",
         "state": {
           "branch": null,
-          "revision": "7915d17608dd32434dc8abb95156f70367f38a5a",
-          "version": "0.2.1"
+          "revision": "bc71bde93b5217833c8ed13d5cf1e0c60f1367a7",
+          "version": "0.3.0"
         }
       },
       {
@@ -96,16 +96,16 @@
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftSemantics.git",
         "state": {
           "branch": null,
-          "revision": "4fdc48bddbbb8311079ed111e5a4f2b92423b05c",
-          "version": "0.1.0"
+          "revision": "2f571ccc67e0789d23f8adbccb6a18a6ff3b166c",
+          "version": "0.3.0"
         }
       },
       {
         "package": "SwiftSyntaxHighlighter",
         "repositoryURL": "https://github.com/NSHipster/SwiftSyntaxHighlighter.git",
         "state": {
-          "branch": "1.1.3",
-          "revision": "b086ef5066b6f799f9c7d6d7fc1553581b55ef1e",
+          "branch": "1.2.2",
+          "revision": "175923d005df00dc76c3c191bd7977c066a5288c",
           "version": null
         }
       }

@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for generating documentation for
+  private symbols.
+  #266 by @Lukas-Stuehrk
+  
+### Fixed
+
+- Fixed bug that caused prefix and postfix operators to be omitted
+  from generated documentation.
+  #262 by @Lukas-Stuehrk.
+
+## [1.0.0-beta.6] - 2021-04-24
+
+### Added
+
+- Added support for generating documentation for
+  extensions to external types.
+  #230 by @Lukas-Stuehrk and @mattt.
+- Added support for generating documentation for operators.
+  #228 by @Lukas-Stuehrk and @mattt.
 - Added end-to-end tests for command-line interface.
   #199 by @MaxDesiatov and @mattt.
 - Added `--minimum-access-level` option to `generate` and `coverage` commands.
@@ -27,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking Change**
+  Changed minimum Swift version requirements to 5.3 or later.
+  #252 by @mattt.
 - Changed display of code declarations in HTML.
   #204 by @mattt.
 - Changed serialization of `Symbol` to encode and decode `sourceRange` key
@@ -61,7 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #159 by @mattt.
 - Fixed relationship diagram to prevent linking to unknown symbols.
   #178 by @MattKiazyk.
-- Fixed problems in CommonMark output related to escaping emoji shortcode. 
+- Fixed problems in CommonMark output related to escaping emoji shortcode.
   #167 by @mattt.
 
 ### Changed
@@ -304,7 +326,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.5...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.6...master
+[1.0.0-beta.6]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.6
 [1.0.0-beta.5]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.5
 [1.0.0-beta.4]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.4
 [1.0.0-beta.3]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.3

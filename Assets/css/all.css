@@ -183,6 +183,7 @@
   --icon-extension: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23eca95b' height='90' rx='8' stroke='%23e89234' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cg fill='%23fff'%3E%3Cpath d='m54.43 81.93h-33.92v-63.86h33.92v12.26h-21.82v13.8h20.45v11.32h-20.45v14.22h21.82z'/%3E%3Cpath d='m68.74 74.58h-.27l-2.78 7.35h-7.28l5.59-12.61-6-12.54h8l2.74 7.3h.27l2.76-7.3h7.64l-6.14 12.54 5.89 12.61h-7.64z'/%3E%3C/g%3E%3C/svg%3E%0A");
   --icon-function: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%237ac673' height='90' rx='8' stroke='%235bb74f' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m24.25 75.66a5.47 5.47 0 0 1 5.75-5.73c1.55 0 3.55.41 6.46.41 3.19 0 4.78-1.55 5.46-6.65l1.5-10.14h-9.34a6 6 0 1 1 0-12h11.1l1.09-7.27c1.55-10.89 8.01-16.58 17.73-16.58 6.69 0 11.74 1.77 11.74 6.64a5.47 5.47 0 0 1 -5.74 5.73c-1.55 0-3.55-.41-6.46-.41-3.14 0-4.73 1.51-5.46 6.65l-.78 5.27h11.44a6 6 0 1 1 .05 12h-13.19l-1.78 12.11c-1.59 10.92-8.1 16.61-17.82 16.61-6.7 0-11.75-1.77-11.75-6.64z' fill='%23fff'/%3E%3C/svg%3E%0A");
   --icon-method: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%235a98f8' height='90' rx='8' stroke='%232974ed' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m70.61 81.71v-39.6h-.31l-15.69 39.6h-9.22l-15.65-39.6h-.35v39.6h-14.19v-63.42h18.63l16 41.44h.36l16-41.44h18.61v63.42z' fill='%23fff'/%3E%3C/svg%3E%0A");
+  --icon-operator: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%237ac673' height='90' rx='8' stroke='%235bb74f' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cellipse fill='%23fff' cx='50' cy='50' rx='16' ry='16'/%3E%3C/svg%3E%0A");
   --icon-property: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2389c5e6' height='90' rx='8' stroke='%236bb7e1' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m52.31 18.29c13.62 0 22.85 8.84 22.85 22.46s-9.71 22.37-23.82 22.37h-10.34v18.59h-16.16v-63.42zm-11.31 32.71h7c6.85 0 10.89-3.56 10.89-10.2s-4.08-10.16-10.89-10.16h-7z' fill='%23fff'/%3E%3C/svg%3E%0A");
   --icon-protocol: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23ff6682' height='90' rx='8' stroke='%23ff2d55' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cg fill='%23fff'%3E%3Cpath d='m46.28 18.29c11.84 0 20 8.66 20 21.71s-8.44 21.71-20.6 21.71h-10.81v20h-12.09v-63.42zm-11.41 33.05h8.13c6.93 0 11-4 11-11.29s-4-11.25-10.93-11.25h-8.2z'/%3E%3Cpath d='m62 57.45h8v4.77h.16c.84-3.45 2.54-5.12 5.17-5.12a5.06 5.06 0 0 1 1.92.35v7.55a5.69 5.69 0 0 0 -2.39-.51c-3.08 0-4.66 1.74-4.66 5.12v12.1h-8.2z'/%3E%3C/g%3E%3C/svg%3E%0A");
   --icon-structure: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23b57edf' height='90' rx='8' stroke='%239454c2' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m38.38 63c.74 4.53 5.62 7.16 11.82 7.16s10.37-2.81 10.37-6.68c0-3.51-2.73-5.31-10.24-6.76l-6.5-1.23c-12.66-2.35-19.21-8.49-19.21-18.21 0-12.22 10.59-20.09 25.18-20.09 16 0 25.36 7.83 25.53 19.91h-15c-.26-4.57-4.57-7.29-10.42-7.29s-9.31 2.63-9.31 6.37c0 3.34 2.9 5.18 9.8 6.5l6.5 1.23c13.56 2.6 19.71 8.09 19.71 18.09 0 12.74-10 20.83-26.72 20.83-15.82 0-26.28-7.3-26.5-19.78z' fill='%23fff'/%3E%3C/svg%3E%0A");
@@ -725,7 +726,8 @@ body {
   }
 
   section > [role="article"][class] pre {
-    margin-left: -2.5em;
+    margin-left: -1em;
+    margin-right: -1em;
   }
 
   section > [role="article"][class] div {
@@ -949,6 +951,10 @@ h1 small {
   color: var(--quaternary-label);
 }
 
+h3 small {
+  color: var(--tertiary-label);
+}
+
 p code,
 dd code,
 li code {
@@ -1033,6 +1039,11 @@ nav li[class] {
 .initializer {
   --background-image: var(--icon-method);
   --link: var(--system-blue);
+}
+
+.operator {
+  --background-image: var(--icon-operator);
+  --link: var(--system-green);
 }
 
 .property {

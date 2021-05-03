@@ -1,0 +1,44 @@
+name: Homebrew CI
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  homebrew-bottle:
+    runs-on: macos-10.15
+    name: Test Homebrew installation from bottle
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/cache@v2
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-xcode-${{ matrix.xcode }}-
+      - name: Install swift-doc
+        run: brew install swiftdocorg/formulae/swift-doc --force-bottle
+      - name: Run Tests
+        run: |
+          swift test --filter EndToEndTests. -Xswiftc -DUSE_HOMEBREW
+
+  homebrew-sources:
+    runs-on: macos-11.0
+
+    name: Test Homebrew installation from sources
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/cache@v2
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-xcode-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-xcode-
+      - name: Install swift-doc
+        run: brew install swiftdocorg/formulae/swift-doc --build-from-source
+      - name: Run Tests
+        run: swift test --filter EndToEndTests. -Xswiftc -DUSE_HOMEBREW

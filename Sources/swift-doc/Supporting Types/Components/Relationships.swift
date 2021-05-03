@@ -125,7 +125,7 @@ struct Relationships: Component {
                             } else {
                                 return #"""
                                 <dt class="\#(descriptor)"><code><a href="\#(path(for: symbol, with: baseURL))">\#(symbol.id)</a></code></dt>
-                                <dd>\#(commonmark: symbol.documentation?.summary ?? "")</dd>
+                                <dd>\#(commonmark: symbol.documentation?.summary?.description ?? "")</dd>
                                 """#
                             }
                         })

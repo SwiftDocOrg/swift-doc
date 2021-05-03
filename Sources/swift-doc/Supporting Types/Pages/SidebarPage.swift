@@ -14,9 +14,13 @@ struct SidebarPage: Page {
     var globalFunctionNames: Set<String> = []
     var globalVariableNames: Set<String> = []
 
-    init(module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    let externalTypes: Set<String>
+
+    init(module: Module, externalTypes: Set<String>, baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
+
+        self.externalTypes = externalTypes
 
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
             switch symbol.api {
@@ -55,7 +59,8 @@ struct SidebarPage: Page {
                     ("Global Typealiases", globalTypealiasNames),
                     ("Global Variables",globalVariableNames),
                     ("Global Functions", globalFunctionNames),
-                    ("Operators", operatorNames)
+                    ("Operators", operatorNames),
+                    ("Extensions", externalTypes),
                 ] as [(title: String, names: Set<String>)]
             ).filter { !$0.names.isEmpty }) { section in
                 // FIXME: This should be an HTML block

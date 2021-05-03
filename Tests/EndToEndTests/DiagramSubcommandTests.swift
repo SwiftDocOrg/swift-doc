@@ -2,12 +2,10 @@ import XCTest
 
 final class DiagramSubcommandTests: XCTestCase {
     func testStandardOutput() throws {
-        let command = Bundle.productsDirectory.appendingPathComponent("swift-doc")
-
         let outputDirectory = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: outputDirectory) }
 
-        try Process.run(command: command,
+        try Process.run(command: swiftDocCommand,
                         arguments: [
                             "diagram",
                             "Sources"

@@ -6,6 +6,7 @@ import struct Highlighter.Token
 public final class Symbol {
     public typealias ID = Identifier
 
+    public let id: ID
     public let api: API
     public let context: [Contextual]
     public let declaration: [Token]
@@ -19,6 +20,9 @@ public final class Symbol {
     public private(set) lazy var conditions: [CompilationCondition] = context.compactMap { $0 as? CompilationCondition }
 
     init(api: API, context: [Contextual], declaration: [Token], documentation: Documentation?, sourceRange: SourceRange?) {
+        self.id = Identifier(context: context.compactMap {
+            ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType
+        }, name: api.name)
         self.api = api
         self.context = context
         self.declaration = declaration
@@ -30,14 +34,21 @@ public final class Symbol {
         return api.name
     }
 
-    public private(set) lazy var id: ID = {
-        Identifier(pathComponents: context.compactMap {
-            ($0 as? Symbol)?.name ?? ($0 as? Extension)?.extendedType
-        }, name: name)
-    }()
+    public var kind: String {
+        switch api {
+        case let function as Function where function.isOperator:
+            return "Operator"
+        default:
+            return String(describing: type(of: api))
+        }
+    }
 
     public var isPublic: Bool {
         if api is Unknown {
+            return true
+        }
+
+        if api is Operator {
             return true
         }
 
@@ -327,5 +338,11 @@ extension Symbol: Codable {
 
         try container.encode(documentation, forKey: .documentation)
         try container.encode(sourceRange, forKey: .sourceRange)
+    }
+}
+
+extension Symbol: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "\(self.declaration.map { $0.text }.joined())"
     }
 }

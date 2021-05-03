@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - "11.7" # Swift 5.2
-          - "12.2" # Swift 5.3
+          - "12.4" # Swift 5.3
 
     name: "macOS Big Sur (Xcode ${{ matrix.xcode }})"
 
@@ -42,8 +41,7 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - "11.7" # Swift 5.2
-          - "12" # Swift 5.3
+          - "12.4" # Swift 5.3
 
     name: "macOS Catalina (Xcode ${{ matrix.xcode }})"
 
@@ -70,7 +68,7 @@ jobs:
 
     strategy:
       matrix:
-        swift: ["5.3", "5.2"]
+        swift: ["5.3"]
 
     name: "Linux (Swift ${{ matrix.swift }})"
 

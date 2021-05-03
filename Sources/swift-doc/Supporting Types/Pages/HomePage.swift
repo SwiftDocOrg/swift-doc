@@ -16,9 +16,13 @@ struct HomePage: Page {
     var globalFunctions: [Symbol] = []
     var globalVariables: [Symbol] = []
 
-    init(module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    let externalTypes: [String]
+
+    init(module: Module, externalTypes: [String], baseURL: String, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
+
+        self.externalTypes = externalTypes
 
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
             switch symbol.api {
@@ -34,8 +38,6 @@ struct HomePage: Page {
                 globalTypealiases.append(symbol)
             case is Operator:
                 operators.append(symbol)
-            case let function as Function where function.isOperator:
-                operators.append(symbol)
             case is Function:
                 globalFunctions.append(symbol)
             case is Variable:
@@ -44,6 +46,18 @@ struct HomePage: Page {
                 continue
             }
         }
+
+        classes.sort()
+        enumerations.sort()
+        structures.sort()
+        protocols.sort()
+        globalTypealiases.sort()
+        operators.sort(by: { (lhs, rhs) in
+            guard let lo = lhs.api as? Operator, let ro = rhs.api as? Operator else { return false }
+            return (lo.kind, lo.name) > (ro.kind, ro.name)
+        })
+        globalFunctions.sort()
+        globalVariables.sort()
     }
 
     // MARK: - Page
@@ -57,16 +71,28 @@ struct HomePage: Page {
             ForEach(in: [
                 ("Types", classes + enumerations + structures),
                 ("Protocols", protocols),
-                ("Operators", operators),
                 ("Global Typealiases", globalTypealiases),
                 ("Global Functions", globalFunctions),
                 ("Global Variables", globalVariables),
+                ("Operators", operators),
             ]) { (heading, symbols) in
                 if (!symbols.isEmpty) {
                     Heading { heading }
 
-                    List(of: symbols.sorted()) { symbol in
+                    List(of: symbols) { symbol in
                         Abstract(for: symbol, baseURL: baseURL).fragment
+                    }
+                }
+            }
+
+            if !externalTypes.isEmpty {
+                Heading { "Extensions"}
+
+                List(of: externalTypes.sorted()) { typeName in
+                    List.Item {
+                        Paragraph {
+                            Link(urlString: path(for: route(for: typeName), with: baseURL), text: typeName)
+                        }
                     }
                 }
             }
@@ -82,7 +108,8 @@ struct HomePage: Page {
             ("Protocols", protocols),
             ("Typealiases", globalTypealiases),
             ("Functions", globalFunctions),
-            ("Variables", globalVariables)
+            ("Variables", globalVariables),
+            ("Operators", operators),
         ].compactMap { (heading, symbols) -> HypertextLiteral.HTML? in
             guard !symbols.isEmpty else { return nil }
 
@@ -90,11 +117,28 @@ struct HomePage: Page {
             <section id=\#(heading.lowercased())>
                 <h2>\#(heading)</h2>
                 <dl>
-                    \#(symbols.sorted().map { Abstract(for: $0, baseURL: baseURL).html })
+                    \#(symbols.map { Abstract(for: $0, baseURL: baseURL).html })
                 </dl>
             </section>
         """#
         })
+        \#((externalTypes.isEmpty ? "" :
+            #"""
+            <section id="extensions">
+                <h2>Extensions</h2>
+                <dl>
+                \#(externalTypes.sorted().map {
+                    #"""
+                    <dt class="extension">
+                        <a href="\#(path(for: route(for: $0), with: baseURL))">\#($0)</a>
+                    </dt>
+                    <dd></dd>
+                    """# as HypertextLiteral.HTML
+                })
+                </dl>
+            <section>
+            """#
+        ) as HypertextLiteral.HTML)
         """#
     }
 }

@@ -5,7 +5,7 @@ import SwiftMarkup
 import SwiftSemantics
 import struct SwiftSemantics.Protocol
 
-#if os(Linux)
+#if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
@@ -75,6 +75,8 @@ extension SwiftDoc {
             pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
           case let `typealias` as Typealias:
             pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
+          case is Operator:
+            pages[route(for: symbol)] = OperatorPage(module: module, symbol: symbol, baseURL: baseURL)
           case let function as Function where !function.isOperator:
             globals[function.name, default: []] += [symbol]
           case let variable as Variable:
@@ -82,6 +84,17 @@ extension SwiftDoc {
           default:
             continue
           }
+        }
+
+        // Extensions on external types.
+        var symbolsByExternalType: [String: [Symbol]] = [:]
+        for symbol in module.interface.symbols.filter(symbolFilter) {
+          guard let extensionDeclaration = symbol.context.first as? Extension, symbol.context.count == 1 else { continue }
+          guard module.interface.symbols(named: extensionDeclaration.extendedType, resolvingTypealiases: true).isEmpty else { continue }
+          symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
+        }
+        for (typeName, symbols) in symbolsByExternalType {
+          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL)
         }
 
         for (name, symbols) in globals {
@@ -110,11 +123,11 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
-            pages["_Sidebar"] = SidebarPage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["_Sidebar"] = SidebarPage(module: module, externalTypes: Set(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
             pages["_Footer"] = FooterPage(baseURL: baseURL)
           case .html:
-            pages["Home"] = HomePage(module: module, baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
           }
 
           try pages.map { $0 }.parallelForEach {
