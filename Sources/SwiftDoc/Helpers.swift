@@ -14,10 +14,20 @@ public func path(for symbol: Symbol, with baseURL: String) -> String {
 }
 
 public func path(for identifier: CustomStringConvertible, with baseURL: String) -> String {
-    let url = URL(string: baseURL)?.appendingPathComponent("\(identifier)") ?? URL(string: "\(identifier)")
+    let tail: String = path(for: "\(identifier)")
+    let url = URL(string: baseURL)?.appendingPathComponent(tail) ?? URL(string: tail)
     guard let string = url?.absoluteString else {
         fatalError("Unable to construct path for \(identifier) with baseURL \(baseURL)")
     }
 
     return string
+}
+
+private let reservedCharacters: CharacterSet = [
+    // Windows Reserved Characters
+    "<", ">", ":", "\"", "/", "\\", "|", "?", "*",
+]
+
+public func path(for identifier: String) -> String {
+    return identifier.components(separatedBy: reservedCharacters).joined(separator: "_")
 }
