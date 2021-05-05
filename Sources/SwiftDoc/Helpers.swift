@@ -23,10 +23,11 @@ public func path(for identifier: CustomStringConvertible, with baseURL: String) 
     return string
 }
 
+private let reservedCharacters: CharacterSet = [
+    // Windows Reserved Characters
+    "<", ">", ":", "\"", "/", "\\", "|", "?", "*",
+]
+
 public func path(for identifier: String) -> String {
-    let kReservedCharacters: CharacterSet = [
-      // Windows Reserved Characters
-      "<", ">", ":", "\"", "/", "\\", "|", "?", "*",
-    ]
-    return identifier.components(separatedBy: kReservedCharacters).joined(separator: "_")
+    return identifier.components(separatedBy: reservedCharacters).joined(separator: "_")
 }
