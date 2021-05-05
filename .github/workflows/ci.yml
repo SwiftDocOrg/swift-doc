@@ -139,9 +139,6 @@ jobs:
         run: |
           echo "C:\Library\graphviz-development\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: DEBUGGING
-        run: dir C:\Library
-
       - name: Build and Test
         run: swift test -c release --enable-test-discovery -Xlinker -LC:\Library\graphviz-development\usr\lib -Xcc -DLIBXML_STATIC -Xcc -IC:\Library\libxml2-development\usr\include -Xcc -IC:\Library\libxml2-development\usr\include\libxml2 -Xlinker -LC:\Library\libxml2-development\usr\lib -Xcc -IC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\include -Xlinker -LC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\lib
 
