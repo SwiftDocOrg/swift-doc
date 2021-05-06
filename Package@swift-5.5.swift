@@ -13,7 +13,7 @@ let package = Package(
         .library(name: "SwiftDoc", targets: ["SwiftDoc"])
     ],
     dependencies: [
-        .package(name: "SwiftSyntax", url: "https://github.com/apple/swift-syntax.git", .revision("4ae758ab85ed2a5d3e3e8b5050a8ce52179bd102")),
+        .package(name: "SwiftSyntax", url: "https://github.com/apple/swift-syntax.git", .revision("release/5.5")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .revision("0.3.1")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .upToNextMinor(from: "0.5.0")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.3.0")),
