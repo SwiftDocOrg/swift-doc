@@ -97,12 +97,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
-      - uses: actions/cache@v2
-        with:
-          path: .build
-          key: ${{ runner.os }}-spm-swift-5.5-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-swift-5.5-
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: .build
+      #     key: ${{ runner.os }}-spm-swift-5.5-${{ hashFiles('**/Package.resolved') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-spm-swift-5.5-
 
       - name: Install swift-5.5 (2021-04-19 SNAPSHOT)
         run: |
