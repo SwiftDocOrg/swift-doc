@@ -74,11 +74,11 @@
         }
       },
       {
-        "package": "SwiftSyntax",
+        "package": "swift-syntax",
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
-          "branch": "0.50300.0",
-          "revision": "844574d683f53d0737a9c6d706c3ef31ed2955eb",
+          "branch": "release/5.5",
+          "revision": "7f9f22900cda1e9eaae868012e9fcc0ecc27f1d0",
           "version": null
         }
       },
@@ -95,9 +95,9 @@
         "package": "SwiftSemantics",
         "repositoryURL": "https://github.com/SwiftDocOrg/SwiftSemantics.git",
         "state": {
-          "branch": null,
-          "revision": "2f571ccc67e0789d23f8adbccb6a18a6ff3b166c",
-          "version": "0.3.0"
+          "branch": "main",
+          "revision": "7823bf47ac183c54326df6ccf83db51eaad3c49d",
+          "version": null
         }
       },
       {
