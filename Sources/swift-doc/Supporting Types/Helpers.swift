@@ -20,6 +20,23 @@ public func linkCodeElements(of html: String, for symbol: Symbol, in module: Mod
     return document.root?.description ?? html
 }
 
+public func linkTypes(of html: String, for symbol: Symbol, in module: Module, with baseURL: String, includingSymbols symbolFilter: (Symbol) -> Bool) -> String {
+    let document = try! Document(string: html.description)!
+    for element in document.search(xpath: "//span[contains(@class,'type')]") {
+        guard let name = element.content else { continue }
+
+        let candidates = module.interface.symbols(named: name, context: symbol.name, resolvingTypealiases: true).filter(symbolFilter)
+        if let candidate = candidates.filter({ $0 != symbol }).first
+        {
+            let a = Element(name: "a")
+            a["href"] = path(for: candidate, with: baseURL)
+            element.wrap(inside: a)
+        }
+    }
+
+    return document.root?.description ?? html
+}
+
 public func sidebar(for html: String) -> String {
     let toc = Element(name: "ol")
 

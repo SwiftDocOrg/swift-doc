@@ -15,10 +15,13 @@ struct ExternalTypePage: Page {
     let properties: [Symbol]
     let methods: [Symbol]
 
-    init(module: Module, externalType: String, symbols: [Symbol], baseURL: String) {
+    let symbolFilter: (Symbol) -> Bool
+
+    init(module: Module, externalType: String, symbols: [Symbol], baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.module = module
         self.externalType = externalType
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
 
         self.typealiases = symbols.filter { $0.api is Typealias }
         self.initializers = symbols.filter { $0.api is Initializer }
@@ -49,7 +52,7 @@ struct ExternalTypePage: Page {
                             Heading {
                                 Code { member.name }
                             }
-                            Documentation(for: member, in: module, baseURL: baseURL)
+                            Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
                         }
                     }
                 }
@@ -75,7 +78,7 @@ struct ExternalTypePage: Page {
                                <h3>
                                    <code>\#(softbreak(member.name))</code>
                                </h3>
-                               \#(Documentation(for: member, in: module, baseURL: baseURL).html)
+                               \#(Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                            </div>
                            """#
                 })

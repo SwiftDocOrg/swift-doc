@@ -8,13 +8,15 @@ struct OperatorPage: Page {
     let symbol: Symbol
     let implementations: [Symbol]
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(module: Module, symbol: Symbol, baseURL: String, includingImplementations symbolFilter: (Symbol) -> Bool) {
+    init(module: Module, symbol: Symbol, baseURL: String, includingImplementations symbolFilter: @escaping (Symbol) -> Bool) {
         precondition(symbol.api is Operator)
         self.module = module
         self.symbol = symbol
         self.implementations = module.interface.functionsByOperator[symbol]?.filter(symbolFilter).sorted() ?? []
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Page
@@ -27,7 +29,7 @@ struct OperatorPage: Page {
         return CommonMark.Document {
             Heading { symbol.id.description }
 
-            Documentation(for: symbol, in: module, baseURL: baseURL)
+            Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
         }
     }
 
@@ -38,8 +40,8 @@ struct OperatorPage: Page {
             <code class="name">\#(softbreak(symbol.id.description))</code>
         </h1>
 
-        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
-        \#(OperatorImplementations(of: symbol, in: module, baseURL: baseURL, implementations: implementations).html)
+        \#(Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
+        \#(OperatorImplementations(of: symbol, in: module, baseURL: baseURL, implementations: implementations, includingOtherSymbols: symbolFilter).html)
         """#
     }
 }
