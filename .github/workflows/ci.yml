@@ -93,6 +93,8 @@ jobs:
   windows:
     runs-on: windows-latest
     
+    name: "Windows (Swift 5.5)"
+    
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
