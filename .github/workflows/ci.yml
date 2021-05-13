@@ -142,7 +142,6 @@ jobs:
 
       - name: Build and Test
         run: |
-          swift package clean
           swift build -v -c release -Xlinker -LC:\Library\graphviz-development\usr\lib -Xcc -DLIBXML_STATIC -Xcc -IC:\Library\libxml2-development\usr\include -Xcc -IC:\Library\libxml2-development\usr\include\libxml2 -Xlinker -LC:\Library\libxml2-development\usr\lib -Xcc -IC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\include -Xlinker -LC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\lib
 
   validate-assets:
