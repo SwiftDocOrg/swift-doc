@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "SwiftSyntax", url: "https://github.com/apple/swift-syntax.git", .revision("release/5.5")),
-        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .revision("main")),
+        .package(url: "https://github.com/SwiftDocOrg/SwiftSemantics.git", .upToNextMinor(from: "0.3.2")),
         .package(url: "https://github.com/SwiftDocOrg/CommonMark.git", .upToNextMinor(from: "0.5.0")),
         .package(url: "https://github.com/SwiftDocOrg/SwiftMarkup.git", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/SwiftDocOrg/GraphViz.git", .upToNextMinor(from: "0.4.1")),
