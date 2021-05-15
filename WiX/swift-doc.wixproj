@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputName>swift-doc</OutputName>
+    <OutputType>Package</OutputType>
+    <ProjectGuid>d45046f0-1d8d-4521-bb45-17809bacf693</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>.build\artifacts\</OutputPath>
+    <IntermediateOutputPath>.build\obj\</IntermediateOutputPath>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProductVersion Condition=" '$(ProductVersion)' == '' ">0.0.0</ProductVersion>
+    <ProductVersion>$(ProductVersion)</ProductVersion>
+    <DefineConstants>ProductVersion=$(ProductVersion);SWIFT_DOC_BUILD=$(SWIFT_DOC_BUILD);GRAPHVIZ_ROOT=$(GRAPHVIZ_ROOT)</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(WixTargetsPath)" />
+  <ItemGroup>
+    <Compile Include="swift-doc.wxs" />
+  </ItemGroup>
+</Project>

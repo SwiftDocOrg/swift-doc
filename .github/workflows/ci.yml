@@ -94,15 +94,21 @@ jobs:
   windows:
     runs-on: windows-latest
 
-    name: "Windows (Swift 5.5)"
+    name: "Windows (Swift ${{ matrix.tag }})"
+
+    strategy:
+      matrix:
+        include:
+          - tag: 5.5-DEVELOPMENT-SNAPSHOT-2021-05-09-a
+            branch: swift-5.5-branch
 
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
 
-      - name: Install swift-5.5 (2021-04-19 SNAPSHOT)
+      - name: Install Swift ${{ matrix.tag }}
         run: |
-          Install-Binary -Url "https://swift.org/builds/swift-5.5-branch/windows10/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a/swift-5.5-DEVELOPMENT-SNAPSHOT-2021-04-19-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
+          Install-Binary -Url "https://swift.org/builds/${{ matrix.branch }}/windows10/swift-${{ matrix.tag }}/swift-${{ matrix.tag }}-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
         run: |
           echo "SDKROOT=C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -126,7 +132,7 @@ jobs:
       # TODO(compnerd) figure out how to build graphviz
       - name: Fetch graphviz
         run: |
-          Invoke-WebRequest -Uri "https://artprodeus21.artifacts.visualstudio.com/A8fd008a0-56bc-482c-ba46-67f9425510be/3133d6ab-80a8-4996-ac4f-03df25cd3224/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL2NvbXBuZXJkL3Byb2plY3RJZC8zMTMzZDZhYi04MGE4LTQ5OTYtYWM0Zi0wM2RmMjVjZDMyMjQvYnVpbGRJZC81MDQ4NS9hcnRpZmFjdE5hbWUvZ3JhcGh2aXotd2luZG93cy14NjQ1/content?format=zip" -OutFile $env:Temp\graphviz-windows-x64.zip
+          Invoke-WebRequest -Uri "https://artprodeus21.artifacts.visualstudio.com/A8fd008a0-56bc-482c-ba46-67f9425510be/3133d6ab-80a8-4996-ac4f-03df25cd3224/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL2NvbXBuZXJkL3Byb2plY3RJZC8zMTMzZDZhYi04MGE4LTQ5OTYtYWM0Zi0wM2RmMjVjZDMyMjQvYnVpbGRJZC81MTAzNC9hcnRpZmFjdE5hbWUvZ3JhcGh2aXotd2luZG93cy14NjQ1/content?format=zip" -OutFile $env:Temp\graphviz-windows-x64.zip
           Expand-Archive -Path $env:Temp\graphviz-windows-x64.zip -Destination $env:Temp -Force
           Move-Item -Path $env:Temp\graphviz-windows-x64\Library\graphviz-development -Destination C:\Library\ -Force
       - name: Add graphviz to PATH
@@ -135,6 +141,15 @@ jobs:
       - name: Build and Test
         run: |
           swift build -v -c release -Xlinker -LC:\Library\graphviz-development\usr\lib -Xcc -DLIBXML_STATIC -Xcc -IC:\Library\libxml2-development\usr\include -Xcc -IC:\Library\libxml2-development\usr\include\libxml2 -Xlinker -LC:\Library\libxml2-development\usr\lib -Xcc -IC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\include -Xlinker -LC:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\lib
+
+      - name: Package
+        run: |
+          msbuild WiX/swift-doc.wixproj -nologo -p:Configuration=Release -p:OutputPath=$PWD\.build\artifacts -p:RunWixToolsOutOfProc=true -p:GRAPHVIZ_ROOT=C:\Library\graphviz-development -p:SWIFT_DOC_BUILD=$PWD\.build\release # -p:ProductVersion=$env:GITHUB_REF.Replace('refs/tags/', '')
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: swift-doc.msi
+          path: .build\artifacts\swift-doc.msi
 
   validate-assets:
     runs-on: ubuntu-latest

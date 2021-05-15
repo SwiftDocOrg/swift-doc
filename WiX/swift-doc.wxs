@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Language="1033"
+           Manufacturer="swiftdoc.org"
+           Name="swift-doc"
+           UpgradeCode="1a733d92-1f0f-4d76-9737-72c698a207cd"
+           Version="$(var.ProductVersion)">
+    <Package Compressed="yes" InstallScope="perMachine" Manufacturer="swiftdoc.org"/>
+
+    <Media Id="1" Cabinet="swiftdoc.cab" CompressionLevel="high" EmbedCab="yes"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="WINDOWSVOLUME">
+        <Directory Id="LIBRARY" Name="Library">
+          <Directory Id="DEVELOPER" Name="Developer">
+            <Directory Id="SWIFT_DOC" Name="SwiftDoc">
+              <Directory Id="USR" Name="usr">
+                <Directory Id="USR_BIN" Name="bin">
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <SetDirectory Id="WINDOWSVOLUME" Value="[WindowsVolume]"/>
+
+    <DirectoryRef Id="USR_BIN">
+      <Component Id="SwiftDoc_BINS" Guid="6ae448ac-e535-4dd6-984a-b32ce99bcd84">
+        <File Id="SWIFT_DOC_EXE" Source="$(var.SWIFT_DOC_BUILD)\swift-doc.exe" Checksum="yes"/>
+
+        <!-- GraphViz -->
+        <File Id="CGRAPH_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\cgraph.dll" Checksum="yes"/>
+        <File Id="GVC_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\gvc.dll" Checksum="yes"/>
+        <File Id="CDT_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\cdt.dll" Checksum="yes"/>
+        <File Id="PATHPLAN_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\Pathplan.dll" Checksum="yes"/>
+        <File Id="XDOT_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\xdot.dll" Checksum="yes"/>
+        <File Id="EXPAT_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\expat.dll" Checksum="yes"/>
+        <File Id="DOT_EXE" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\dot.exe" Checksum="yes"/>
+
+        <!-- Plugins -->
+        <File Id="GVPLUGIN_CORE_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\gvplugin_core.dll" Checksum="yes"/>
+        <File Id="GVPLUGIN_DOT_LAYOUT_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\gvplugin_dot_layout.dll" Checksum="yes"/>
+        <File Id="GVPLUGIN_GDIPLUS_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\gvplugin_gdiplus.dll" Checksum="yes"/>
+        <File Id="GVPLUGIN_NEATO_LAYOUT_DLL" Source="$(var.GRAPHVIZ_ROOT)\usr\bin\gvplugin_neato_layout.dll" Checksum="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="ENV_VARS" Guid="e02268ca-0ea1-421e-9c19-d1ba23dcff4e">
+        <Environment Id="PATH" Action="set" Name="PATH" Part="last" Permanent="no" System="yes" Value="[WindowsVolume]Library\Developer\SwiftDoc\usr\bin"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="SwiftDoc" Level="1">
+      <ComponentRef Id="SwiftDoc_BINS"/>
+      <ComponentRef Id="ENV_VARS"/>
+    </Feature>
+
+    <InstallExecuteSequence>
+      <Custom Action="CreateDotConfig" After="InstallFiles">NOT REMOVE</Custom>
+      <Custom Action="CleanupDotConfig" Before="RemoveFiles">REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
+
+    <CustomAction Id="CreateDotConfig" Directory="USR_BIN" Execute="deferred" Impersonate="no" ExeCommand="cmd /c &quot;dot -c&quot;" Return="check"/>
+    <CustomAction Id="CleanupDotConfig" Directory="USR_BIN" Execute="deferred" Impersonate="no" ExeCommand="cmd /c &quot;del config6&quot;" Return="ignore"/>
+  </Product>
+</Wix>
