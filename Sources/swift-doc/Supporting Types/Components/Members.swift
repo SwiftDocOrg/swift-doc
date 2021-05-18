@@ -102,11 +102,12 @@ struct Members: Component {
             
                     \#(section.members.map { member -> HypertextLiteral.HTML in
                         let descriptor = String(describing: type(of: member.api)).lowercased()
+                        let id = member.id.description.lowercased().replacingOccurrences(of: " ", with: "-")
 
                         return #"""
-                        <div role="article" class="\#(descriptor)" id=\#(member.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>
+                        <div role="article" class="\#(descriptor)" id=\#(id)>
                             <h3>
-                                <code>\#(softbreak(member.name))</code>
+                                <code><a href=\#("#\(id)")>\#(softbreak(member.name))</a></code>
                             </h3>
                             \#(Documentation(for: member, in: module, baseURL: baseURL).html)
                         </div>
