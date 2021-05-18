@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed bug that caused operator implementations to appear in the documentation
+  although they should be omitted because of their lower access level.
+  #264 by @Lukas-Stuehrk
 - Fixed bug that caused prefix and postfix operators to be omitted
   from generated documentation.
   #262 by @Lukas-Stuehrk.
