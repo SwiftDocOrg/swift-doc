@@ -25,8 +25,8 @@ public func linkTypes(of html: String, for symbol: Symbol, in module: Module, wi
     for element in document.search(xpath: "//span[contains(@class,'type')]") {
         guard let name = element.content else { continue }
 
-        let candidates = module.interface.symbols(named: name, context: symbol.name, resolvingTypealiases: true).filter(symbolFilter)
-        if let candidate = candidates.filter({ $0 != symbol }).first
+        let candidates = module.interface.symbols(named: "\(symbol.name).\(name)", resolvingTypealiases: true).nonEmpty ?? module.interface.symbols(named: name, resolvingTypealiases: true)
+        if let candidate = candidates.filter(symbolFilter).filter({ $0 != symbol }).first
         {
             let a = Element(name: "a")
             a["href"] = path(for: candidate, with: baseURL)
@@ -94,4 +94,10 @@ public func softbreak(_ string: String) -> String {
                        .replacingOccurrences(of: ":", with: ":\u{200B}")
 
     return regex.stringByReplacingMatches(in: string, options: [], range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "$1\u{200B}$2")
+}
+
+fileprivate extension Collection {
+    var nonEmpty: Self? {
+        return isEmpty ? nil : self
+    }
 }

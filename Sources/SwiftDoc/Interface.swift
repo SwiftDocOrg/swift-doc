@@ -190,14 +190,6 @@ public final class Interface {
     public func symbols(named name: String, resolvingTypealiases: Bool) -> [Symbol] {
         symbolsGroupedByIdentifier.named(name, resolvingTypealiases: resolvingTypealiases)
     }
-
-    public func symbols(named name: String, context: String, resolvingTypealiases: Bool) -> [Symbol] {
-        let foundSymbols = symbols(named: "\(context).\(name)", resolvingTypealiases: resolvingTypealiases)
-        if !foundSymbols.isEmpty {
-            return symbols
-        }
-        return symbols(named: name, resolvingTypealiases: resolvingTypealiases)
-    }
 }
 
 fileprivate extension Dictionary where Key == Identifier, Value == [Symbol] {
