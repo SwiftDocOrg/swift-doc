@@ -72,11 +72,13 @@ struct OperatorImplementations: Component {
                 heading = [operand.type, function.name].compactMap { $0 }.joined(separator: " ")
             }
 
+            let id = implementation.id.description.lowercased().replacingOccurrences(of: " ", with: "-")
+
             return #"""
-                   <div role="article" class="function" id=\#(implementation.id.description.lowercased().replacingOccurrences(of: " ", with: "-"))>
+                   <div role="article" class="function" id=\#(id)>
                        <h3>
-                         \#(heading)
-                         \#(unsafeUnescaped: function.genericWhereClause.map({ #"<small>\#($0.escaped)</small>"# }) ?? "")
+                         <a href=\#("#\(id)")>\#(heading)
+                         \#(unsafeUnescaped: function.genericWhereClause.map({ #"<small>\#($0.escaped)</small>"# }) ?? "")</a>
                        </h3>
                        \#(Documentation(for: implementation, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                    </div>

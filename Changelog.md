@@ -11,8 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for generating documentation for
   private symbols.
-  #266 by @Lukas-Stuehrk
-  
+  #266 by @Lukas-Stuehrk.
+- Added anchor links to documentation entries for symbols.
+  #275 by @Lukas-Stuehrk.
+
 ### Fixed
 
 - Fixed bug that caused operator implementations to appear in the documentation
