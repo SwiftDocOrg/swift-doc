@@ -816,6 +816,61 @@ blockquote {
   }
 }
 
+.discussion aside {
+  --link: var(--accent-color);
+
+  border: 0.25px var(--separator) solid;
+  border-left: 6px var(--accent-color) solid;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 0.125em 0 0.125em 1em;
+  margin-bottom: 1em;
+  color: var(--accent-color);
+
+  &:before {
+    content: attr(title);
+    font-variant: small-caps;
+    text-transform: lowercase;
+    color: var(--accent-color);
+  }
+
+  & > p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+
+  & {
+    --accent-color: var(--system-blue);
+    --separator: rgba(0, 122, 255, 0.25);
+    background: rgba(0, 122, 255, 0.025);
+  }
+
+  &.author,
+  &.authors,
+  &.copyright,
+  &.date {
+    --accent-color: var(--system-fill);
+    --separator: var(--system-gray);
+    background: var(--system-background);
+  }
+
+  &.attention,
+  &.warning,
+  &.important {
+    --accent-color: var(--system-orange);
+    --separator: rgba(255, 149, 0, 0.25);
+    background: rgba(255, 149, 0, 0.025);
+  }
+
+  &.bug {
+    --accent-color: var(--system-pink);
+    --separator: rgba(255, 59, 48, 0.25);
+    background: rgba(255, 59, 48, 0.025);
+  }
+}
+
 article {
   padding: 2em 0 1em 0;
 
@@ -943,7 +998,6 @@ p code,
 dd code,
 li code {
   font-size: smaller;
-  color: var(--secondary-label);
 }
 
 a code {
