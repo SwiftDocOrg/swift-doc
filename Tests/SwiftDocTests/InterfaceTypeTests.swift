@@ -366,7 +366,7 @@ final class InterfaceTypeTests: XCTestCase {
             public func someMethod() { }
         }
                      
-        public infix operator ≠
+        infix operator ≠
                 
         public typealias OtherClass = SomeClass
                      
