@@ -45,7 +45,7 @@ func layout(_ page: Page) -> HTML {
         </main>
 
         <footer>
-            \#(FooterPage(baseURL: page.baseURL).html)
+            \#(FooterPage(baseURL: page.baseURL, datesLocale: page.datesLocale).html)
         </footer>
     </body>
     </html>

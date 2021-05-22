@@ -2,17 +2,20 @@ import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
 import HypertextLiteral
+import Foundation
 
 struct TypealiasPage: Page {
     let module: Module
     let symbol: Symbol
     let baseURL: String
-
-    init(module: Module, symbol: Symbol, baseURL: String) {
+    let datesLocale: Locale
+    
+    init(module: Module, symbol: Symbol, baseURL: String, datesLocale: Locale) {
         precondition(symbol.api is Typealias)
         self.module = module
         self.symbol = symbol
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
     }
 
     // MARK: - Page

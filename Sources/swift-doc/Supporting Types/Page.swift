@@ -12,6 +12,7 @@ protocol Page: HypertextLiteralConvertible {
     var title: String { get }
     var document: CommonMark.Document { get }
     var html: HypertextLiteral.HTML { get }
+    var datesLocale: Locale { get }
 }
 
 extension Page {

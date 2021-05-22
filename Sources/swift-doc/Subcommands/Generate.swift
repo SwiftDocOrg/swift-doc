@@ -39,6 +39,10 @@ extension SwiftDoc {
       @Option(name: .long,
               help: "The minimum access level of the symbols included in generated documentation.")
       var minimumAccessLevel: AccessLevel = .public
+        
+      @Option(name: .long,
+              help: "The locale used to format the printed dates")
+      var datesLocale: String = "en_US"
     }
 
     static var configuration = CommandConfiguration(abstract: "Generates Swift documentation")
@@ -47,6 +51,8 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
+     let datesLocale = Locale(identifier: self.options.datesLocale)
+    
       for directory in options.inputs {
         var isDirectory: ObjCBool = false
         if !FileManager.default.fileExists(atPath: directory, isDirectory: &isDirectory) {
@@ -72,11 +78,11 @@ extension SwiftDoc {
         for symbol in module.interface.topLevelSymbols.filter(symbolFilter) {
           switch symbol.api {
           case is Class, is Enumeration, is Structure, is Protocol:
-            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
+            pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, datesLocale: datesLocale, includingChildren: symbolFilter)
           case let `typealias` as Typealias:
-            pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
+            pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL, datesLocale: datesLocale)
           case is Operator:
-            let operatorPage = OperatorPage(module: module, symbol: symbol, baseURL: baseURL, includingImplementations: symbolFilter)
+            let operatorPage = OperatorPage(module: module, symbol: symbol, baseURL: baseURL, datesLocale: datesLocale, includingImplementations: symbolFilter)
             if !operatorPage.implementations.isEmpty {
               pages[route(for: symbol)] = operatorPage
             }
@@ -97,11 +103,11 @@ extension SwiftDoc {
           symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
         }
         for (typeName, symbols) in symbolsByExternalType {
-          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL)
+          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL, datesLocale: datesLocale)
         }
 
         for (name, symbols) in globals {
-            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL)
+            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL, datesLocale: datesLocale)
         }
 
         guard !pages.isEmpty else {
@@ -126,11 +132,11 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
-            pages["_Sidebar"] = SidebarPage(module: module, externalTypes: Set(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
-            pages["_Footer"] = FooterPage(baseURL: baseURL)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
+            pages["_Sidebar"] = SidebarPage(module: module, externalTypes: Set(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
+            pages["_Footer"] = FooterPage(baseURL: baseURL, datesLocale: datesLocale)
           case .html:
-            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
           }
 
           try pages.map { $0 }.parallelForEach {

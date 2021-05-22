@@ -2,10 +2,12 @@ import CommonMarkBuilder
 import SwiftDoc
 import SwiftSemantics
 import HypertextLiteral
+import struct Foundation.Locale
 
 struct HomePage: Page {
     var module: Module
     let baseURL: String
+    let datesLocale: Locale
 
     var classes: [Symbol] = []
     var enumerations: [Symbol] = []
@@ -18,9 +20,10 @@ struct HomePage: Page {
 
     let externalTypes: [String]
 
-    init(module: Module, externalTypes: [String], baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    init(module: Module, externalTypes: [String], baseURL: String, datesLocale: Locale, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
 
         self.externalTypes = externalTypes
 

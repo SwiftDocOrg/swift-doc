@@ -6,6 +6,7 @@ fileprivate let dateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .long
     dateFormatter.timeStyle = .none
+    
     return dateFormatter
 }()
 
@@ -19,9 +20,11 @@ fileprivate let href = "https://github.com/SwiftDocOrg/swift-doc"
 
 struct FooterPage: Page {
     let baseURL: String
+    let datesLocale: Locale
 
-    init(baseURL: String) {
+    init(baseURL: String, datesLocale: Locale) {
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
     }
 
     // MARK: - Page
@@ -37,6 +40,8 @@ struct FooterPage: Page {
     }
 
     var html: HypertextLiteral.HTML {
+        dateFormatter.locale = datesLocale
+        
         let timestamp = timestampDateFormatter.string(from: Date())
         let dateString = dateFormatter.string(from: Date())
 

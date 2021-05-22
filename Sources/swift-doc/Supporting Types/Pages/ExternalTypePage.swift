@@ -3,9 +3,9 @@ import SwiftDoc
 import HypertextLiteral
 import SwiftMarkup
 import SwiftSemantics
+import Foundation
 
 struct ExternalTypePage: Page {
-
     let module: Module
     let externalType: String
     let baseURL: String
@@ -14,11 +14,13 @@ struct ExternalTypePage: Page {
     let initializers: [Symbol]
     let properties: [Symbol]
     let methods: [Symbol]
+    let datesLocale: Locale
 
-    init(module: Module, externalType: String, symbols: [Symbol], baseURL: String) {
+    init(module: Module, externalType: String, symbols: [Symbol], baseURL: String, datesLocale: Locale) {
         self.module = module
         self.externalType = externalType
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
 
         self.typealiases = symbols.filter { $0.api is Typealias }
         self.initializers = symbols.filter { $0.api is Initializer }

@@ -2,6 +2,7 @@ import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
 import HypertextLiteral
+import struct Foundation.Locale
 
 struct SidebarPage: Page {
     var module: Module
@@ -15,10 +16,12 @@ struct SidebarPage: Page {
     var globalVariableNames: Set<String> = []
 
     let externalTypes: Set<String>
+    let datesLocale: Locale
 
-    init(module: Module, externalTypes: Set<String>, baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    init(module: Module, externalTypes: Set<String>, baseURL: String, datesLocale: Locale, symbolFilter: (Symbol) -> Bool) {
         self.module = module
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
 
         self.externalTypes = externalTypes
 

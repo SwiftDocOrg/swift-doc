@@ -2,18 +2,21 @@ import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
 import HypertextLiteral
+import Foundation
 
 struct TypePage: Page {
     let module: Module
     let symbol: Symbol
     let baseURL: String
+    let datesLocale: Locale
     let symbolFilter: (Symbol) -> Bool
 
-    init(module: Module, symbol: Symbol, baseURL: String, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
+    init(module: Module, symbol: Symbol, baseURL: String, datesLocale: Locale, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
         precondition(symbol.api is Type)
         self.module = module
         self.symbol = symbol
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
         self.symbolFilter = symbolFilter
     }
 

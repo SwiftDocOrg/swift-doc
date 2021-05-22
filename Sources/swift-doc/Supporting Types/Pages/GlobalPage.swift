@@ -2,18 +2,21 @@ import SwiftSemantics
 import SwiftDoc
 import CommonMarkBuilder
 import HypertextLiteral
+import Foundation
 
 struct GlobalPage: Page {
     let module: Module
     let name: String
     let symbols: [Symbol]
     let baseURL: String
+    let datesLocale: Locale
 
-    init(module: Module, name: String, symbols: [Symbol], baseURL: String) {
+    init(module: Module, name: String, symbols: [Symbol], baseURL: String, datesLocale: Locale) {
         self.module = module
         self.name = name
         self.symbols = symbols
         self.baseURL = baseURL
+        self.datesLocale = datesLocale
     }
 
     // MARK: - Page
