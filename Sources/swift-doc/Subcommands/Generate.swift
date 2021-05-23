@@ -132,11 +132,29 @@ extension SwiftDoc {
         } else {
           switch format {
           case .commonmark:
-            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
-            pages["_Sidebar"] = SidebarPage(module: module, externalTypes: Set(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(
+                module: module,
+                externalTypes: Array(symbolsByExternalType.keys),
+                baseURL: baseURL,
+                datesLocale: datesLocale,
+                symbolFilter: symbolFilter
+            )
+            pages["_Sidebar"] = SidebarPage(
+                module: module,
+                externalTypes: Set(symbolsByExternalType.keys),
+                baseURL: baseURL,
+                datesLocale: datesLocale,
+                symbolFilter: symbolFilter
+            )
             pages["_Footer"] = FooterPage(baseURL: baseURL, datesLocale: datesLocale)
           case .html:
-            pages["Home"] = HomePage(module: module, externalTypes: Array(symbolsByExternalType.keys), baseURL: baseURL, datesLocale: datesLocale, symbolFilter: symbolFilter)
+            pages["Home"] = HomePage(
+                module: module,
+                externalTypes: Array(symbolsByExternalType.keys),
+                baseURL: baseURL,
+                datesLocale: datesLocale,
+                symbolFilter: symbolFilter
+            )
           }
 
           try pages.map { $0 }.parallelForEach {
