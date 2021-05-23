@@ -51,7 +51,7 @@ extension SwiftDoc {
     var options: Options
 
     func run() throws {
-     let datesLocale = Locale(identifier: self.options.datesLocale)
+     let datesLocale = Locale(identifier: options.datesLocale)
     
       for directory in options.inputs {
         var isDirectory: ObjCBool = false
