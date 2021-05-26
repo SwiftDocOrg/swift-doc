@@ -768,7 +768,8 @@ nav {
   padding: 0 1em 3em 1em;
   position: sticky;
   top: 1em;
-  max-width: 20vw;
+  width: 20vw;
+  max-width: 14em;
 
   & a {
     color: var(--secondary-label);
