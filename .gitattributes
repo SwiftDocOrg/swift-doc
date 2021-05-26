@@ -1,5 +1,5 @@
 .node/package-lock.json -diff -merge
 .node/package-lock.json linguist-generated=true
 
-Resources/all.min.css -diff -merge
-Resources/all.min.css linguist-generated=true
+Sources/swift-doc/Generated/* -diff -merge
+Sources/swift-doc/Generated/* linguist-generated=true
