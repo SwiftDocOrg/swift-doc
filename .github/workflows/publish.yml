@@ -123,7 +123,8 @@ jobs:
 
       - name: Package
         run: |
-          msbuild WiX/swift-doc.wixproj -nologo -p:Configuration=Release -p:OutputPath=$PWD\.build\artifacts -p:RunWixToolsOutOfProc=true -p:GRAPHVIZ_ROOT=C:\Library\graphviz-development -p:SWIFT_DOC_BUILD=$PWD\.build\release -p:ProductVersion=$env:GITHUB_REF.Replace('refs/tags/', '')
+          $ProductVersion=$env:GITHUB_REF.Replace('refs/tags/', '')
+          msbuild WiX/swift-doc.wixproj -nologo -p:Configuration=Release -p:OutputPath=$PWD\.build\artifacts -p:RunWixToolsOutOfProc=true -p:GRAPHVIZ_ROOT=C:\Library\graphviz-development -p:SWIFT_DOC_BUILD=$PWD\.build\release -p:ProductVersion=$ProductVersion
 
       - name: Upload the installer to the GitHub release
         uses: actions/upload-release-asset@v1.0.1
