@@ -820,12 +820,12 @@ blockquote {
   --link: var(--accent-color);
 
   border: 0.25px var(--separator) solid;
-  border-left: 6px var(--accent-color) solid;
+  border-left: 6px var(--separator) solid;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
-  padding: 0.125em 0 0.125em 1em;
+  padding: 0.125em 1em;
   margin-bottom: 1em;
   color: var(--accent-color);
 
@@ -842,32 +842,32 @@ blockquote {
   }
 
   & {
-    --accent-color: var(--system-blue);
-    --separator: rgba(0, 122, 255, 0.25);
-    background: rgba(0, 122, 255, 0.025);
+    --accent-color: rgb(0, 0, 73);
+    --separator: var(--system-blue);
+    background: rgba(0, 122, 255, 0.0125);
   }
 
   &.author,
   &.authors,
   &.copyright,
   &.date {
-    --accent-color: var(--system-fill);
-    --separator: var(--system-gray);
+    --accent-color: rgb(51, 51, 51);
+    --separator: var(--system-fill);
     background: var(--system-background);
   }
 
   &.attention,
   &.warning,
   &.important {
-    --accent-color: var(--system-orange);
-    --separator: rgba(255, 149, 0, 0.25);
-    background: rgba(255, 149, 0, 0.025);
+    --accent-color: rgb(76, 37, 2);
+    --separator: var(--system-orange);
+    background: rgba(255, 149, 0, 0.0125);
   }
 
   &.bug {
-    --accent-color: var(--system-pink);
-    --separator: rgba(255, 59, 48, 0.25);
-    background: rgba(255, 59, 48, 0.025);
+    --accent-color: rgb(78, 0, 41);
+    --separator: var(--system-pink);
+    background: rgba(255, 59, 48, 0.0125);
   }
 }
 
