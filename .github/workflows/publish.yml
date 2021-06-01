@@ -34,8 +34,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
-          asset_name: swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.tar.gz
+          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.catalina.bottle.1.tar.gz
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.catalina.bottle.1.tar.gz
           asset_content_type: application/gzip
 
   bottle_macos_big_sur:
@@ -54,8 +54,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
-          asset_name: swift-doc-${{ github.event.release.tag_name }}.big_sur.bottle.tar.gz
+          asset_path: ./swift-doc--${{ github.event.release.tag_name }}.big_sur.bottle.1.tar.gz
+          asset_name: swift-doc-${{ github.event.release.tag_name }}.big_sur.bottle.1.tar.gz
           asset_content_type: application/gzip
 
   update_formula_bottle:
