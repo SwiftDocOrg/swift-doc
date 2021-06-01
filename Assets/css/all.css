@@ -769,6 +769,7 @@ nav {
   position: sticky;
   top: 1em;
   width: 20vw;
+  max-width: 14em;
 
   & a {
     color: var(--secondary-label);

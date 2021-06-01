@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed bug that caused prefix and postfix operators to be omitted
   from generated documentation.
   #262 by @Lukas-Stuehrk.
+- Fixed layout of HTML output on large displays.
+  #251 by @Lukas-Stuehrk and @mattt.
 
 ## [1.0.0-beta.6] - 2021-04-24
 
