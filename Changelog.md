@@ -31,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed date formatters to use `en_US_POSIX` locale instead of current locale.
   #289 by @mattt.
 
+### Removed
+
+- Removed <sup>Beta</sup> from header in HTML output.
+  #291 by @mattt.
+
 ## [1.0.0-beta.6] - 2021-04-24
 
 ### Added
