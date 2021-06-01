@@ -236,7 +236,7 @@ extension Documentation {
                 return HTML(blockquote.render(format: .html, options: [.unsafe]))
             case .callout(let callout):
                 return #"""
-                <aside class=\#(callout.delimiter.rawValue)>
+                <aside class=\#(callout.delimiter.rawValue.lowercased()) title=\#(callout.delimiter.rawValue)>
                     \#(commonmark: callout.content)
                 </aside>
                 """# as HTML
