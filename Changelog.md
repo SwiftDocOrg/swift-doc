@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.1]
+
 ### Added
 
 - Added support for generating documentation for
@@ -345,7 +347,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
-[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-beta.6...master
+[unreleased]: https://github.com/SwiftDocOrg/swift-doc/compare/1.0.0-rc.1...master
+[1.0.0-rc.1]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-rc.1
 [1.0.0-beta.6]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.6
 [1.0.0-beta.5]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.5
 [1.0.0-beta.4]: https://github.com/SwiftDocOrg/swift-doc/releases/tag/1.0.0-beta.4
