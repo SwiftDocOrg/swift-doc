@@ -6,8 +6,7 @@
   ],
   "scripts": {
     "build": "node index.js",
-    "watch:build": "nodemon -w ../Assets/ -e css -x \"npm run build\"",
-    "watch": "npm run watch:build"
+    "watch": "nodemon -w ../Assets/ -e css -x \"npm run build\""
   },
   "dependencies": {
     "cssnano": "^5.0.4",
