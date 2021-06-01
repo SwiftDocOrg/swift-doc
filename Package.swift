@@ -71,6 +71,7 @@ let package = Package(
             name: "EndToEndTests",
             dependencies: [
                 .target(name: "swift-doc"),
+                .product(name: "Markup", package: "Markup"),
             ]
         ),
     ]
