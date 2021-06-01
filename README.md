@@ -30,7 +30,24 @@ as well as top-level type aliases, functions, and variables.
 
 Run the following command to install using [Homebrew](https://brew.sh/):
 
-```terminal
+```console
+$ brew install swiftdocorg/formulae/swift-doc
+```
+
+If you already have `swift-doc` installed,
+run the following command to upgrade your installation:
+
+```console
+$ brew upgrade swift-doc
+```
+
+If installing or upgrading fails with the message
+*Error: Failed to download resource "swift-doc"*,
+try resetting your installation with the following commands:
+
+```console
+$ brew uninstall swift-doc
+$ brew untap swiftdocorg/formulae
 $ brew install swiftdocorg/formulae/swift-doc
 ```
 
