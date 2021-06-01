@@ -30,7 +30,24 @@ as well as top-level type aliases, functions, and variables.
 
 Run the following command to install using [Homebrew](https://brew.sh/):
 
-```terminal
+```console
+$ brew install swiftdocorg/formulae/swift-doc
+```
+
+If you already have `swift-doc` installed,
+run the following command to upgrade your installation:
+
+```console
+$ brew upgrade swift-doc
+```
+
+If installing or upgrading fails with the message
+*Error: Failed to download resource "swift-doc"*,
+try resetting your installation with the following commands:
+
+```console
+$ brew uninstall swift-doc
+$ brew untap swiftdocorg/formulae
 $ brew install swiftdocorg/formulae/swift-doc
 ```
 
@@ -234,27 +251,6 @@ $ dot -T svg Alamofire.gv > Alamofire.svg
 Here's an excerpt of the graph generated for Alamofire:
 
 ![Excerpt of swift-doc-api Diagram for Alamofire](https://user-images.githubusercontent.com/7659/73189318-0db0e880-40d9-11ea-8895-341a75ce873c.png)
-
-## Troubleshooting
-
-Having trouble with SwiftDoc? Have a look at this section for help.
-
-### Homebrew: Failed to download resource "swift-doc"
-
-If using Homebrew to install or upgrade SwiftDoc fails with a `404` error similar to this:
-
-```bash
-curl: (22) The requested URL returned error: 404
-Error: Failed to download resource "swift-doc"
-```
-
-Try untapping and reinstalling SwiftDoc:
-
-```bash
-$ brew uninstall swift-doc
-$ brew untap swiftdocorg/formulae
-$ brew install swiftdocorg/formulae/swift-doc
-```
 
 ## GitHub Action
 
