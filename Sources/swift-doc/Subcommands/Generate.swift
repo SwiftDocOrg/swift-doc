@@ -74,7 +74,7 @@ extension SwiftDoc {
           case is Class, is Enumeration, is Structure, is Protocol:
             pages[route(for: symbol)] = TypePage(module: module, symbol: symbol, baseURL: baseURL, includingChildren: symbolFilter)
           case let `typealias` as Typealias:
-            pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL)
+            pages[route(for: `typealias`.name)] = TypealiasPage(module: module, symbol: symbol, baseURL: baseURL, includingOtherSymbols: symbolFilter)
           case is Operator:
             let operatorPage = OperatorPage(module: module, symbol: symbol, baseURL: baseURL, includingImplementations: symbolFilter)
             if !operatorPage.implementations.isEmpty {
@@ -97,11 +97,11 @@ extension SwiftDoc {
           symbolsByExternalType[extensionDeclaration.extendedType, default: []] += [symbol]
         }
         for (typeName, symbols) in symbolsByExternalType {
-          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL)
+          pages[route(for: typeName)] = ExternalTypePage(module: module, externalType: typeName, symbols: symbols, baseURL: baseURL, includingOtherSymbols: symbolFilter)
         }
 
         for (name, symbols) in globals {
-            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL)
+            pages[route(for: name)] = GlobalPage(module: module, name: name, symbols: symbols, baseURL: baseURL, includingOtherSymbols: symbolFilter)
         }
 
         guard !pages.isEmpty else {

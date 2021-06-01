@@ -27,10 +27,10 @@ struct TypePage: Page {
         return CommonMark.Document {
             Heading { symbol.id.description }
 
-            Documentation(for: symbol, in: module, baseURL: baseURL)
+            Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
             Relationships(of: symbol, in: module, baseURL: baseURL, includingChildren: symbolFilter)
             Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter)
-            Requirements(of: symbol, in: module, baseURL: baseURL)
+            Requirements(of: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
         }
     }
 
@@ -41,10 +41,10 @@ struct TypePage: Page {
             <code class="name">\#(softbreak(symbol.id.description))</code>
         </h1>
 
-        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
+        \#(Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
         \#(Relationships(of: symbol, in: module, baseURL: baseURL, includingChildren: symbolFilter).html)
         \#(Members(of: symbol, in: module, baseURL: baseURL, symbolFilter: symbolFilter).html)
-        \#(Requirements(of: symbol, in: module, baseURL: baseURL).html)
+        \#(Requirements(of: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
         """#
     }
 }

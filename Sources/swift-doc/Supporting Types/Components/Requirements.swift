@@ -8,11 +8,13 @@ struct Requirements: Component {
     var symbol: Symbol
     var module: Module
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     var sections: [(title: String, requirements: [Symbol])] {
@@ -34,7 +36,7 @@ struct Requirements: Component {
                     Section {
                         ForEach(in: section.requirements) { requirement in
                             Heading { requirement.name.escapingEmojiShortcodes }
-                            Documentation(for: requirement, in: module, baseURL: baseURL)
+                            Documentation(for: requirement, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
                         }
                     }
                 }
@@ -57,7 +59,7 @@ struct Requirements: Component {
                             <h3>
                                 <code>\#(softbreak(member.name))</code>
                             </h3>
-                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
+                            \#(Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                         </div>
                         """#
                     })

@@ -7,12 +7,14 @@ struct TypealiasPage: Page {
     let module: Module
     let symbol: Symbol
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(module: Module, symbol: Symbol, baseURL: String) {
+    init(module: Module, symbol: Symbol, baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         precondition(symbol.api is Typealias)
         self.module = module
         self.symbol = symbol
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Page
@@ -24,7 +26,7 @@ struct TypealiasPage: Page {
     var document: CommonMark.Document {
         Document {
             Heading { symbol.id.description }
-            Documentation(for: symbol, in: module, baseURL: baseURL)
+            Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
         }
     }
 
@@ -35,7 +37,7 @@ struct TypealiasPage: Page {
             <span class="name">\#(softbreak(symbol.id.description))</span>
         </h1>
 
-        \#(Documentation(for: symbol, in: module, baseURL: baseURL).html)
+        \#(Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
         """#
     }
 }

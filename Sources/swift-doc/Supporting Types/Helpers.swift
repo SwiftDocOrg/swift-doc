@@ -20,6 +20,23 @@ public func linkCodeElements(of html: String, for symbol: Symbol, in module: Mod
     return document.root?.description ?? html
 }
 
+public func linkTypes(of html: String, for symbol: Symbol, in module: Module, with baseURL: String, includingSymbols symbolFilter: (Symbol) -> Bool) -> String {
+    let document = try! Document(string: html.description)!
+    for element in document.search(xpath: "//span[contains(@class,'type')]") {
+        guard let name = element.content else { continue }
+
+        let candidates = module.interface.symbols(named: "\(symbol.name).\(name)", resolvingTypealiases: true).nonEmpty ?? module.interface.symbols(named: name, resolvingTypealiases: true)
+        if let candidate = candidates.filter(symbolFilter).filter({ $0 != symbol }).first
+        {
+            let a = Element(name: "a")
+            a["href"] = path(for: candidate, with: baseURL)
+            element.wrap(inside: a)
+        }
+    }
+
+    return document.root?.description ?? html
+}
+
 public func sidebar(for html: String) -> String {
     let toc = Element(name: "ol")
 
@@ -77,4 +94,10 @@ public func softbreak(_ string: String) -> String {
                        .replacingOccurrences(of: ":", with: ":\u{200B}")
 
     return regex.stringByReplacingMatches(in: string, options: [], range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "$1\u{200B}$2")
+}
+
+fileprivate extension Collection {
+    var nonEmpty: Self? {
+        return isEmpty ? nil : self
+    }
 }

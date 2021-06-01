@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed links to type declarations.
+  #277 by @Lukas-Stuehrk.
 - Fixed bug that caused operator implementations to appear in the documentation
   although they should be omitted because of their lower access level.
   #264 by @Lukas-Stuehrk

@@ -10,11 +10,13 @@ struct Declaration: Component {
     var symbol: Symbol
     var module: Module
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(of symbol: Symbol, in module: Module, baseURL: String) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Component
@@ -30,9 +32,11 @@ struct Declaration: Component {
     var html: HypertextLiteral.HTML {
         let code = symbol.declaration.map { $0.html }.joined()
 
+        let html = linkTypes(of: code, for: symbol, in: module, with: baseURL, includingSymbols: symbolFilter)
+
         return #"""
         <div class="declaration">
-        <pre class="highlight"><code>\#(unsafeUnescaped: code)</code></pre>
+        <pre class="highlight"><code>\#(unsafeUnescaped: html)</code></pre>
         </div>
         """#
     }

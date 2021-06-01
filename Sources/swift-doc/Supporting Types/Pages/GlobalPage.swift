@@ -8,12 +8,14 @@ struct GlobalPage: Page {
     let name: String
     let symbols: [Symbol]
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(module: Module, name: String, symbols: [Symbol], baseURL: String) {
+    init(module: Module, name: String, symbols: [Symbol], baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.module = module
         self.name = name
         self.symbols = symbols
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Page
@@ -26,7 +28,7 @@ struct GlobalPage: Page {
         return Document {
             ForEach(in: symbols) { symbol in
                 Heading { symbol.id.description }
-                Documentation(for: symbol, in: module, baseURL: baseURL)
+                Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
             }
         }
     }
@@ -48,7 +50,7 @@ struct GlobalPage: Page {
         </h1>
 
         \#(symbols.map { symbol in
-        Documentation(for: symbol, in: module, baseURL: baseURL).html
+        Documentation(for: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html
         })
         """#
     }

@@ -9,13 +9,16 @@ struct OperatorImplementations: Component {
     var module: Module
     let baseURL: String
 
+    let symbolFilter: (Symbol) -> Bool
+
     var implementations: [Symbol]
 
-    init(of symbol: Symbol, in module: Module, baseURL: String, implementations: [Symbol]) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, implementations: [Symbol], includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
         self.implementations = implementations
+        self.symbolFilter = symbolFilter
     }
 
 
@@ -29,7 +32,7 @@ struct OperatorImplementations: Component {
                 Section {
                     Heading { implementation.name }
 
-                    Documentation(for: implementation, in: module, baseURL: baseURL)
+                    Documentation(for: implementation, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
                 }
             }
         }
@@ -77,7 +80,7 @@ struct OperatorImplementations: Component {
                          <a href=\#("#\(id)")>\#(heading)
                          \#(unsafeUnescaped: function.genericWhereClause.map({ #"<small>\#($0.escaped)</small>"# }) ?? "")</a>
                        </h3>
-                       \#(Documentation(for: implementation, in: module, baseURL: baseURL).html)
+                       \#(Documentation(for: implementation, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                    </div>
                    """#
         }

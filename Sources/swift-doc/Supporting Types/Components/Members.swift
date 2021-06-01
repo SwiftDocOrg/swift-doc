@@ -9,6 +9,8 @@ struct Members: Component {
     var module: Module
     let baseURL: String
 
+    let symbolFilter: (Symbol) -> Bool
+
     var members: [Symbol]
 
     var typealiases: [Symbol]
@@ -20,10 +22,12 @@ struct Members: Component {
     var genericallyConstrainedMembers: [[GenericRequirement] : [Symbol]]
     let defaultImplementations: [Symbol]
 
-    init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: (Symbol) -> Bool) {
+    init(of symbol: Symbol, in module: Module, baseURL: String, symbolFilter: @escaping (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
+
+        self.symbolFilter = symbolFilter
 
         self.members = module.interface.members(of: symbol)
             .filter { $0.extension?.genericRequirements.isEmpty != false }
@@ -66,7 +70,7 @@ struct Members: Component {
                             Heading {
                                 Code { member.name }
                             }
-                            Documentation(for: member, in: module, baseURL: baseURL)
+                            Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
                         }
                     }
                 }
@@ -83,7 +87,7 @@ struct Members: Component {
                             Section {
                                 ForEach(in: members) { member in
                                     Heading { member.name }
-                                    Documentation(for: member, in: module, baseURL: baseURL)
+                                    Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
                                 }
                             }
                         }
@@ -109,7 +113,7 @@ struct Members: Component {
                             <h3>
                                 <code><a href=\#("#\(id)")>\#(softbreak(member.name))</a></code>
                             </h3>
-                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
+                            \#(Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                         </div>
                         """#
                     })
@@ -129,7 +133,7 @@ struct Members: Component {
                         \#(members.map { member -> HypertextLiteral.HTML in
                             #"""
                             <h4>\#(softbreak(member.name))</h4>
-                            \#(Documentation(for: member, in: module, baseURL: baseURL).html)
+                            \#(Documentation(for: member, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter).html)
                             """#
                         })
                     </section>

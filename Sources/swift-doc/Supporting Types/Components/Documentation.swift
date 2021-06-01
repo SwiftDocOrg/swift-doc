@@ -11,11 +11,13 @@ struct Documentation: Component {
     var symbol: Symbol
     var module: Module
     let baseURL: String
+    let symbolFilter: (Symbol) -> Bool
 
-    init(for symbol: Symbol, in module: Module, baseURL: String) {
+    init(for symbol: Symbol, in module: Module, baseURL: String, includingOtherSymbols symbolFilter: @escaping (Symbol) -> Bool) {
         self.symbol = symbol
         self.module = module
         self.baseURL = baseURL
+        self.symbolFilter = symbolFilter
     }
 
     // MARK: - Component
@@ -39,7 +41,7 @@ struct Documentation: Component {
                 Fragment { "\(documentation.summary!.description.escapingEmojiShortcodes)" }
             }
 
-            Declaration(of: symbol, in: module, baseURL: baseURL)
+            Declaration(of: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter)
 
             ForEach(in: documentation.discussionParts) { part in
                 DiscussionPart(part, for: symbol, in: module, baseURL: baseURL)
@@ -85,7 +87,7 @@ struct Documentation: Component {
 
         var fragments: [HypertextLiteralConvertible] = []
 
-        fragments.append(Declaration(of: symbol, in: module, baseURL: baseURL))
+        fragments.append(Declaration(of: symbol, in: module, baseURL: baseURL, includingOtherSymbols: symbolFilter))
 
         if let summary = documentation.summary {
             fragments.append(#"""
