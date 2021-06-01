@@ -4,6 +4,7 @@ import HypertextLiteral
 
 fileprivate let dateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
     dateFormatter.dateStyle = .long
     dateFormatter.timeStyle = .none
     return dateFormatter
@@ -11,6 +12,7 @@ fileprivate let dateFormatter: DateFormatter = {
 
 fileprivate let timestampDateFormatter: DateFormatter = {
     var dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
     return dateFormatter
 }()

@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed layout of HTML output on large displays.
   #251 by @Lukas-Stuehrk and @mattt.
 
+### Changed
+
+- Changed date formatters to use `en_US_POSIX` locale instead of current locale.
+  #289 by @mattt.
+
 ## [1.0.0-beta.6] - 2021-04-24
 
 ### Added
