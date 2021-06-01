@@ -340,7 +340,7 @@ run the `watch` script
 to start watching for changes to files in the `Assets` folder.
 Whenever an asset source file is added, removed, or updated,
 its corresponding (unoptimized) product is automatically generated
-in the `Resources` folder.
+in the `Sources/swift-doc/Generated` folder.
 
 ```terminal
 $ npm run watch
@@ -348,10 +348,10 @@ $ npm run watch
 
 When you're happy with the results,
 commit any changes to the source files in `Assets`
-as well as the generated files in `Resources`.
+as well as the generated files in `Sources/swift-doc/Generated`.
 
 ```terminal
-$ git add Assets Resources
+$ git add Assets Sources/swift-doc/Generated
 $ git commit
 ```
 
