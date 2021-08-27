@@ -36,7 +36,7 @@ struct Relationships: Component {
     init(of symbol: Symbol, in module: Module, baseURL: String, includingChildren symbolFilter: @escaping (Symbol) -> Bool) {
         self.module = module
         self.symbol = symbol
-        self.inheritedTypes = module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)
+        self.inheritedTypes = (module.interface.typesInherited(by: symbol) + module.interface.typesConformed(by: symbol)).filter(symbolFilter)
         self.baseURL = baseURL
         self.symbolFilter = symbolFilter
     }
@@ -68,7 +68,7 @@ struct Relationships: Component {
             ("Subclasses", module.interface.typesInheriting(from: symbol)),
             ("Conforms To", module.interface.typesConformed(by: symbol)),
             ("Types Conforming to <code>\(softbreak(symbol.id.description))</code>", module.interface.typesConforming(to: symbol)),
-        ].map { (title: $0.0, symbols: $0.1.filter { $0.isPublic }) }.filter { !$0.symbols.isEmpty }
+        ].map { (title: $0.0, symbols: $0.1.filter(symbolFilter)) }.filter { !$0.symbols.isEmpty }
     }
 
     // MARK: - Component
