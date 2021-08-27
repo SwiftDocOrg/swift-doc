@@ -134,7 +134,7 @@ public final class Interface {
             var superclasses = Set(CollectionOfOne(baseClass))
 
             while !superclasses.isEmpty {
-                let subclasses = Set(superclasses.flatMap { typesInheriting(from: $0) }.filter { $0.isPublic })
+                let subclasses = Set(superclasses.flatMap { typesInheriting(from: $0) })
                 defer { superclasses = subclasses }
                 classClusters[baseClass, default: []].formUnion(subclasses)
             }

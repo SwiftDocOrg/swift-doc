@@ -35,7 +35,7 @@ fileprivate func diagram(of module: Module, including symbolFilter: (Symbol) -> 
     for (baseClass, subclasses) in module.interface.classHierarchies {
         var subgraph = Subgraph(id: "cluster_\(baseClass.id.description.replacingOccurrences(of: ".", with: "_"))")
 
-        for subclass in subclasses {
+        for subclass in subclasses.filter(symbolFilter) {
             var subclassNode = Node("\(subclass.id)")
             subclassNode.shape = .box
 
@@ -54,7 +54,7 @@ fileprivate func diagram(of module: Module, including symbolFilter: (Symbol) -> 
             }
         }
         
-        if subclasses.count > 1 {
+        if subgraph.nodes.count > 1 {
             graph.append(subgraph)
         } else {
             subgraph.nodes.forEach { graph.append($0) }
@@ -67,7 +67,7 @@ fileprivate func diagram(of module: Module, including symbolFilter: (Symbol) -> 
         let symbolNode = Node("\(symbol.id)")
         graph.append(symbolNode)
 
-        for inherited in module.interface.typesConformed(by: symbol) {
+        for inherited in module.interface.typesConformed(by: symbol).filter(symbolFilter) {
             let inheritedNode = Node("\(inherited.id.description)")
             let edge = Edge(from: symbolNode, to: inheritedNode)
 
